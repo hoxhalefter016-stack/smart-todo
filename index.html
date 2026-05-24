@@ -397,7 +397,7 @@
                 <div class="stat-number" id="completed-tasks-count">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">% Përfundim</div>
+                <div class="stat-label" id="text-completion">% Përfundim</div>
                 <div class="stat-number" id="completion-percentage">0%</div>
             </div>
             <div class="stat-card">
@@ -406,40 +406,40 @@
             </div>
         </div>
 
-        <h3 style="margin: 20px 0 15px; font-size: 16px;">Shpërndarja e Prioriteteve</h3>
+        <h3 style="margin: 20px 0 15px; font-size: 16px;" id="text-priority-dist">Shpërndarja e Prioriteteve</h3>
         <div class="stats-container">
             <div class="stat-card">
-                <div class="stat-label">🔴 Të Larta</div>
+                <div class="stat-label" id="text-priority-high">🔴 Të Larta</div>
                 <div class="stat-number" id="priority-high-count" style="color: #ef4444;">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">🟡 Mesatare</div>
+                <div class="stat-label" id="text-priority-medium">🟡 Mesatare</div>
                 <div class="stat-number" id="priority-medium-count" style="color: #f59e0b;">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">🟢 Të Ulëta</div>
+                <div class="stat-label" id="text-priority-low">🟢 Të Ulëta</div>
                 <div class="stat-number" id="priority-low-count" style="color: #10b981;">0</div>
             </div>
         </div>
 
         <div style="margin-top: 20px; padding: 16px; border-radius: 10px; background: rgba(255, 255, 255, 0.05);">
-            <p style="font-size: 13px; color: #94a3b8; margin-bottom: 8px;">💾 Madhësia e të Dhënave</p>
+            <p style="font-size: 13px; color: #94a3b8; margin-bottom: 8px;" id="text-storage">💾 Madhësia e të Dhënave</p>
             <div id="storage-info"></div>
         </div>
     </div>
 
     <!-- Settings Page -->
     <div id="page-settings" class="page">
-        <h3 style="margin-bottom: 16px; font-size: 16px;">🌐 Zgjidh Gjuhën</h3>
-        <button class="lang-btn active" onclick="changeLanguage('sq')">🇦🇱 Shqip</button>
-        <button class="lang-btn" onclick="changeLanguage('en')">🇬🇧 English</button>
-        <button class="lang-btn" onclick="changeLanguage('hr')">🇭🇷 Hrvatski</button>
-        <button class="lang-btn" onclick="changeLanguage('fr')">🇫🇷 Français</button>
-        <button class="lang-btn" onclick="changeLanguage('de')">🇩🇪 Deutsch</button>
-        <button class="lang-btn" onclick="changeLanguage('it')">🇮🇹 Italiano</button>
-        <button class="lang-btn" onclick="changeLanguage('es')">🇪🇸 Español</button>
+        <h3 style="margin-bottom: 16px; font-size: 16px;" id="text-select-lang">🌐 Zgjidh Gjuhën</h3>
+        <button class="lang-btn active" data-lang="sq" onclick="changeLanguage('sq')">🇦🇱 Shqip</button>
+        <button class="lang-btn" data-lang="en" onclick="changeLanguage('en')">🇬🇧 English</button>
+        <button class="lang-btn" data-lang="hr" onclick="changeLanguage('hr')">🇭🇷 Hrvatski</button>
+        <button class="lang-btn" data-lang="fr" onclick="changeLanguage('fr')">🇫🇷 Français</button>
+        <button class="lang-btn" data-lang="de" onclick="changeLanguage('de')">🇩🇪 Deutsch</button>
+        <button class="lang-btn" data-lang="it" onclick="changeLanguage('it')">🇮🇹 Italiano</button>
+        <button class="lang-btn" data-lang="es" onclick="changeLanguage('es')">🇪🇸 Español</button>
 
-        <h3 style="margin-top: 24px; margin-bottom: 16px; font-size: 16px;">💾 Të Dhënat</h3>
+        <h3 style="margin-top: 24px; margin-bottom: 16px; font-size: 16px;" id="text-data-section">💾 Të Dhënat</h3>
         <button class="btn-primary btn-full" onclick="exportJSON()">📥 Eksporto si JSON</button>
         <button class="btn-primary btn-full" onclick="exportCSV()">📊 Eksporto si CSV</button>
         <button class="btn-success btn-full" onclick="importData()">📤 Importo Të Dhënat</button>
@@ -487,13 +487,153 @@
         let editingNoteIndex = null;
 
         const translations = {
-            sq: { titleTasks: "Detyrat e Mia", titleNotes: "Shënimet e Mia", titleStats: "Ecuria ime", titleSettings: "Cilësimet", navTasks: "Detyrat", navNotes: "Shënim", navStats: "Ecuria", navSettings: "Cilësime" },
-            en: { titleTasks: "My Tasks", titleNotes: "My Notes", titleStats: "My Progress", titleSettings: "Settings", navTasks: "Tasks", navNotes: "Notes", navStats: "Progress", navSettings: "Settings" },
-            hr: { titleTasks: "Moji Zadaci", titleNotes: "Moje Bilješke", titleStats: "Moj Napredak", titleSettings: "Postavke", navTasks: "Zadaci", navNotes: "Bilješke", navStats: "Napredak", navSettings: "Postavke" },
-            fr: { titleTasks: "Mes Tâches", titleNotes: "Mes Notes", titleStats: "Mon Progrès", titleSettings: "Paramètres", navTasks: "Tâches", navNotes: "Notes", navStats: "Progrès", navSettings: "Paramètres" },
-            de: { titleTasks: "Meine Aufgaben", titleNotes: "Meine Notizen", titleStats: "Mein Fortschritt", titleSettings: "Einstellungen", navTasks: "Aufgaben", navNotes: "Notizen", navStats: "Fortschritt", navSettings: "Optionen" },
-            it: { titleTasks: "I Miei Compiti", titleNotes: "Le Mie Note", titleStats: "I Miei Progressi", titleSettings: "Impostazioni", navTasks: "Compiti", navNotes: "Note", navStats: "Progressi", navSettings: "Impostazioni" },
-            es: { titleTasks: "Mis Tareas", titleNotes: "Mis Notas", titleStats: "Mi Progreso", titleSettings: "Configuración", navTasks: "Tareas", navNotes: "Notas", navStats: "Progreso", navSettings: "Configuración" }
+            sq: {
+                titleTasks: "Detyrat e Mia",
+                titleNotes: "Shënimet e Mia",
+                titleStats: "Ecuria ime",
+                titleSettings: "Cilësimet",
+                navTasks: "Detyrat",
+                navNotes: "Shënim",
+                navStats: "Ecuria",
+                navSettings: "Cilësime",
+                totalTasks: "Gjithsej Detyra",
+                doneTasks: "Të Kryera",
+                completion: "% Përfundim",
+                totalNotes: "Shënime",
+                priorityDist: "Shpërndarja e Prioriteteve",
+                priorityHigh: "🔴 Të Larta",
+                priorityMedium: "🟡 Mesatare",
+                priorityLow: "🟢 Të Ulëta",
+                storage: "💾 Madhësia e të Dhënave",
+                selectLang: "🌐 Zgjidh Gjuhën",
+                dataSection: "💾 Të Dhënat"
+            },
+            en: {
+                titleTasks: "My Tasks",
+                titleNotes: "My Notes",
+                titleStats: "My Progress",
+                titleSettings: "Settings",
+                navTasks: "Tasks",
+                navNotes: "Notes",
+                navStats: "Progress",
+                navSettings: "Settings",
+                totalTasks: "Total Tasks",
+                doneTasks: "Completed",
+                completion: "% Completion",
+                totalNotes: "Notes",
+                priorityDist: "Priority Distribution",
+                priorityHigh: "🔴 High",
+                priorityMedium: "🟡 Medium",
+                priorityLow: "🟢 Low",
+                storage: "💾 Data Size",
+                selectLang: "🌐 Select Language",
+                dataSection: "💾 Data"
+            },
+            hr: {
+                titleTasks: "Moji Zadaci",
+                titleNotes: "Moje Bilješke",
+                titleStats: "Moj Napredak",
+                titleSettings: "Postavke",
+                navTasks: "Zadaci",
+                navNotes: "Bilješke",
+                navStats: "Napredak",
+                navSettings: "Postavke",
+                totalTasks: "Ukupno Zadataka",
+                doneTasks: "Završeni",
+                completion: "% Dovršenosti",
+                totalNotes: "Bilješke",
+                priorityDist: "Raspodjela Prioriteta",
+                priorityHigh: "🔴 Visoki",
+                priorityMedium: "🟡 Srednji",
+                priorityLow: "🟢 Niski",
+                storage: "💾 Veličina Podataka",
+                selectLang: "🌐 Odaberi Jezik",
+                dataSection: "💾 Podaci"
+            },
+            fr: {
+                titleTasks: "Mes Tâches",
+                titleNotes: "Mes Notes",
+                titleStats: "Mon Progrès",
+                titleSettings: "Paramètres",
+                navTasks: "Tâches",
+                navNotes: "Notes",
+                navStats: "Progrès",
+                navSettings: "Paramètres",
+                totalTasks: "Total Tâches",
+                doneTasks: "Terminées",
+                completion: "% Achèvement",
+                totalNotes: "Notes",
+                priorityDist: "Distribution des Priorités",
+                priorityHigh: "🔴 Élevée",
+                priorityMedium: "🟡 Moyenne",
+                priorityLow: "🟢 Basse",
+                storage: "💾 Taille des Données",
+                selectLang: "🌐 Sélectionner la Langue",
+                dataSection: "💾 Données"
+            },
+            de: {
+                titleTasks: "Meine Aufgaben",
+                titleNotes: "Meine Notizen",
+                titleStats: "Mein Fortschritt",
+                titleSettings: "Einstellungen",
+                navTasks: "Aufgaben",
+                navNotes: "Notizen",
+                navStats: "Fortschritt",
+                navSettings: "Einstellungen",
+                totalTasks: "Gesamtaufgaben",
+                doneTasks: "Abgeschlossen",
+                completion: "% Fertigstellung",
+                totalNotes: "Notizen",
+                priorityDist: "Prioritätsverteilung",
+                priorityHigh: "🔴 Hoch",
+                priorityMedium: "🟡 Mittel",
+                priorityLow: "🟢 Niedrig",
+                storage: "💾 Datengröße",
+                selectLang: "🌐 Sprache Wählen",
+                dataSection: "💾 Daten"
+            },
+            it: {
+                titleTasks: "I Miei Compiti",
+                titleNotes: "Le Mie Note",
+                titleStats: "I Miei Progressi",
+                titleSettings: "Impostazioni",
+                navTasks: "Compiti",
+                navNotes: "Note",
+                navStats: "Progressi",
+                navSettings: "Impostazioni",
+                totalTasks: "Compiti Totali",
+                doneTasks: "Completati",
+                completion: "% Completamento",
+                totalNotes: "Note",
+                priorityDist: "Distribuzione Priorità",
+                priorityHigh: "🔴 Alta",
+                priorityMedium: "🟡 Media",
+                priorityLow: "🟢 Bassa",
+                storage: "💾 Dimensione Dati",
+                selectLang: "🌐 Seleziona Lingua",
+                dataSection: "💾 Dati"
+            },
+            es: {
+                titleTasks: "Mis Tareas",
+                titleNotes: "Mis Notas",
+                titleStats: "Mi Progreso",
+                titleSettings: "Configuración",
+                navTasks: "Tareas",
+                navNotes: "Notas",
+                navStats: "Progreso",
+                navSettings: "Configuración",
+                totalTasks: "Tareas Totales",
+                doneTasks: "Completadas",
+                completion: "% Finalización",
+                totalNotes: "Notas",
+                priorityDist: "Distribución de Prioridades",
+                priorityHigh: "🔴 Alta",
+                priorityMedium: "🟡 Media",
+                priorityLow: "🟢 Baja",
+                storage: "💾 Tamaño de Datos",
+                selectLang: "🌐 Seleccionar Idioma",
+                dataSection: "💾 Datos"
+            }
         };
 
         function switchPage(pageId, element) {
@@ -705,6 +845,18 @@
             const total = tasks.length;
             const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
 
+            const t = translations[currentLang];
+
+            document.getElementById('text-total-tasks').innerText = t.totalTasks;
+            document.getElementById('text-done-tasks').innerText = t.doneTasks;
+            document.getElementById('text-completion').innerText = t.completion;
+            document.getElementById('text-total-notes').innerText = t.totalNotes;
+            document.getElementById('text-priority-dist').innerText = t.priorityDist;
+            document.getElementById('text-priority-high').innerText = t.priorityHigh;
+            document.getElementById('text-priority-medium').innerText = t.priorityMedium;
+            document.getElementById('text-priority-low').innerText = t.priorityLow;
+            document.getElementById('text-storage').innerText = t.storage;
+
             document.getElementById('total-tasks-count').innerText = total;
             document.getElementById('completed-tasks-count').innerText = completed;
             document.getElementById('completion-percentage').innerText = percentage + '%';
@@ -721,8 +873,12 @@
         function changeLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('lang', lang);
+            
+            // Remove active class from all language buttons
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('lang-' + lang).classList.add('active');
+            
+            // Add active class to the selected language button
+            document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
 
             const t = translations[lang];
             document.getElementById('app-title').innerText = t.titleTasks;
@@ -730,6 +886,10 @@
             document.getElementById('nav-text-notes').innerText = t.navNotes;
             document.getElementById('nav-text-stats').innerText = t.navStats;
             document.getElementById('nav-text-settings').innerText = t.navSettings;
+            document.getElementById('text-select-lang').innerText = t.selectLang;
+            document.getElementById('text-data-section').innerText = t.dataSection;
+            
+            updateStats();
         }
 
         function toggleTheme() {
@@ -844,4 +1004,5 @@
         });
     </script>
 </body>
-	</html>
+</html>
+
