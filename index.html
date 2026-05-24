@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lefter - Daily App</title>
+    <style>
+        /* Stilet Kryesore */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f4f7f6; color: #333; padding-bottom: 70px; }
+        
+        /* Faqet/Dritaret */
+        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Koka e Faqes */
+        header { background: #2c3e50; color: white; padding: 20px; text-align: center; font-size: 20px; font-weight: bold; }
+
+        /* Menuja e Navigimit (Në fund të ekranit) */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
+            background-color: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex; justify-content: space-around; align-items: center;
+        }
+        .nav-item {
+            background: none; border: none; color: #7f8c8d; font-size: 14px;
+            font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center;
+        }
+        .nav-item.active { color: #2ecc71; }
+        .nav-icon { font-size: 20px; margin-bottom: 2px; }
+
+        /* Elemente për To-Do (Lista Aktuale) */
+        .input-section { display: flex; margin-bottom: 20px; gap: 10px; }
+        input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        button.btn-add { background: #2ecc71; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .task-list { list-style: none; }
+        .task-item { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Stili për Shënimet e Reja */
+        .notes-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
+        .note-card { background: #fef5d1; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; }
+    </style>
+</head>
+<body>
+
+    <header id="app-title">Detyrat e Mia</header>
+
+    <div id="todo-page" class="page active">
+        <div class="input-section">
+            <input type="text" id="task-input" placeholder="Shto një detyrë të re...">
+            <button class="btn-add" onclick="addTask()">Shto</button>
+        </div>
+        <ul class="task-list" id="tasks-container">
+            <li class="task-item"><span>Shembull: Të rregulloj llogarinë në GitHub</span></li>
+        </ul>
+    </div>
+
+    <div id="notes-page" class="page">
+        <div class="input-section" style="flex-direction: column;">
+            <textarea id="note-input" rows="3" placeholder="Shkruaj një shënim të ri apo një ide..."></textarea>
+            <button class="btn-add" style="background: #3498db; margin-top: 5px;" onclick="addNote()">Ruaj Shënimin</button>
+        </div>
+        <div class="notes-grid" id="notes-container">
+            </div>
+    </div>
+
+    <div id="settings-page" class="page">
+        <h3>Zgjidh Gjuhën / Language</h3>
+        <p style="margin: 10px 0; color: #666;">Aplikacioni do të përkthehet automatikisht.</p>
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button class="btn-add" style="background: #95a5a6;" onclick="changeLang('sq')">Shqip</button>
+            <button class="btn-add" style="background: #95a5a6;" onclick="changeLang('en')">English</button>
+            <button class="btn-add" style="background: #95a5a6;" onclick="changeLang('hr')">Hrvatski</button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchPage('todo-page', this, 'Detyrat e Mia')">
+            <span class="nav-icon">📋</span><span>Detyrat</span>
+        </button>
+        <button class="nav-item" onclick="switchPage('notes-page', this, 'Shënimet e Mia')">
+            <span class="nav-icon">📝</span><span>Shënime</span>
+        </button>
+        <button class="nav-item" onclick="switchPage('settings-page', this, 'Cilësimet')">
+            <span class="nav-icon">⚙️</span><span>Cilësime</span>
+        </button>
+    </nav>
+
+    <script>
+        // Logjika për ndërrimin e dritareve (Menuja)
+        function switchPage(pageId, buttonElement, titleText) {
+            // Fshih të gjitha faqet
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            // Hiq stilin aktiv nga butonat e menusë
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            
+            // Shfaq faqen e përzgjedhur dhe bëj butonin aktiv
+            document.getElementById(pageId).classList.add('active');
+            buttonElement.classList.add('active');
+            document.getElementById('app-title').innerText = titleText;
+        }
+
+        // Funksioni për të shtuar detyrë të re
+        function addTask() {
+            const input = document.getElementById('task-input');
+            if(input.value.trim() === '') return;
+            
+            const li = document.createElement('li');
+            li.className = 'task-item';
+            li.innerHTML = `<span>${input.value}</span>`;
+            document.getElementById('tasks-container').appendChild(li);
+            input.value = '';
+        }
+
+        // Funksioni për të shtuar shënim të ri
+        function addNote() {
+            const textarea = document.getElementById('note-input');
+            if(textarea.value.trim() === '') return;
+            
+            const div = document.createElement('div');
+            div.className = 'note-card';
+            div.innerHTML = `<p>${textarea.value}</p>`;
+            document.getElementById('notes-container').appendChild(div);
+            textarea.value = '';
+        }
+
+        // Funksioni i përkthimit (Do e pasurojmë bashkë)
+        function changeLang(lang) {
+            alert("Gjuha u ndryshua në: " + lang.toUpperCase());
+        }
+    </script>
+</body>
+</html>
