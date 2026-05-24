@@ -3,132 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lefter - Daily App</title>
+    <title>Smart Organizer</title>
     <style>
-        /* Stilet Kryesore */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: #f4f7f6; color: #333; padding-bottom: 70px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; }
         
-        /* Faqet/Dritaret */
-        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+        /* Sfondi i ri modern me Gradient */
+        body { 
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); 
+            color: #f8fafc; 
+            min-height: 100vh;
+            padding-bottom: 90px; 
+        }
+        
+        /* Koka e aplikacionit */
+        header { 
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            color: #38bdf8; 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 22px; 
+            font-weight: 700; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            letter-spacing: 0.5px;
+        }
+        
+        .page { display: none; padding: 20px; animation: fadeIn 0.4s ease-out; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Koka e Faqes */
-        header { background: #2c3e50; color: white; padding: 20px; text-align: center; font-size: 20px; font-weight: bold; }
-
-        /* Menuja e Navigimit (Në fund të ekranit) */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
-            background-color: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            display: flex; justify-content: space-around; align-items: center;
+        /* Inputet e stilit "Glass" */
+        .input-group { display: flex; gap: 12px; margin-bottom: 25px; }
+        input, textarea, select { 
+            flex: 1; 
+            padding: 14px; 
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 12px; 
+            font-size: 16px; 
+            color: white;
+            outline: none;
+            transition: all 0.3s;
         }
-        .nav-item {
-            background: none; border: none; color: #7f8c8d; font-size: 14px;
-            font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center;
+        input:focus, textarea:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
         }
-        .nav-item.active { color: #2ecc71; }
-        .nav-icon { font-size: 20px; margin-bottom: 2px; }
+        input::placeholder, textarea::placeholder { color: #94a3b8; }
 
-        /* Elemente për To-Do (Lista Aktuale) */
-        .input-section { display: flex; margin-bottom: 20px; gap: 10px; }
-        input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
-        button.btn-add { background: #2ecc71; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .task-list { list-style: none; }
-        .task-item { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        /* Butonat modernë */
+        button { 
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+            color: white; 
+            border: none; 
+            padding: 14px 24px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            transition: all 0.2s;
+        }
+        button:active { transform: scale(0.97); }
+        .btn-blue { 
+            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); 
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+        }
+
+        /* Kartat e Listës (Stil Glassmorphism) */
+        .list-item { 
+            background: rgba(255, 255, 255, 0.03); 
+            padding: 16px; 
+            border-radius: 14px; 
+            margin-bottom: 12px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
         
-        /* Stili për Shënimet e Reja */
-        .notes-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
-        .note-card { background: #fef5d1; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; }
+        /* Ndryshimi i bukur i ngjyrës kur detyra KRYHET */
+        .list-item.completed { 
+            background: rgba(16, 185, 129, 0.1); 
+            border-left: 4px solid #10b981; 
+            border-top: 1px solid rgba(16, 185, 129, 0.2);
+            border-right: 1px solid rgba(16, 185, 129, 0.2);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .list-item.completed span { color: #a7f3d0; }
+        
+        .action-btns { display: flex; gap: 8px; }
+        .edit-btn { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); padding: 8px 12px; border-radius: 8px; box-shadow: none; font-size: 14px;}
+        .delete-btn { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 12px; border-radius: 8px; box-shadow: none; font-size: 14px;}
+        .edit-btn:hover { background: #f59e0b; color: white; }
+        .delete-btn:hover { background: #ef4444; color: white; }
+
+        /* Menuja e Navigimit e Errët në fund */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            background: rgba(15, 23, 42, 0.8); 
+            backdrop-filter: blur(15px);
+            display: flex; 
+            border-top: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 -4px 24px rgba(0,0,0,0.3); 
+            padding: 8px 0;
+        }
+        .nav-item { flex: 1; text-align: center; padding: 8px 0; color: #94a3b8; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.3s; }
+        .nav-item.active { color: #38bdf8; transform: translateY(-2px); }
+        .nav-icon { font-size: 22px; display: block; margin-bottom: 4px; transition: transform 0.2s; }
+        .nav-item.active .nav-icon { transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.5)); }
+
+        /* Kartat e Ecurisë */
+        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .stat-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            padding: 22px; 
+            border-radius: 16px; 
+            text-align: center; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .stat-number { font-size: 28px; font-weight: 700; color: #38bdf8; margin-top: 8px; }
+
+        /* Butonat e Gjuhës */
+        .lang-btn { 
+            width: 100%; 
+            padding: 15px; 
+            margin-bottom: 10px; 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 12px; 
+            background: rgba(255, 255, 255, 0.02); 
+            color: #e2e8f0;
+            font-size: 16px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            text-align: left; 
+            box-shadow: none;
+            transition: all 0.2s;
+        }
+        .lang-btn.active { 
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); 
+            color: white; 
+            border-color: #3b82f6; 
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
     </style>
 </head>
 <body>
 
     <header id="app-title">Detyrat e Mia</header>
 
-    <div id="todo-page" class="page active">
-        <div class="input-section">
+    <div id="page-tasks" class="page active">
+        <div class="input-group">
             <input type="text" id="task-input" placeholder="Shto një detyrë të re...">
-            <button class="btn-add" onclick="addTask()">Shto</button>
+            <button onclick="addTask()" id="btn-add-task">Shto</button>
         </div>
-        <ul class="task-list" id="tasks-container">
-            <li class="task-item"><span>Shembull: Të rregulloj llogarinë në GitHub</span></li>
-        </ul>
+        <div id="tasks-list"></div>
     </div>
 
-    <div id="notes-page" class="page">
-        <div class="input-section" style="flex-direction: column;">
-            <textarea id="note-input" rows="3" placeholder="Shkruaj një shënim të ri apo një ide..."></textarea>
-            <button class="btn-add" style="background: #3498db; margin-top: 5px;" onclick="addNote()">Ruaj Shënimin</button>
+    <div id="page-notes" class="page">
+        <div class="input-group" style="flex-direction: column;">
+            <textarea id="note-input" rows="4" placeholder="Shkruaj një shënim të ri apo një ide..."></textarea>
+            <button onclick="addNote()" class="btn-blue" id="btn-save-note" style="width: 100%;">Ruaj Shënimin</button>
         </div>
-        <div class="notes-grid" id="notes-container">
+        <div id="notes-list"></div>
+    </div>
+
+    <div id="page-stats" class="page">
+        <div class="stats-container">
+            <div class="stat-card">
+                <div id="text-total-tasks" style="color: #94a3b8;">Gjithsej Detyra</div>
+                <div id="total-tasks-count" class="stat-number">0</div>
             </div>
-    </div>
-
-    <div id="settings-page" class="page">
-        <h3>Zgjidh Gjuhën / Language</h3>
-        <p style="margin: 10px 0; color: #666;">Aplikacioni do të përkthehet automatikisht.</p>
-        <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button class="btn-add" style="background: #95a5a6;" onclick="changeLang('sq')">Shqip</button>
-            <button class="btn-add" style="background: #95a5a6;" onclick="changeLang('en')">English</button>
-            <button class="btn-add" style="background: #95a5a6;" onclick="changeLang('hr')">Hrvatski</button>
+            <div class="stat-card">
+                <div id="text-done-tasks" style="color: #94a3b8;">Të Kryera</div>
+                <div id="completed-tasks-count" class="stat-number" style="color: #10b981;">0</div>
+            </div>
+        </div>
+        <div class="stat-card" style="margin-top: 15px;">
+            <div id="text-total-notes" style="color: #94a3b8;">Gjithsej Shënime</div>
+            <div id="total-notes-count" class="stat-number" style="color: #0ea5e9;">0</div>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <button class="nav-item active" onclick="switchPage('todo-page', this, 'Detyrat e Mia')">
-            <span class="nav-icon">📋</span><span>Detyrat</span>
-        </button>
-        <button class="nav-item" onclick="switchPage('notes-page', this, 'Shënimet e Mia')">
-            <span class="nav-icon">📝</span><span>Shënime</span>
-        </button>
-        <button class="nav-item" onclick="switchPage('settings-page', this, 'Cilësimet')">
-            <span class="nav-icon">⚙️</span><span>Cilësime</span>
-        </button>
-    </nav>
+    <div id="page-settings" class="page">
+        <h3 style="margin-bottom: 20px; color: #94a3b8; font-weight: 500; font-size: 16px;" id="text-select-lang">Zgjidh Gjuhën / Select Language</h3>
+        <button class="lang-btn" onclick="changeLanguage('en')" id="lang-en">🇬🇧 Anglisht / English</button>
+        <button class="lang-btn active" onclick="changeLanguage('sq')" id="lang-sq">🇦🇱 Shqip</button>
+        <button class="lang-btn" onclick="changeLanguage('fr')" id="lang-fr">🇫🇷 Frëngjisht / Français</button>
+        <button class="lang-btn" onclick="changeLanguage('de')" id="lang-de">🇩🇪 Gjermanisht / Deutsch</button>
+        <button class="lang-btn" onclick="changeLanguage('it')" id="lang-it">🇮🇹 Italiano</button>
+        <button class="lang-btn" onclick="changeLanguage('es')" id="lang-es">🇪🇸 Spanjisht / Español</button>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchPage('tasks', this)" id="nav-tasks">
+            <span class="nav-icon">📋</span><span id="nav-text-tasks">Detyrat</span>
+        </div>
+        <div class="nav-item" onclick="switchPage('notes', this)" id="nav-notes">
+            <span class="nav-icon">📝</span><span id="nav-text-notes">Shënim</span>
+        </div>
+        <div class="nav-item" onclick="switchPage('stats', this)" id="nav-stats">
+            <span class="nav-icon">📊</span><span id="nav-text-stats">Ecuria</span>
+        </div>
+        <div class="nav-item" onclick="switchPage('settings', this)" id="nav-settings">
+            <span class="nav-icon">⚙️</span><span id="nav-text-settings">Cilësime</span>
+        </div>
+    </div>
 
     <script>
-        // Logjika për ndërrimin e dritareve (Menuja)
-        function switchPage(pageId, buttonElement, titleText) {
-            // Fshih të gjitha faqet
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            // Hiq stilin aktiv nga butonat e menusë
-            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-            
-            // Shfaq faqen e përzgjedhur dhe bëj butonin aktiv
-            document.getElementById(pageId).classList.add('active');
-            buttonElement.classList.add('active');
-            document.getElementById('app-title').innerText = titleText;
-        }
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+        let currentLang = localStorage.getItem('lang') || 'sq';
+        let editingNoteIndex = null;
 
-        // Funksioni për të shtuar detyrë të re
-        function addTask() {
-            const input = document.getElementById('task-input');
-            if(input.value.trim() === '') return;
-            
-            const li = document.createElement('li');
-            li.className = 'task-item';
-            li.innerHTML = `<span>${input.value}</span>`;
-            document.getElementById('tasks-container').appendChild(li);
-            input.value = '';
-        }
-
-        // Funksioni për të shtuar shënim të ri
-        function addNote() {
-            const textarea = document.getElementById('note-input');
-            if(textarea.value.trim() === '') return;
-            
-            const div = document.createElement('div');
-            div.className = 'note-card';
-            div.innerHTML = `<p>${textarea.value}</p>`;
-            document.getElementById('notes-container').appendChild(div);
-            textarea.value = '';
-        }
-
-        // Funksioni i përkthimit (Do e pasurojmë bashkë)
-        function changeLang(lang) {
-            alert("Gjuha u ndryshua në: " + lang.toUpperCase());
-        }
-    </script>
-</body>
-</html>
+        const translations = {
+            sq: { titleTasks: "Detyrat e Mia", titleNotes: "Shënimet e Mia", titleStats: "Ecuria ime", titleSettings: "Cilësimet", placeholderTask: "Shto një detyrë të re...", placeholderNote: "Shkruaj një shënim të ri apo një ide...", btnAdd: "Shto", btnSave: "Ruaj Shënimin", totalTasks: "Gjithsej Detyra", doneTasks: "Të Kryera", totalNotes: "Gjithsej Shënime", selectLang: "Zgjidh Gjuhën / Select Language", navTasks: "Detyrat", navNotes: "Shënim", navStats: "Ecuria", navSettings: "Cilësime" },
+            en: { titleTasks: "My Tasks", titleNotes: "My Notes", titleStats: "My Progress", titleSettings: "Settings", placeholderTask: "Add a new task...", placeholderNote: "Write a new note or idea...", btnAdd: "Add", btnSave: "Save Note", totalTasks: "Total Tasks", doneTasks: "Completed", totalNotes: "Total Notes", selectLang: "Select Language", navTasks: "Tasks", navNotes: "Notes", navStats: "Progress", navSettings: "Settings" },
+            fr: { titleTasks: "Mes Tâches", titleNotes: "Mes Notes", titleStats: "Mon Progrès", titleSettings: "Paramètres", placeholderTask: "Ajouter une tâche...", placeholderNote: "Écrire une note ou une idée...", btnAdd: "Ajouter", btnSave: "Enregistrer", totalTasks: "Total des tâches", doneTasks: "Complétées", totalNotes: "Total des notes", selectLang: "Choisir la langue", navTasks: "Tâches", navNotes: "Notes", navStats: "Progrès", navSettings: "Paramètres" },
+            de: { titleTasks: "Meine Aufgaben", titleNotes: "Meine Notizen", titleStats: "Mein Fortschritt", titleSettings: "Einstellungen", placeholderTask: "Aufgabe hinzufügen...", placeholderNote: "Notiz oder Idee schreiben...", btnAdd: "Hinzufügen", btnSave: "Speichern", totalTasks: "Aufgaben gesamt", doneTasks: "Erledigt", totalNotes: "Notizen gesamt", selectLang: "Sprache auswählen", navTasks: "Aufgaben", navNotes: "
