@@ -2,904 +2,1153 @@
 <html lang="sq">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Todo - Professional Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Organizer Pro - Advanced Task Manager</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
         
         :root {
-            --bg-light: #f8fafc;
-            --bg-dark: #0f172a;
-            --text-light: #0f172a;
-            --text-dark: #f8fafc;
-            --border-light: #e2e8f0;
-            --border-dark: #334155;
-            --card-light: #ffffff;
-            --card-dark: #1e293b;
-            --primary: #1e293b;
-            --primary-hover: #0f172a;
-            --success: #22c55e;
-            --warning: #eab308;
-            --danger: #dc2626;
-            --info: #0284c7;
-            --high: #ef4444;
-            --medium: #f97316;
-            --low: #22c55e;
+            --primary: #0f172a;
+            --secondary: #38bdf8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        body { 
+            background-color: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            padding-bottom: 100px;
+            transition: background-color 0.3s;
         }
         
         body.dark-mode {
-            --bg-light: #0f172a;
-            --bg-dark: #f8fafc;
-            --text-light: #f8fafc;
-            --text-dark: #0f172a;
-            --border-light: #334155;
-            --border-dark: #e2e8f0;
-            --card-light: #1e293b;
-            --card-dark: #f8fafc;
+            background-color: #0f172a;
+            color: #f8fafc;
         }
-        
-        body { 
-            background-color: var(--bg-light); 
-            color: var(--text-light); 
-            min-height: 100vh;
-            padding-bottom: 90px; 
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        
-        /* Header */
+
         header { 
-            background-color: var(--card-light);
-            color: var(--text-light); 
-            padding: 16px 24px; 
-            text-align: left; 
-            font-size: 18px; 
-            font-weight: 600; 
-            border-bottom: 1px solid var(--border-light);
+            background-color: #ffffff;
+            color: #0f172a;
+            padding: 16px 20px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            border-bottom: 1px solid #e2e8f0;
             position: sticky;
             top: 0;
             z-index: 100;
-            letter-spacing: -0.3px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
-        .header-actions { display: flex; gap: 12px; align-items: center; }
-        .theme-toggle { background: none; border: 1px solid var(--border-light); padding: 6px 12px; border-radius: 6px; font-size: 16px; cursor: pointer; transition: all 0.15s; }
-        .theme-toggle:hover { background-color: var(--bg-light); }
 
-        /* Pages */
-        .page { display: none; padding: 24px; animation: pageFade 0.2s ease-in-out; }
+        body.dark-mode header {
+            background-color: #1e293b;
+            color: #f8fafc;
+            border-bottom-color: #334155;
+        }
+
+        .header-title { flex: 1; text-align: center; }
+        .header-actions { display: flex; gap: 8px; }
+        .header-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease-out; }
         .page.active { display: block; }
-        @keyframes pageFade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Forms */
-        .input-group { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+        /* Input Styles */
+        .input-group { 
+            display: flex; 
+            gap: 12px; 
+            margin-bottom: 20px; 
+            flex-wrap: wrap;
+        }
+
         input, textarea, select { 
-            flex: 1; 
-            min-width: 200px;
-            padding: 12px 16px; 
-            background-color: var(--card-light);
-            color: var(--text-light);
-            border: 1px solid var(--border-light); 
-            border-radius: 8px; 
-            font-size: 15px; 
-            transition: all 0.15s ease;
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 16px;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.3s;
         }
+
+        body.dark-mode input,
+        body.dark-mode textarea,
+        body.dark-mode select {
+            background-color: #1e293b;
+            border-color: #334155;
+            color: #f8fafc;
+        }
+
         input:focus, textarea:focus, select:focus { 
-            border-color: var(--text-light); 
-            outline: none; 
-            box-shadow: 0 0 0 2px rgba(30, 41, 59, 0.1); 
+            border-color: #38bdf8;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
         }
+
         input::placeholder, textarea::placeholder { color: #94a3b8; }
 
         /* Buttons */
         button { 
-            background-color: var(--primary); 
-            color: #ffffff; 
-            border: none; 
-            padding: 12px 20px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: 500; 
-            transition: all 0.15s ease;
-            font-size: 15px;
+            background-color: #0f172a;
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
         }
-        button:hover { background-color: var(--primary-hover); }
+
+        button:hover { transform: translateY(-2px); }
         button:active { transform: scale(0.98); }
+
+        .btn-primary { background-color: #38bdf8; color: #0f172a; }
+        .btn-success { background-color: #10b981; }
+        .btn-warning { background-color: #f59e0b; }
+        .btn-danger { background-color: #ef4444; }
         .btn-secondary { background-color: #64748b; }
-        .btn-secondary:hover { background-color: #475569; }
-        .btn-danger { background-color: var(--danger); }
-        .btn-danger:hover { background-color: #b91c1c; }
         .btn-small { padding: 6px 12px; font-size: 13px; }
+        .btn-full { width: 100%; }
 
-        /* Task Items */
+        /* Task List */
         .list-item { 
-            background-color: var(--card-light); 
-            padding: 16px 20px; 
-            border-radius: 8px; 
-            margin-bottom: 12px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border: 1px solid var(--border-light);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-            transition: all 0.15s;
-            gap: 12px;
+            background-color: #ffffff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #cbd5e1;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.3s;
         }
-        .list-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        
-        .list-item.completed { 
-            background-color: var(--bg-light); 
-            border-left: 3px solid #64748b; 
-        }
-        .list-item.completed .task-text { 
-            color: #64748b; 
-            text-decoration: line-through; 
-        }
-        
-        .task-checkbox { width: 20px; height: 20px; cursor: pointer; accent-color: var(--success); }
-        .task-text { flex: 1; font-size: 15px; font-weight: 400; }
-        .task-priority { padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
-        .priority-high { background-color: rgba(239, 68, 68, 0.1); color: var(--high); }
-        .priority-medium { background-color: rgba(249, 115, 22, 0.1); color: var(--medium); }
-        .priority-low { background-color: rgba(34, 197, 94, 0.1); color: var(--low); }
-        
-        .action-btns { display: flex; gap: 8px; }
-        .edit-btn { background-color: transparent; color: var(--info); border: 1px solid #bae6fd; padding: 6px 12px; font-size: 13px; border-radius: 6px; }
-        .delete-btn { background-color: transparent; color: var(--danger); border: 1px solid #fecaca; padding: 6px 12px; font-size: 13px; border-radius: 6px; }
-        .edit-btn:hover { background-color: #f0f9ff; }
-        .delete-btn:hover { background-color: #fef2f2; }
 
-        /* Filter Buttons */
-        .filter-btns { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-        .filter-btn { 
-            padding: 6px 12px; 
-            border: 1px solid var(--border-light); 
-            border-radius: 6px; 
-            background-color: var(--card-light);
-            color: var(--text-light);
-            cursor: pointer; 
-            font-size: 13px; 
-            font-weight: 500;
-            transition: all 0.15s;
+        body.dark-mode .list-item {
+            background-color: #1e293b;
+            border-color: #334155;
         }
-        .filter-btn.active { 
-            background-color: var(--primary); 
-            color: #ffffff; 
-            border-color: var(--primary);
+
+        .list-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .list-item.completed { 
+            background-color: #f1f5f9;
+            opacity: 0.7;
+        }
+
+        body.dark-mode .list-item.completed {
+            background-color: #0f172a;
+        }
+
+        .list-item.high-priority { border-left-color: #ef4444; }
+        .list-item.medium-priority { border-left-color: #f59e0b; }
+        .list-item.low-priority { border-left-color: #38bdf8; }
+
+        .task-header { 
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .task-title {
+            flex: 1;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .task-completed .task-title {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .priority-high { background-color: #fee2e2; color: #991b1b; }
+        .priority-medium { background-color: #fef3c7; color: #92400e; }
+        .priority-low { background-color: #dbeafe; color: #0c2d6b; }
+
+        .task-meta {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 8px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .task-actions { 
+            display: flex; 
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        /* Filters */
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            background-color: #ffffff;
+            color: #0f172a;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .filter-btn {
+            background-color: #1e293b;
+            border-color: #334155;
+            color: #f8fafc;
+        }
+
+        .filter-btn.active {
+            background-color: #38bdf8;
+            color: #0f172a;
+            border-color: #38bdf8;
+        }
+
+        /* Stats Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .stat-card { 
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .stat-card {
+            background-color: #1e293b;
+            border-color: #334155;
+        }
+
+        .stat-label { 
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-number { 
+            font-size: 32px;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-top: 8px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .modal-content {
+            background-color: #1e293b;
+            color: #f8fafc;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 12px;
+        }
+
+        body.dark-mode .modal-header { border-bottom-color: #334155; }
+
+        .modal-close { 
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #64748b;
         }
 
         /* Navigation */
         .bottom-nav { 
-            position: fixed; 
-            bottom: 0; 
-            left: 0; 
-            width: 100%; 
-            background-color: var(--card-light);
-            display: flex; 
-            border-top: 1px solid var(--border-light); 
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffffff;
+            display: flex;
+            border-top: 1px solid #e2e8f0;
             padding: 8px 0;
-            z-index: 100;
-        }
-        .nav-item { flex: 1; text-align: center; padding: 6px 0; color: #64748b; cursor: pointer; font-size: 12px; font-weight: 500; transition: color 0.15s ease; }
-        .nav-item.active { color: var(--text-light); font-weight: 600; }
-        .nav-icon { font-size: 18px; display: block; margin-bottom: 2px; }
-
-        /* Statistics */
-        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
-        .stat-card { 
-            background-color: var(--card-light); 
-            padding: 24px; 
-            border-radius: 8px; 
-            text-align: left; 
-            border: 1px solid var(--border-light);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.01);
-            transition: all 0.15s;
-        }
-        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .stat-label { color: #64748b; font-size: 14px; font-weight: 500; }
-        .stat-number { font-size: 32px; font-weight: 700; color: var(--text-light); margin-top: 8px; }
-
-        /* Settings */
-        .lang-btn { 
-            width: 100%; 
-            padding: 14px 18px; 
-            margin-bottom: 8px; 
-            border: 1px solid var(--border-light); 
-            border-radius: 8px; 
-            background-color: var(--card-light); 
-            color: var(--text-light);
-            font-size: 15px; 
-            font-weight: 500; 
-            cursor: pointer; 
-            text-align: left; 
-            transition: all 0.15s ease;
-        }
-        .lang-btn:hover { background-color: var(--bg-light); border-color: #cbd5e1; }
-        .lang-btn.active { 
-            background-color: var(--primary);
-            color: #ffffff; 
-            border-color: var(--primary); 
+            z-index: 1000;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        /* Notes */
-        .note-item { 
-            background-color: var(--card-light); 
-            padding: 16px 20px; 
-            border-radius: 8px; 
-            margin-bottom: 12px; 
-            border: 1px solid var(--border-light);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        body.dark-mode .bottom-nav {
+            background-color: #1e293b;
+            border-top-color: #334155;
         }
-        .note-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
-        .note-text { font-size: 14px; line-height: 1.5; margin-bottom: 8px; color: #64748b; }
-        .note-meta { font-size: 12px; color: #94a3b8; margin-bottom: 8px; }
-        .note-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
-        .tag { 
-            background-color: rgba(2, 132, 199, 0.1); 
-            color: var(--info); 
-            padding: 2px 8px; 
-            border-radius: 4px; 
-            font-size: 12px; 
+
+        .nav-item { 
+            flex: 1;
+            text-align: center;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 12px;
             font-weight: 500;
+            padding: 8px 0;
+            transition: all 0.3s;
         }
 
-        /* Toast */
-        .toast { 
-            position: fixed; 
-            bottom: 100px; 
-            left: 24px; 
-            background-color: var(--success); 
-            color: #ffffff; 
-            padding: 16px 20px; 
-            border-radius: 8px; 
+        .nav-item.active { 
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        .nav-icon { 
+            font-size: 18px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* Language Settings */
+        .lang-btn {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background-color: #ffffff;
+            color: #0f172a;
             font-size: 14px;
-            z-index: 200;
-            animation: slideUp 0.3s ease;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* Empty State */
-        .empty-state { 
-            text-align: center; 
-            padding: 40px 20px; 
-            color: #94a3b8; 
+        body.dark-mode .lang-btn {
+            background-color: #1e293b;
+            border-color: #334155;
+            color: #f8fafc;
         }
-        .empty-state-icon { font-size: 48px; margin-bottom: 16px; }
 
-        /* Modal */
-        .modal { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-color: rgba(0,0,0,0.5); 
-            z-index: 300;
+        .lang-btn.active { 
+            background-color: #38bdf8;
+            color: #0f172a;
+            border-color: #38bdf8;
+            font-weight: 600;
         }
-        .modal.active { display: flex; align-items: center; justify-content: center; }
-        .modal-content { 
-            background-color: var(--card-light); 
-            padding: 24px; 
-            border-radius: 8px; 
-            max-width: 500px; 
-            width: 90%;
-            box-shadow: 0 20px 25px rgba(0,0,0,0.15);
+
+        /* Calendar */
+        .calendar {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
         }
-        .modal-header { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
-        .modal-footer { display: flex; gap: 12px; margin-top: 24px; justify-content: flex-end; }
+
+        body.dark-mode .calendar {
+            background-color: #1e293b;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            background-color: #f1f5f9;
+        }
+
+        body.dark-mode .calendar-day {
+            background-color: #0f172a;
+        }
+
+        .calendar-day.has-task { background-color: #dbeafe; }
+        .calendar-day.today { background-color: #38bdf8; color: #ffffff; font-weight: 600; }
 
         /* Responsive */
-        @media (max-width: 640px) {
-            .stats-container { grid-template-columns: 1fr; }
-            .input-group { gap: 8px; }
-            input, textarea { min-width: 100%; }
+        @media (max-width: 768px) {
+            .header-actions { gap: 4px; }
+            .filter-group { margin-bottom: 12px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <header>
-        <span id="app-title">Detyrat Ditore</span>
+        <span class="header-title" id="app-title">Smart Organizer Pro</span>
         <div class="header-actions">
-            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</button>
+            <button class="header-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
+            <button class="header-btn" onclick="openModal('export')" title="Export Data">⬇️</button>
+            <button class="header-btn" onclick="openModal('import')" title="Import Data">⬆️</button>
         </div>
     </header>
 
-    <!-- Tasks Page -->
+    <!-- TASKS PAGE -->
     <div id="page-tasks" class="page active">
         <div class="input-group">
-            <input type="text" id="task-input" placeholder="Shto një detyrë të re...">
-            <select id="task-priority" style="max-width: 120px;">
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
+            <input type="text" id="task-input" placeholder="Add a new task...">
+            <select id="task-priority">
                 <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
             </select>
-            <button onclick="addTask()" id="btn-add-task">Shto</button>
+            <input type="date" id="task-date">
+            <button onclick="addTask()" class="btn-primary">Add</button>
         </div>
-        <div class="filter-btns" id="filter-btns"></div>
+
+        <div class="filter-group">
+            <button class="filter-btn active" onclick="filterTasks('all')">All</button>
+            <button class="filter-btn" onclick="filterTasks('active')">Active</button>
+            <button class="filter-btn" onclick="filterTasks('completed')">Completed</button>
+            <button class="filter-btn" onclick="filterTasks('today')">Today</button>
+        </div>
+
         <div id="tasks-list"></div>
     </div>
 
-    <!-- Notes Page -->
+    <!-- NOTES PAGE -->
     <div id="page-notes" class="page">
         <div class="input-group" style="flex-direction: column;">
-            <input type="text" id="note-title" placeholder="Titulla i Shënimit...">
-            <textarea id="note-input" rows="4" placeholder="Shkruaj një shënim të ri apo një ide..."></textarea>
-            <input type="text" id="note-tags" placeholder="Tags (ndarë me presje, p.sh: pune, personal)">
-            <button onclick="addNote()" class="btn-secondary" id="btn-save-note" style="width: 100%;">Ruaj Shënimin</button>
+            <input type="text" id="note-title" placeholder="Note title...">
+            <textarea id="note-input" rows="4" placeholder="Write your note..."></textarea>
+            <input type="text" id="note-tags" placeholder="Tags (comma separated)">
+            <button onclick="addNote()" class="btn-primary btn-full">Save Note</button>
         </div>
-        <input type="text" id="note-search" placeholder="Kërko në shënime..." style="width: 100%; margin-bottom: 16px;">
+
+        <div class="filter-group">
+            <input type="text" id="note-search" placeholder="Search notes..." style="flex: 1;">
+        </div>
+
         <div id="notes-list"></div>
     </div>
 
-    <!-- Statistics Page -->
+    <!-- STATS PAGE -->
     <div id="page-stats" class="page">
-        <div class="stats-container">
+        <h2 style="margin-bottom: 16px;">Your Progress</h2>
+        
+        <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-label" id="text-total-tasks">Detyra Gjithsej</div>
-                <div class="stat-number" id="total-tasks-count">0</div>
+                <div class="stat-label">Total Tasks</div>
+                <div class="stat-number" id="stat-total-tasks">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label" id="text-done-tasks">Të Kryera</div>
-                <div class="stat-number" id="completed-tasks-count">0</div>
+                <div class="stat-label">Completed</div>
+                <div class="stat-number" id="stat-completed-tasks">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label" id="text-progress">Përqindja</div>
-                <div class="stat-number" id="progress-percentage">0%</div>
+                <div class="stat-label">Today's Tasks</div>
+                <div class="stat-number" id="stat-today-tasks">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label" id="text-total-notes">Shënime</div>
-                <div class="stat-number" id="total-notes-count">0</div>
+                <div class="stat-label">Total Notes</div>
+                <div class="stat-number" id="stat-total-notes">0</div>
             </div>
         </div>
 
-        <div style="margin-top: 24px;">
-            <h3 style="margin-bottom: 16px; font-size: 16px;" id="text-priority-distribution">Përqindja e Prioriteteve</h3>
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-label">🔴 <span id="text-high">E Lartë</span></div>
-                    <div class="stat-number" id="priority-high-count">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">🟠 <span id="text-medium">E Mesme</span></div>
-                    <div class="stat-number" id="priority-medium-count">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">🟢 <span id="text-low">E Ulët</span></div>
-                    <div class="stat-number" id="priority-low-count">0</div>
-                </div>
+        <h3 style="margin-top: 24px; margin-bottom: 16px;">Priority Distribution</h3>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">High Priority</div>
+                <div class="stat-number" id="stat-high-priority" style="color: #ef4444;">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Medium Priority</div>
+                <div class="stat-number" id="stat-medium-priority" style="color: #f59e0b;">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Low Priority</div>
+                <div class="stat-number" id="stat-low-priority" style="color: #38bdf8;">0</div>
             </div>
         </div>
 
-        <div style="margin-top: 24px;">
-            <h3 style="margin-bottom: 16px; font-size: 16px;" id="text-data-management">Menaxhimi i të Dhënave</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                <button onclick="exportJSON()" class="btn-secondary" style="width: 100%;">📥 JSON</button>
-                <button onclick="exportCSV()" class="btn-secondary" style="width: 100%;">📥 CSV</button>
-                <button onclick="importData()" class="btn-secondary" style="width: 100%;">📤 Import</button>
-                <button onclick="clearAllData()" class="btn-danger" style="width: 100%;">🗑️ Clear</button>
-            </div>
-        </div>
+        <div class="calendar" id="calendar-container"></div>
     </div>
 
-    <!-- Settings Page -->
+    <!-- SETTINGS PAGE -->
     <div id="page-settings" class="page">
-        <h3 style="margin-bottom: 20px; color: #475569; font-weight: 500; font-size: 15px;" id="text-select-lang">Zgjidh Gjuhën</h3>
-        <button class="lang-btn active" onclick="changeLanguage('sq')" id="lang-sq">🇦🇱 Shqip</button>
-        <button class="lang-btn" onclick="changeLanguage('hr')" id="lang-hr">🇭🇷 Hrvatski</button>
-        <button class="lang-btn" onclick="changeLanguage('en')" id="lang-en">🇬🇧 English</button>
-        <button class="lang-btn" onclick="changeLanguage('fr')" id="lang-fr">🇫🇷 Français</button>
-        <button class="lang-btn" onclick="changeLanguage('de')" id="lang-de">🇩🇪 Deutsch</button>
-        <button class="lang-btn" onclick="changeLanguage('it')" id="lang-it">🇮🇹 Italiano</button>
-        <button class="lang-btn" onclick="changeLanguage('es')" id="lang-es">🇪🇸 Español</button>
-    </div>
+        <h2 style="margin-bottom: 20px;">Settings</h2>
 
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchPage('tasks', this)" id="nav-tasks">
-            <span class="nav-icon">📋</span><span id="nav-text-tasks">Detyrat</span>
-        </div>
-        <div class="nav-item" onclick="switchPage('notes', this)" id="nav-notes">
-            <span class="nav-icon">📝</span><span id="nav-text-notes">Shënim</span>
-        </div>
-        <div class="nav-item" onclick="switchPage('stats', this)" id="nav-stats">
-            <span class="nav-icon">📊</span><span id="nav-text-stats">Ecuria</span>
-        </div>
-        <div class="nav-item" onclick="switchPage('settings', this)" id="nav-settings">
-            <span class="nav-icon">⚙️</span><span id="nav-text-settings">Cilësime</span>
+        <h3 style="margin-bottom: 16px; color: #64748b;">Language</h3>
+        <button class="lang-btn" onclick="changeLanguage('sq')">🇦🇱 Shqip</button>
+        <button class="lang-btn" onclick="changeLanguage('en')">🇬🇧 English</button>
+        <button class="lang-btn" onclick="changeLanguage('hr')">🇭🇷 Hrvatski</button>
+        <button class="lang-btn" onclick="changeLanguage('fr')">🇫🇷 Français</button>
+        <button class="lang-btn" onclick="changeLanguage('de')">🇩🇪 Deutsch</button>
+        <button class="lang-btn" onclick="changeLanguage('it')">🇮🇹 Italiano</button>
+        <button class="lang-btn" onclick="changeLanguage('es')">🇪🇸 Español</button>
+
+        <h3 style="margin-top: 24px; margin-bottom: 16px; color: #64748b;">Data Management</h3>
+        <button onclick="clearAllData()" class="btn-danger btn-full" style="margin-bottom: 8px;">Clear All Data</button>
+        <button onclick="backupData()" class="btn-success btn-full" style="margin-bottom: 8px;">Backup Data</button>
+        <button onclick="printReport()" class="btn-secondary btn-full">Print Report</button>
+
+        <div style="margin-top: 24px; padding: 16px; background-color: #f1f5f9; border-radius: 8px; font-size: 12px; color: #475569;">
+            <strong>App Version:</strong> 2.0 Pro<br>
+            <strong>Storage Used:</strong> <span id="storage-info">0 KB</span><br>
+            <strong>Last Updated:</strong> <span id="last-updated">-</span>
         </div>
     </div>
 
-    <!-- Modal for Edit Task -->
-    <div id="edit-modal" class="modal">
+    <!-- MODALS -->
+    <div id="modal-export" class="modal">
         <div class="modal-content">
-            <div class="modal-header" id="modal-title">Ndrysho Detyrën</div>
-            <input type="text" id="edit-task-text" placeholder="Teksti i detyrës" style="width: 100%; margin-bottom: 12px;">
-            <select id="edit-task-priority" style="width: 100%; margin-bottom: 12px;">
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-            </select>
-            <div class="modal-footer">
-                <button onclick="closeModal()" class="btn-secondary">Anulo</button>
-                <button onclick="saveEditTask()">Ruaj</button>
+            <div class="modal-header">
+                <h2>Export Data</h2>
+                <button class="modal-close" onclick="closeModal('export')">✕</button>
             </div>
+            <button onclick="exportAsJSON()" class="btn-primary btn-full" style="margin-bottom: 8px;">Export as JSON</button>
+            <button onclick="exportAsCSV()" class="btn-secondary btn-full">Export as CSV</button>
+        </div>
+    </div>
+
+    <div id="modal-import" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Import Data</h2>
+                <button class="modal-close" onclick="closeModal('import')">✕</button>
+            </div>
+            <input type="file" id="import-file" accept=".json" style="margin-bottom: 16px;">
+            <button onclick="importData()" class="btn-primary btn-full">Import</button>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchPage('tasks', this)">
+            <span class="nav-icon">📋</span><span>Tasks</span>
+        </div>
+        <div class="nav-item" onclick="switchPage('notes', this)">
+            <span class="nav-icon">📝</span><span>Notes</span>
+        </div>
+        <div class="nav-item" onclick="switchPage('stats', this)">
+            <span class="nav-icon">📊</span><span>Stats</span>
+        </div>
+        <div class="nav-item" onclick="switchPage('settings', this)">
+            <span class="nav-icon">⚙️</span><span>Settings</span>
         </div>
     </div>
 
     <script>
-        // Data
-        let tasks = [];
-        let notes = [];
-        let currentLang = localStorage.getItem('lang') || 'sq';
-        let taskFilter = 'all';
+        // Application State
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+        let currentLang = localStorage.getItem('lang') || 'en';
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        let currentFilter = 'all';
         let editingTaskIndex = null;
-
-        // Load data
-        try {
-            tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            notes = JSON.parse(localStorage.getItem('notes')) || [];
-        } catch(e) { console.error(e); }
+        let editingNoteIndex = null;
 
         // Translations
         const translations = {
             sq: {
-                titleTasks: "Detyrat Ditore", titleNotes: "Shënimet e Mia", titleStats: "Ecuria ime", titleSettings: "Cilësimet",
-                placeholderTask: "Shto një detyrë të re...", placeholderNote: "Shkruaj një shënim të ri apo një ide...",
-                addBtn: "Shto", saveBtn: "Ruaj Shënimin", all: "Të Gjitha", active: "Aktive", completed: "Të Kryera", today: "Sot",
-                totalTasks: "Detyra Gjithsej", doneTasks: "Të Kryera", totalNotes: "Shënime të Ruajtura", progress: "Përqindja",
-                selectLang: "Zgjidh Gjuhën", high: "E Lartë", medium: "E Mesme", low: "E Ulët",
-                priorityDistribution: "Përqindja e Prioriteteve", dataManagement: "Menaxhimi i të Dhënave",
-                navTasks: "Detyrat", navNotes: "Shënim", navStats: "Ecuria", navSettings: "Cilësime",
-                editTask: "Ndrysho Detyrën", cancel: "Anulo", save: "Ruaj", delete: "Fshij", noTasks: "Asnjë detyrë", noNotes: "Asnjë shënim"
-            },
-            hr: {
-                titleTasks: "Dnevni Zadaci", titleNotes: "Moje Bilješke", titleStats: "Moj Napredak", titleSettings: "Postavke",
-                placeholderTask: "Dodaj novi zadatak...", placeholderNote: "Napiši novu bilješku ili ideju...",
-                addBtn: "Dodaj", saveBtn: "Spremi Bilješku", all: "Sve", active: "Aktivni", completed: "Dovršeni", today: "Danas",
-                totalTasks: "Ukupno Zadaci", doneTasks: "Dovršeni", totalNotes: "Spravljene Bilješke", progress: "Napredak",
-                selectLang: "Odaberite Jezik", high: "Visoka", medium: "Srednja", low: "Niska",
-                priorityDistribution: "Distribucija Prioriteta", dataManagement: "Upravljanje Podacima",
-                navTasks: "Zadaci", navNotes: "Bilješke", navStats: "Napredak", navSettings: "Postavke",
-                editTask: "Uredi Zadatak", cancel: "Otkaži", save: "Spremi", delete: "Obriši", noTasks: "Nema zadataka", noNotes: "Nema bilješki"
+                appTitle: "Detyrat e Mia Pro",
+                addTask: "Shto",
+                addNote: "Ruaj Shënimin",
+                today: "Sot",
+                high: "Urgjenť",
+                medium: "Normal",
+                low: "I Ulët",
+                completed: "E Kryer",
+                delete: "Fshi",
+                edit: "Edito",
+                completed: "Të Kryerat",
+                exportData: "Eksporto",
+                importData: "Importo"
             },
             en: {
-                titleTasks: "Daily Tasks", titleNotes: "My Notes", titleStats: "My Progress", titleSettings: "Settings",
-                placeholderTask: "Add a new task...", placeholderNote: "Write a new note or idea...",
-                addBtn: "Add", saveBtn: "Save Note", all: "All", active: "Active", completed: "Completed", today: "Today",
-                totalTasks: "Total Tasks", doneTasks: "Completed", totalNotes: "Saved Notes", progress: "Progress",
-                selectLang: "Select Language", high: "High", medium: "Medium", low: "Low",
-                priorityDistribution: "Priority Distribution", dataManagement: "Data Management",
-                navTasks: "Tasks", navNotes: "Notes", navStats: "Progress", navSettings: "Settings",
-                editTask: "Edit Task", cancel: "Cancel", save: "Save", delete: "Delete", noTasks: "No tasks", noNotes: "No notes"
+                appTitle: "My Tasks Pro",
+                addTask: "Add",
+                addNote: "Save Note",
+                today: "Today",
+                high: "High",
+                medium: "Medium",
+                low: "Low",
+                completed: "Completed",
+                delete: "Delete",
+                edit: "Edit",
+                exportData: "Export",
+                importData: "Import"
+            },
+            hr: {
+                appTitle: "Moji Zadaci Pro",
+                addTask: "Dodaj",
+                addNote: "Spremi Bilješku",
+                today: "Danas",
+                high: "Hitan",
+                medium: "Normalan",
+                low: "Nizak",
+                completed: "Završeni",
+                delete: "Obriši",
+                edit: "Uredi",
+                exportData: "Preuzmi",
+                importData: "Učitaj"
             },
             fr: {
-                titleTasks: "Tâches Journalières", titleNotes: "Mes Notes", titleStats: "Mon Progrès", titleSettings: "Paramètres",
-                placeholderTask: "Ajouter une tâche...", placeholderNote: "Écrivez une nouvelle note ou une idée...",
-                addBtn: "Ajouter", saveBtn: "Enregistrer la Note", all: "Tous", active: "Actifs", completed: "Complétés", today: "Aujourd'hui",
-                totalTasks: "Tâches Totales", doneTasks: "Complétés", totalNotes: "Notes Enregistrées", progress: "Progrès",
-                selectLang: "Sélectionner la Langue", high: "Élevée", medium: "Moyen", low: "Basse",
-                priorityDistribution: "Distribution des Priorités", dataManagement: "Gestion des Données",
-                navTasks: "Tâches", navNotes: "Notes", navStats: "Progrès", navSettings: "Paramètres",
-                editTask: "Modifier la Tâche", cancel: "Annuler", save: "Enregistrer", delete: "Supprimer", noTasks: "Aucune tâche", noNotes: "Aucune note"
+                appTitle: "Mes Tâches Pro",
+                addTask: "Ajouter",
+                addNote: "Enregistrer",
+                today: "Aujourd'hui",
+                high: "Urgent",
+                medium: "Normal",
+                low: "Bas",
+                completed: "Complétées",
+                delete: "Supprimer",
+                edit: "Modifier",
+                exportData: "Exporter",
+                importData: "Importer"
             },
             de: {
-                titleTasks: "Tägliche Aufgaben", titleNotes: "Meine Notizen", titleStats: "Mein Fortschritt", titleSettings: "Einstellungen",
-                placeholderTask: "Aufgabe hinzufügen...", placeholderNote: "Schreiben Sie eine neue Notiz oder Idee...",
-                addBtn: "Hinzufügen", saveBtn: "Notiz Speichern", all: "Alle", active: "Aktiv", completed: "Abgeschlossen", today: "Heute",
-                totalTasks: "Gesamtaufgaben", doneTasks: "Abgeschlossen", totalNotes: "Gespeicherte Notizen", progress: "Fortschritt",
-                selectLang: "Sprache Wählen", high: "Hoch", medium: "Mittel", low: "Niedrig",
-                priorityDistribution: "Prioritätsverteilung", dataManagement: "Datenverwaltung",
-                navTasks: "Aufgaben", navNotes: "Notizen", navStats: "Fortschritt", navSettings: "Einstellungen",
-                editTask: "Aufgabe Bearbeiten", cancel: "Abbrechen", save: "Speichern", delete: "Löschen", noTasks: "Keine Aufgaben", noNotes: "Keine Notizen"
+                appTitle: "Meine Aufgaben Pro",
+                addTask: "Hinzufügen",
+                addNote: "Speichern",
+                today: "Heute",
+                high: "Dringend",
+                medium: "Normal",
+                low: "Niedrig",
+                completed: "Erledigt",
+                delete: "Löschen",
+                edit: "Bearbeiten",
+                exportData: "Exportieren",
+                importData: "Importieren"
             },
             it: {
-                titleTasks: "Compiti Giornalieri", titleNotes: "Le Mie Note", titleStats: "I Miei Progressi", titleSettings: "Impostazioni",
-                placeholderTask: "Aggiungi un compito...", placeholderNote: "Scrivi una nuova nota o un'idea...",
-                addBtn: "Aggiungi", saveBtn: "Salva Nota", all: "Tutti", active: "Attivi", completed: "Completati", today: "Oggi",
-                totalTasks: "Compiti Totali", doneTasks: "Completati", totalNotes: "Note Salvate", progress: "Progresso",
-                selectLang: "Seleziona Lingua", high: "Alto", medium: "Medio", low: "Basso",
-                priorityDistribution: "Distribuzione Priorità", dataManagement: "Gestione Dati",
-                navTasks: "Compiti", navNotes: "Note", navStats: "Progressi", navSettings: "Impostazioni",
-                editTask: "Modifica Compito", cancel: "Annulla", save: "Salva", delete: "Elimina", noTasks: "Nessun compito", noNotes: "Nessuna nota"
+                appTitle: "I Miei Compiti Pro",
+                addTask: "Aggiungi",
+                addNote: "Salva",
+                today: "Oggi",
+                high: "Urgente",
+                medium: "Normale",
+                low: "Basso",
+                completed: "Completati",
+                delete: "Elimina",
+                edit: "Modifica",
+                exportData: "Esporta",
+                importData: "Importa"
             },
             es: {
-                titleTasks: "Tareas Diarias", titleNotes: "Mis Notas", titleStats: "Mi Progreso", titleSettings: "Ajustes",
-                placeholderTask: "Añadir una tarea...", placeholderNote: "Escribir una nota o idea nueva...",
-                addBtn: "Añadir", saveBtn: "Guardar Nota", all: "Todos", active: "Activos", completed: "Completados", today: "Hoy",
-                totalTasks: "Tareas Totales", doneTasks: "Completados", totalNotes: "Notas Guardadas", progress: "Progreso",
-                selectLang: "Seleccionar Idioma", high: "Alto", medium: "Medio", low: "Bajo",
-                priorityDistribution: "Distribución de Prioridades", dataManagement: "Gestión de Datos",
-                navTasks: "Tareas", navNotes: "Notas", navStats: "Progreso", navSettings: "Ajustes",
-                editTask: "Editar Tarea", cancel: "Cancelar", save: "Guardar", delete: "Eliminar", noTasks: "Sin tareas", noNotes: "Sin notas"
+                appTitle: "Mis Tareas Pro",
+                addTask: "Añadir",
+                addNote: "Guardar",
+                today: "Hoy",
+                high: "Urgente",
+                medium: "Normal",
+                low: "Bajo",
+                completed: "Completadas",
+                delete: "Eliminar",
+                edit: "Editar",
+                exportData: "Exportar",
+                importData: "Importar"
             }
         };
 
-        // Initialize
-        function init() {
-            updateLanguage();
-            renderTasks();
-            renderNotes();
-            createFilterButtons();
-            loadTheme();
-        }
-
-        // Theme
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-            updateThemeButton();
-        }
-
-        function loadTheme() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-mode');
-            }
-            updateThemeButton();
-        }
-
-        function updateThemeButton() {
-            const btn = document.querySelector('.theme-toggle');
-            btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-        }
-
-        // Page switching
+        // Core Functions
         function switchPage(pageId, element) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(`page-${pageId}`).classList.add('active');
-            element.classList.add('active');
             
-            const t = translations[currentLang];
-            const titles = {tasks: t.titleTasks, notes: t.titleNotes, stats: t.titleStats, settings: t.titleSettings};
-            document.getElementById('app-title').textContent = titles[pageId];
-            updateStats();
-        }
+            document.getElementById('page-' + pageId).classList.add('active');
+            element.classList.add('active');
 
-        // Tasks
-        function createFilterButtons() {
-            const t = translations[currentLang];
-            const filters = ['all', 'active', 'completed', 'today'];
-            const labels = [t.all, t.active, t.completed, t.today];
-            const container = document.getElementById('filter-btns');
-            container.innerHTML = '';
-            filters.forEach((filter, i) => {
-                const btn = document.createElement('button');
-                btn.className = `filter-btn ${filter === taskFilter ? 'active' : ''}`;
-                btn.textContent = labels[i];
-                btn.onclick = () => setTaskFilter(filter);
-                container.appendChild(btn);
-            });
-        }
-
-        function setTaskFilter(filter) {
-            taskFilter = filter;
-            createFilterButtons();
-            renderTasks();
-        }
-
-        function getFilteredTasks() {
-            const today = new Date().toDateString();
-            return tasks.filter(task => {
-                if (taskFilter === 'all') return true;
-                if (taskFilter === 'active') return !task.completed;
-                if (taskFilter === 'completed') return task.completed;
-                if (taskFilter === 'today') return task.date === today;
-                return true;
-            });
+            if (pageId === 'stats') {
+                updateStats();
+                generateCalendar();
+            } else if (pageId === 'notes') {
+                renderNotes();
+            } else if (pageId === 'tasks') {
+                renderTasks();
+            }
         }
 
         function addTask() {
             const input = document.getElementById('task-input');
             const priority = document.getElementById('task-priority').value;
-            if (input.value.trim()) {
-                tasks.push({
-                    text: input.value,
-                    completed: false,
-                    priority: priority,
-                    date: new Date().toDateString(),
-                    id: Date.now()
-                });
-                input.value = '';
-                saveTasks();
-                renderTasks();
-                showToast('Detyrë shtuar!');
-            }
-        }
+            const date = document.getElementById('task-date').value;
 
-        function toggleTask(index) {
-            const filteredTasks = getFilteredTasks();
-            const taskId = filteredTasks[index].id;
-            const task = tasks.find(t => t.id === taskId);
-            if (task) {
-                task.completed = !task.completed;
-                saveTasks();
-                renderTasks();
-            }
-        }
+            if (input.value.trim() === '') return;
 
-        function deleteTask(index) {
-            const filteredTasks = getFilteredTasks();
-            const taskId = filteredTasks[index].id;
-            tasks = tasks.filter(t => t.id !== taskId);
-            saveTasks();
+            const task = {
+                id: Date.now(),
+                text: input.value,
+                completed: false,
+                priority: priority,
+                date: date || new Date().toISOString().split('T')[0],
+                createdAt: new Date().toISOString(),
+                timeSpent: 0
+            };
+
+            if (editingTaskIndex !== null) {
+                tasks[editingTaskIndex] = { ...tasks[editingTaskIndex], ...task };
+                editingTaskIndex = null;
+            } else {
+                tasks.push(task);
+            }
+
+            input.value = '';
+            document.getElementById('task-date').value = '';
+            localStorage.setItem('tasks', JSON.stringify(tasks));
             renderTasks();
-        }
-
-        function openEditTask(index) {
-            const filteredTasks = getFilteredTasks();
-            editingTaskIndex = filteredTasks[index].id;
-            const task = tasks.find(t => t.id === editingTaskIndex);
-            document.getElementById('edit-task-text').value = task.text;
-            document.getElementById('edit-task-priority').value = task.priority;
-            document.getElementById('edit-modal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('edit-modal').classList.remove('active');
-            editingTaskIndex = null;
-        }
-
-        function saveEditTask() {
-            const task = tasks.find(t => t.id === editingTaskIndex);
-            if (task) {
-                task.text = document.getElementById('edit-task-text').value;
-                task.priority = document.getElementById('edit-task-priority').value;
-                saveTasks();
-                renderTasks();
-                closeModal();
-                showToast('Detyrë përditesuar!');
-            }
+            updateStats();
         }
 
         function renderTasks() {
             const list = document.getElementById('tasks-list');
-            const filtered = getFilteredTasks();
             list.innerHTML = '';
-            
-            if (filtered.length === 0) {
-                list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div>' + translations[currentLang].noTasks + '</div></div>';
+
+            let filteredTasks = tasks.filter(t => {
+                if (currentFilter === 'completed') return t.completed;
+                if (currentFilter === 'active') return !t.completed;
+                if (currentFilter === 'today') {
+                    const today = new Date().toISOString().split('T')[0];
+                    return t.date === today;
+                }
+                return true;
+            });
+
+            if (filteredTasks.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>No tasks found</p></div>';
                 return;
             }
-            
-            filtered.forEach((task, index) => {
+
+            filteredTasks.forEach((task, index) => {
+                const realIndex = tasks.indexOf(task);
                 const item = document.createElement('div');
-                item.className = `list-item ${task.completed ? 'completed' : ''}`;
-                const priorityClass = `priority-${task.priority}`;
+                item.className = `list-item ${task.completed ? 'completed' : ''} ${task.priority}-priority`;
+                
+                const dueDate = new Date(task.date);
+                const today = new Date();
+                const isOverdue = dueDate < today && !task.completed;
+
                 item.innerHTML = `
-                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${index})">
-                    <span class="task-text">${task.text}</span>
-                    <span class="task-priority ${priorityClass}">${task.priority}</span>
-                    <button class="edit-btn btn-small" onclick="openEditTask(${index})">✎</button>
-                    <button class="delete-btn btn-small" onclick="deleteTask(${index})">✕</button>
+                    <div style="flex: 1;">
+                        <div class="task-header">
+                            <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${realIndex})" style="margin-right: 10px; cursor: pointer;">
+                            <span class="task-title" onclick="toggleTask(${realIndex})">${task.text}</span>
+                            <span class="priority-badge priority-${task.priority}">
+                                ${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                            </span>
+                        </div>
+                        <div class="task-meta">
+                            <span>📅 ${task.date}</span>
+                            ${isOverdue ? '<span style="color: #ef4444;">⚠️ Overdue</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn-small btn-secondary" onclick="editTask(${realIndex})">✏️</button>
+                        <button class="btn-small btn-danger" onclick="deleteTask(${realIndex})">🗑️</button>
+                    </div>
                 `;
                 list.appendChild(item);
             });
-            saveTasks();
+        }
+
+        function toggleTask(index) {
+            tasks[index].completed = !tasks[index].completed;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            renderTasks();
             updateStats();
         }
 
-        function saveTasks() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
-        // Notes
-        function addNote() {
-            const title = document.getElementById('note-title');
-            const text = document.getElementById('note-input');
-            const tagsInput = document.getElementById('note-tags');
-            
-            if (text.value.trim()) {
-                const tags = tagsInput.value.split(',').map(t => t.trim()).filter(t => t);
-                notes.push({
-                    id: Date.now(),
-                    title: title.value || 'Shënim',
-                    text: text.value,
-                    tags: tags,
-                    date: new Date().toLocaleDateString(currentLang)
-                });
-                title.value = '';
-                text.value = '';
-                tagsInput.value = '';
-                saveNotes();
-                renderNotes();
-                showToast('Shënim shtuar!');
+        function deleteTask(index) {
+            if (confirm('Are you sure?')) {
+                tasks.splice(index, 1);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                renderTasks();
+                updateStats();
             }
         }
 
-        function deleteNote(id) {
-            notes = notes.filter(n => n.id !== id);
-            saveNotes();
+        function editTask(index) {
+            const task = tasks[index];
+            document.getElementById('task-input').value = task.text;
+            document.getElementById('task-priority').value = task.priority;
+            document.getElementById('task-date').value = task.date;
+            editingTaskIndex = index;
+            document.getElementById('page-tasks').classList.add('active');
+            document.querySelector('#page-tasks input').focus();
+        }
+
+        function filterTasks(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTasks();
+        }
+
+        // Notes Functions
+        function addNote() {
+            const titleInput = document.getElementById('note-title');
+            const contentInput = document.getElementById('note-input');
+            const tagsInput = document.getElementById('note-tags');
+
+            if (contentInput.value.trim() === '') return;
+
+            const note = {
+                id: Date.now(),
+                title: titleInput.value || 'Untitled',
+                content: contentInput.value,
+                tags: tagsInput.value.split(',').map(t => t.trim()).filter(t => t),
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            if (editingNoteIndex !== null) {
+                notes[editingNoteIndex] = note;
+                editingNoteIndex = null;
+            } else {
+                notes.push(note);
+            }
+
+            titleInput.value = '';
+            contentInput.value = '';
+            tagsInput.value = '';
+            localStorage.setItem('notes', JSON.stringify(notes));
             renderNotes();
+            updateStats();
         }
 
         function renderNotes() {
             const list = document.getElementById('notes-list');
-            const search = document.getElementById('note-search').value.toLowerCase();
-            const filtered = notes.filter(n => 
-                n.title.toLowerCase().includes(search) || 
-                n.text.toLowerCase().includes(search) ||
-                n.tags.some(t => t.toLowerCase().includes(search))
-            );
-            
+            const searchInput = document.getElementById('note-search')?.value || '';
             list.innerHTML = '';
-            
-            if (filtered.length === 0) {
-                list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div>' + translations[currentLang].noNotes + '</div></div>';
+
+            let filteredNotes = notes.filter(n => 
+                n.title.toLowerCase().includes(searchInput.toLowerCase()) ||
+                n.content.toLowerCase().includes(searchInput.toLowerCase())
+            );
+
+            if (filteredNotes.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><p>No notes found</p></div>';
                 return;
             }
-            
-            filtered.forEach(note => {
+
+            filteredNotes.forEach((note, index) => {
+                const realIndex = notes.indexOf(note);
                 const item = document.createElement('div');
-                item.className = 'note-item';
-                let tagsHtml = '';
-                note.tags.forEach(tag => {
-                    tagsHtml += `<span class="tag">#${tag}</span>`;
-                });
+                item.className = 'list-item';
+
+                const preview = note.content.substring(0, 100) + (note.content.length > 100 ? '...' : '');
+
                 item.innerHTML = `
-                    <div class="note-title">${note.title}</div>
-                    <div class="note-meta">${note.date}</div>
-                    <div class="note-text">${note.text}</div>
-                    ${tagsHtml ? `<div class="note-tags">${tagsHtml}</div>` : ''}
-                    <button class="delete-btn btn-small" onclick="deleteNote(${note.id})">🗑️ ${translations[currentLang].delete}</button>
+                    <div style="flex: 1;">
+                        <div class="task-header">
+                            <span class="task-title">${note.title}</span>
+                        </div>
+                        <div style="font-size: 14px; color: #64748b; margin-bottom: 8px; line-height: 1.5;">${preview}</div>
+                        <div class="task-meta">
+                            ${note.tags.map(tag => `<span style="background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 11px;">#${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn-small btn-secondary" onclick="editNote(${realIndex})">✏️</button>
+                        <button class="btn-small btn-danger" onclick="deleteNote(${realIndex})">🗑️</button>
+                    </div>
                 `;
                 list.appendChild(item);
             });
-            saveNotes();
         }
 
-        function saveNotes() {
-            localStorage.setItem('notes', JSON.stringify(notes));
+        function editNote(index) {
+            const note = notes[index];
+            document.getElementById('note-title').value = note.title;
+            document.getElementById('note-input').value = note.content;
+            document.getElementById('note-tags').value = note.tags.join(', ');
+            editingNoteIndex = index;
         }
 
-        // Statistics
-        function updateStats() {
-            const completed = tasks.filter(t => t.completed).length;
-            const total = tasks.length;
-            const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
-            
-            document.getElementById('total-tasks-count').textContent = total;
-            document.getElementById('completed-tasks-count').textContent = completed;
-            document.getElementById('progress-percentage').textContent = percentage + '%';
-            document.getElementById('total-notes-count').textContent = notes.length;
-            
-            const high = tasks.filter(t => t.priority === 'high').length;
-            const medium = tasks.filter(t => t.priority === 'medium').length;
-            const low = tasks.filter(t => t.priority === 'low').length;
-            
-            document.getElementById('priority-high-count').textContent = high;
-            document.getElementById('priority-medium-count').textContent = medium;
-            document.getElementById('priority-low-count').textContent = low;
-        }
-
-        // Data Export/Import
-        function exportJSON() {
-            const data = { tasks, notes, version: '1.0' };
-            const json = JSON.stringify(data, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `smart-todo-backup-${new Date().getTime()}.json`;
-            a.click();
-            showToast('Të dhënat u eksportuan!');
-        }
-
-        function exportCSV() {
-            let csv = 'Task,Priority,Completed,Date\n';
-            tasks.forEach(t => {
-                csv += `"${t.text}","${t.priority}","${t.completed}","${t.date}"\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `smart-todo-tasks-${new Date().getTime()}.csv`;
-            a.click();
-            showToast('CSV u eksportua!');
-        }
-
-        function importData() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = (e) => {
-                const file = e.target.files[0];
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    try {
-                        const data = JSON.parse(event.target.result);
-                        tasks = data.tasks || [];
-                        notes = data.notes || [];
-                        saveTasks();
-                        saveNotes();
-                        renderTasks();
-                        renderNotes();
-                        updateStats();
-                        showToast('Të dhënat u importuan!');
-                    } catch (err) {
-                        showToast('Gabim në importim!');
-                    }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
-
-        function clearAllData() {
-            if (confirm('Jeni i sigurt? Kjo do të fshijë të gjitha të dhënat!')) {
-                tasks = [];
-                notes = [];
-                saveTasks();
-                saveNotes();
-                renderTasks();
+        function deleteNote(index) {
+            if (confirm('Delete this note?')) {
+                notes.splice(index, 1);
+                localStorage.setItem('notes', JSON.stringify(notes));
                 renderNotes();
                 updateStats();
-                showToast('Të gjitha të dhënat u fshehën!');
             }
         }
 
-        // Language
+        // Stats Functions
+        function updateStats() {
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(t => t.completed).length;
+            const today = new Date().toISOString().split('T')[0];
+            const todayTasks = tasks.filter(t => t.date === today).length;
+            const totalNotes = notes.length;
+
+            const highPriority = tasks.filter(t => t.priority === 'high').length;
+            const mediumPriority = tasks.filter(t => t.priority === 'medium').length;
+            const lowPriority = tasks.filter(t => t.priority === 'low').length;
+
+            document.getElementById('stat-total-tasks').innerText = totalTasks;
+            document.getElementById('stat-completed-tasks').innerText = completedTasks;
+            document.getElementById('stat-today-tasks').innerText = todayTasks;
+            document.getElementById('stat-total-notes').innerText = totalNotes;
+
+            document.getElementById('stat-high-priority').innerText = highPriority;
+            document.getElementById('stat-medium-priority').innerText = mediumPriority;
+            document.getElementById('stat-low-priority').innerText = lowPriority;
+        }
+
+        function generateCalendar() {
+            const container = document.getElementById('calendar-container');
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            let html = `
+                <h4 style="text-align: center; margin-bottom: 12px;">${monthNames[month]} ${year}</h4>
+                <div class="calendar-grid">
+            `;
+
+            dayNames.forEach(day => {
+                html += `<div style="font-weight: 600; text-align: center; padding: 8px; font-size: 11px;">${day}</div>`;
+            });
+
+            for (let i = 0; i < firstDay; i++) {
+                html += '<div></div>';
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const hasTask = tasks.some(t => t.date === dateStr);
+                const isToday = dateStr === new Date().toISOString().split('T')[0];
+
+                html += `
+                    <div class="calendar-day ${isToday ? 'today' : ''} ${hasTask ? 'has-task' : ''}">
+                        ${day}
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Theme Functions
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        // Language Functions
         function changeLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('lang', lang);
-            updateLanguage();
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`lang-${lang}`).classList.add('active');
-            createFilterButtons();
-            showToast('Gjuha u ndryshua!');
+            document.getElementById(`lang-${lang}`) && document.getElementById(`lang-${lang}`).classList.add('active');
         }
 
-        function updateLanguage() {
-            const t = translations[currentLang];
-            document.getElementById('text-total-tasks').textContent = t.totalTasks;
-            document.getElementById('text-done-tasks').textContent = t.doneTasks;
-            document.getElementById('text-progress').textContent = t.progress;
-            document.getElementById('text-total-notes').textContent = t.totalNotes;
-            document.getElementById('text-select-lang').textContent = t.selectLang;
-            document.getElementById('text-priority-distribution').textContent = t.priorityDistribution;
-            document.getElementById('text-data-management').textContent = t.dataManagement;
-            document.getElementById('text-high').textContent = t.high;
-            document.getElementById('text-medium').textContent = t.medium;
-            document.getElementById('text-low').textContent = t.low;
-            document.getElementById('nav-text-tasks').textContent = t.navTasks;
-            document.getElementById('nav-text-notes').textContent = t.navNotes;
-            document.getElementById('nav-text-stats').textContent = t.navStats;
-            document.getElementById('nav-text-settings').textContent = t.navSettings;
-            document.getElementById('modal-title').textContent = t.editTask;
-            document.getElementById('task-input').placeholder = t.placeholderTask;
-            document.getElementById('note-input').placeholder = t.placeholderNote;
-            document.getElementById('btn-add-task').textContent = t.addBtn;
-            document.getElementById('btn-save-note').textContent = t.saveBtn;
+        // Export/Import Functions
+        function exportAsJSON() {
+            const data = { tasks, notes, exportedAt: new Date().toISOString() };
+            const json = JSON.stringify(data, null, 2);
+            downloadFile(json, 'smart-organizer-backup.json', 'application/json');
+            closeModal('export');
         }
 
-        // Toast
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        function exportAsCSV() {
+            let csv = 'Title,Status,Priority,Date,Content\n';
+            tasks.forEach(task => {
+                csv += `"${task.text}","${task.completed ? 'Completed' : 'Active'}","${task.priority}","${task.date}",""\n`;
+            });
+            notes.forEach(note => {
+                csv += `"${note.title}","","","","${note.content.replace(/"/g, '""')}"\n`;
+            });
+            downloadFile(csv, 'smart-organizer-backup.csv', 'text/csv');
+            closeModal('export');
         }
 
-        // Search notes
-        document.addEventListener('DOMContentLoaded', () => {
+        function importData() {
+            const file = document.getElementById('import-file').files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.tasks && data.notes) {
+                        tasks = data.tasks;
+                        notes = data.notes;
+                        localStorage.setItem('tasks', JSON.stringify(tasks));
+                        localStorage.setItem('notes', JSON.stringify(notes));
+                        alert('Data imported successfully!');
+                        location.reload();
+                    }
+                } catch (err) {
+                    alert('Error importing file: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+        }
+
+        function backupData() {
+            const backup = {
+                tasks: JSON.stringify(tasks),
+                notes: JSON.stringify(notes),
+                exportedAt: new Date().toISOString()
+            };
+            localStorage.setItem('app-backup', JSON.stringify(backup));
+            alert('Backup created successfully!');
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure? This will delete all your data!')) {
+                tasks = [];
+                notes = [];
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                localStorage.setItem('notes', JSON.stringify(notes));
+                location.reload();
+            }
+        }
+
+        function printReport() {
+            const reportWindow = window.open('', '_blank');
+            reportWindow.document.write(`
+                <html>
+                <head><title>Smart Organizer Report</title></head>
+                <body style="font-family: Arial; padding: 20px;">
+                <h1>Smart Organizer Report</h1>
+                <h2>Tasks Summary</h2>
+                <p>Total Tasks: ${tasks.length}</p>
+                <p>Completed: ${tasks.filter(t => t.completed).length}</p>
+                <p>High Priority: ${tasks.filter(t => t.priority === 'high').length}</p>
+                <h3>All Tasks</h3>
+                <ul>
+                ${tasks.map(t => `<li>${t.text} (${t.priority}) - ${t.completed ? '✓' : '○'}</li>`).join('')}
+                </ul>
+                <h2>Notes Summary</h2>
+                <p>Total Notes: ${notes.length}</p>
+                <h3>All Notes</h3>
+                ${notes.map(n => `<div style="margin: 10px 0; padding: 10px; border: 1px solid #ccc;"><h4>${n.title}</h4><p>${n.content}</p></div>`).join('')}
+                <p style="margin-top: 20px; color: #999; font-size: 12px;">Generated: ${new Date().toLocaleString()}</p>
+                </body>
+                </html>
+            `);
+            reportWindow.document.close();
+            reportWindow.print();
+        }
+
+        // Modal Functions
+        function openModal(id) {
+            document.getElementById(`modal-${id}`).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(`modal-${id}`).classList.remove('active');
+        }
+
+        // Search Notes
+        document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('note-search');
             if (searchInput) {
                 searchInput.addEventListener('input', renderNotes);
             }
+
+            // Initialize
+            if (currentTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+            renderTasks();
+            renderNotes();
+            updateStats();
         });
-
-        // Init
-        init();
     </script>
-
 </body>
-  </html>
+</html>
 
