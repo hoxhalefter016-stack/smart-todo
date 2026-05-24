@@ -3,160 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Organizer</title>
+    <title>Dashboard Profesional</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         
-        /* Sfondi i ri modern me Gradient */
         body { 
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); 
-            color: #f8fafc; 
+            background-color: #f8fafc; 
+            color: #0f172a; 
             min-height: 100vh;
             padding-bottom: 90px; 
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
         
-        /* Koka e aplikacionit */
+        /* Koka e stilit Premium */
         header { 
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            color: #38bdf8; 
-            padding: 20px; 
-            text-align: center; 
-            font-size: 22px; 
-            font-weight: 700; 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            letter-spacing: 0.5px;
+            background-color: #ffffff;
+            color: #0f172a; 
+            padding: 18px 24px; 
+            text-align: left; 
+            font-size: 18px; 
+            font-weight: 600; 
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            letter-spacing: -0.3px;
         }
         
-        .page { display: none; padding: 20px; animation: fadeIn 0.4s ease-out; }
+        .page { display: none; padding: 24px; animation: pageFade 0.2s ease-in-out; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pageFade { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Inputet e stilit "Glass" */
-        .input-group { display: flex; gap: 12px; margin-bottom: 25px; }
-        input, textarea, select { 
+        /* Inputet dhe Fushat e Shkrimit */
+        .input-group { display: flex; gap: 12px; margin-bottom: 24px; }
+        input, textarea { 
             flex: 1; 
-            padding: 14px; 
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 12px; 
-            font-size: 16px; 
-            color: white;
-            outline: none;
-            transition: all 0.3s;
+            padding: 12px 16px; 
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1; 
+            border-radius: 8px; 
+            font-size: 15px; 
+            color: #0f172a;
+            transition: all 0.15s ease;
         }
-        input:focus, textarea:focus {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: #38bdf8;
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
-        }
+        input:focus, textarea:focus { border-color: #0f172a; outline: none; box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.05); }
         input::placeholder, textarea::placeholder { color: #94a3b8; }
 
-        /* Butonat modernë */
+        /* Butonat e stilit Minimalist / Dark Slate */
         button { 
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
-            color: white; 
+            background-color: #1e293b; 
+            color: #ffffff; 
             border: none; 
-            padding: 14px 24px; 
-            border-radius: 12px; 
+            padding: 12px 20px; 
+            border-radius: 8px; 
             cursor: pointer; 
-            font-weight: 600; 
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-            transition: all 0.2s;
+            font-weight: 500; 
+            transition: background-color 0.15s ease;
+            font-size: 15px;
         }
-        button:active { transform: scale(0.97); }
-        .btn-blue { 
-            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); 
-            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
-        }
+        button:hover { background-color: #0f172a; }
+        button:active { transform: scale(0.98); }
+        .btn-secondary { background-color: #64748b; }
+        .btn-secondary:hover { background-color: #475569; }
 
-        /* Kartat e Listës (Stil Glassmorphism) */
+        /* Kartat e Listës Profesionale */
         .list-item { 
-            background: rgba(255, 255, 255, 0.03); 
-            padding: 16px; 
-            border-radius: 14px; 
+            background-color: #ffffff; 
+            padding: 16px 20px; 
+            border-radius: 8px; 
             margin-bottom: 12px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
         
-        /* Ndryshimi i bukur i ngjyrës kur detyra KRYHET */
+        /* Detyrat e kryera - Pa ngjyra fëmijërore */
         .list-item.completed { 
-            background: rgba(16, 185, 129, 0.1); 
-            border-left: 4px solid #10b981; 
-            border-top: 1px solid rgba(16, 185, 129, 0.2);
-            border-right: 1px solid rgba(16, 185, 129, 0.2);
-            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+            background-color: #f1f5f9; 
+            border-left: 3px solid #64748b; 
         }
-        .list-item.completed span { color: #a7f3d0; }
+        .list-item.completed span { color: #64748b; text-decoration: line-through; }
         
         .action-btns { display: flex; gap: 8px; }
-        .edit-btn { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); padding: 8px 12px; border-radius: 8px; box-shadow: none; font-size: 14px;}
-        .delete-btn { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 12px; border-radius: 8px; box-shadow: none; font-size: 14px;}
-        .edit-btn:hover { background: #f59e0b; color: white; }
-        .delete-btn:hover { background: #ef4444; color: white; }
+        .edit-btn { background-color: transparent; color: #0284c7; border: 1px solid #bae6fd; padding: 6px 12px; font-size: 13px; border-radius: 6px; }
+        .delete-btn { background-color: transparent; color: #dc2626; border: 1px solid #fecaca; padding: 6px 12px; font-size: 13px; border-radius: 6px; }
+        .edit-btn:hover { background-color: #f0f9ff; }
+        .delete-btn:hover { background-color: #fef2f2; }
 
-        /* Menuja e Navigimit e Errët në fund */
+        /* Navigimi i hollë në fund */
         .bottom-nav { 
             position: fixed; 
             bottom: 0; 
             left: 0; 
             width: 100%; 
-            background: rgba(15, 23, 42, 0.8); 
-            backdrop-filter: blur(15px);
+            background-color: #ffffff;
             display: flex; 
-            border-top: 1px solid rgba(255, 255, 255, 0.08); 
-            box-shadow: 0 -4px 24px rgba(0,0,0,0.3); 
+            border-top: 1px solid #e2e8f0; 
             padding: 8px 0;
+            z-index: 100;
         }
-        .nav-item { flex: 1; text-align: center; padding: 8px 0; color: #94a3b8; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.3s; }
-        .nav-item.active { color: #38bdf8; transform: translateY(-2px); }
-        .nav-icon { font-size: 22px; display: block; margin-bottom: 4px; transition: transform 0.2s; }
-        .nav-item.active .nav-icon { transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.5)); }
+        .nav-item { flex: 1; text-align: center; padding: 6px 0; color: #64748b; cursor: pointer; font-size: 12px; font-weight: 500; transition: color 0.15s ease; }
+        .nav-item.active { color: #0f172a; font-weight: 600; }
+        .nav-icon { font-size: 18px; display: block; margin-bottom: 2px; }
 
-        /* Kartat e Ecurisë */
-        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        /* Grid i Statistikave */
+        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
         .stat-card { 
-            background: rgba(255, 255, 255, 0.03); 
-            padding: 22px; 
-            border-radius: 16px; 
-            text-align: center; 
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background-color: #ffffff; 
+            padding: 24px; 
+            border-radius: 8px; 
+            text-align: left; 
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.01);
         }
-        .stat-number { font-size: 28px; font-weight: 700; color: #38bdf8; margin-top: 8px; }
+        .stat-number { font-size: 32px; font-weight: 700; color: #0f172a; margin-top: 8px; }
 
-        /* Butonat e Gjuhës */
+        /* Butonat e Gjuhës te Cilësimet */
         .lang-btn { 
             width: 100%; 
-            padding: 15px; 
-            margin-bottom: 10px; 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            border-radius: 12px; 
-            background: rgba(255, 255, 255, 0.02); 
-            color: #e2e8f0;
-            font-size: 16px; 
-            font-weight: 600; 
+            padding: 14px 18px; 
+            margin-bottom: 8px; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 8px; 
+            background-color: #ffffff; 
+            color: #334155;
+            font-size: 15px; 
+            font-weight: 500; 
             cursor: pointer; 
             text-align: left; 
-            box-shadow: none;
-            transition: all 0.2s;
+            transition: all 0.15s ease;
         }
+        .lang-btn:hover { background-color: #f8fafc; border-color: #cbd5e1; }
         .lang-btn.active { 
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); 
-            color: white; 
-            border-color: #3b82f6; 
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            background-color: #f1f5f9;
+            color: #0f172a; 
+            border-color: #94a3b8; 
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-    <header id="app-title">Detyrat e Mia</header>
+    <header id="app-title">Detyrat Ditore</header>
 
     <div id="page-tasks" class="page active">
         <div class="input-group">
@@ -169,7 +160,7 @@
     <div id="page-notes" class="page">
         <div class="input-group" style="flex-direction: column;">
             <textarea id="note-input" rows="4" placeholder="Shkruaj një shënim të ri apo një ide..."></textarea>
-            <button onclick="addNote()" class="btn-blue" id="btn-save-note" style="width: 100%;">Ruaj Shënimin</button>
+            <button onclick="addNote()" class="btn-secondary" id="btn-save-note" style="width: 100%; margin-top: 10px;">Ruaj Shënimin</button>
         </div>
         <div id="notes-list"></div>
     </div>
@@ -177,28 +168,29 @@
     <div id="page-stats" class="page">
         <div class="stats-container">
             <div class="stat-card">
-                <div id="text-total-tasks" style="color: #94a3b8;">Gjithsej Detyra</div>
+                <div id="text-total-tasks" style="color: #64748b; font-size: 14px; font-weight: 500;">Detyra Gjithsej</div>
                 <div id="total-tasks-count" class="stat-number">0</div>
             </div>
             <div class="stat-card">
-                <div id="text-done-tasks" style="color: #94a3b8;">Të Kryera</div>
-                <div id="completed-tasks-count" class="stat-number" style="color: #10b981;">0</div>
+                <div id="text-done-tasks" style="color: #64748b; font-size: 14px; font-weight: 500;">Të Kryera</div>
+                <div id="completed-tasks-count" class="stat-number" style="color: #475569;">0</div>
             </div>
         </div>
-        <div class="stat-card" style="margin-top: 15px;">
-            <div id="text-total-notes" style="color: #94a3b8;">Gjithsej Shënime</div>
-            <div id="total-notes-count" class="stat-number" style="color: #0ea5e9;">0</div>
+        <div class="stat-card" style="margin-top: 16px;">
+            <div id="text-total-notes" style="color: #64748b; font-size: 14px; font-weight: 500;">Shënime të Ruajtura</div>
+            <div id="total-notes-count" class="stat-number">0</div>
         </div>
     </div>
 
     <div id="page-settings" class="page">
-        <h3 style="margin-bottom: 20px; color: #94a3b8; font-weight: 500; font-size: 16px;" id="text-select-lang">Zgjidh Gjuhën / Select Language</h3>
-        <button class="lang-btn" onclick="changeLanguage('en')" id="lang-en">🇬🇧 Anglisht / English</button>
+        <h3 style="margin-bottom: 20px; color: #475569; font-weight: 500; font-size: 15px;" id="text-select-lang">Zgjidh Gjuhën / Izaberi Jezik</h3>
         <button class="lang-btn active" onclick="changeLanguage('sq')" id="lang-sq">🇦🇱 Shqip</button>
-        <button class="lang-btn" onclick="changeLanguage('fr')" id="lang-fr">🇫🇷 Frëngjisht / Français</button>
-        <button class="lang-btn" onclick="changeLanguage('de')" id="lang-de">🇩🇪 Gjermanisht / Deutsch</button>
+        <button class="lang-btn" onclick="changeLanguage('hr')" id="lang-hr">🇭🇷 Hrvatski</button>
+        <button class="lang-btn" onclick="changeLanguage('en')" id="lang-en">🇬🇧 English</button>
+        <button class="lang-btn" onclick="changeLanguage('fr')" id="lang-fr">🇫🇷 Français</button>
+        <button class="lang-btn" onclick="changeLanguage('de')" id="lang-de">🇩🇪 Deutsch</button>
         <button class="lang-btn" onclick="changeLanguage('it')" id="lang-it">🇮🇹 Italiano</button>
-        <button class="lang-btn" onclick="changeLanguage('es')" id="lang-es">🇪🇸 Spanjisht / Español</button>
+        <button class="lang-btn" onclick="changeLanguage('es')" id="lang-es">🇪🇸 Español</button>
     </div>
 
     <div class="bottom-nav">
@@ -217,13 +209,54 @@
     </div>
 
     <script>
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+        let tasks = [];
+        let notes = [];
+        try {
+            tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            notes = JSON.parse(localStorage.getItem('notes')) || [];
+        } catch(e) { console.error(e); }
         let currentLang = localStorage.getItem('lang') || 'sq';
         let editingNoteIndex = null;
 
         const translations = {
-            sq: { titleTasks: "Detyrat e Mia", titleNotes: "Shënimet e Mia", titleStats: "Ecuria ime", titleSettings: "Cilësimet", placeholderTask: "Shto një detyrë të re...", placeholderNote: "Shkruaj një shënim të ri apo një ide...", btnAdd: "Shto", btnSave: "Ruaj Shënimin", totalTasks: "Gjithsej Detyra", doneTasks: "Të Kryera", totalNotes: "Gjithsej Shënime", selectLang: "Zgjidh Gjuhën / Select Language", navTasks: "Detyrat", navNotes: "Shënim", navStats: "Ecuria", navSettings: "Cilësime" },
-            en: { titleTasks: "My Tasks", titleNotes: "My Notes", titleStats: "My Progress", titleSettings: "Settings", placeholderTask: "Add a new task...", placeholderNote: "Write a new note or idea...", btnAdd: "Add", btnSave: "Save Note", totalTasks: "Total Tasks", doneTasks: "Completed", totalNotes: "Total Notes", selectLang: "Select Language", navTasks: "Tasks", navNotes: "Notes", navStats: "Progress", navSettings: "Settings" },
-            fr: { titleTasks: "Mes Tâches", titleNotes: "Mes Notes", titleStats: "Mon Progrès", titleSettings: "Paramètres", placeholderTask: "Ajouter une tâche...", placeholderNote: "Écrire une note ou une idée...", btnAdd: "Ajouter", btnSave: "Enregistrer", totalTasks: "Total des tâches", doneTasks: "Complétées", totalNotes: "Total des notes", selectLang: "Choisir la langue", navTasks: "Tâches", navNotes: "Notes", navStats: "Progrès", navSettings: "Paramètres" },
-            de: { titleTasks: "Meine Aufgaben", titleNotes: "Meine Notizen", titleStats: "Mein Fortschritt", titleSettings: "Einstellungen", placeholderTask: "Aufgabe hinzufügen...", placeholderNote: "Notiz oder Idee schreiben...", btnAdd: "Hinzufügen", btnSave: "Speichern", totalTasks: "Aufgaben gesamt", doneTasks: "Erledigt", totalNotes: "Notizen gesamt", selectLang: "Sprache auswählen", navTasks: "Aufgaben", navNotes: "
+            sq: { titleTasks: "Detyrat Ditore", titleNotes: "Shënimet e Mia", titleStats: "Ecuria ime", titleSettings: "Cilësimet", placeholderTask: "Shto një detyrë të re...", placeholderNote: "Shkruaj një shënim të ri apo një ide...", btnAdd: "Shto", btnSave: "Ruaj", totalTasks: "Detyra Gjithsej", doneTasks: "Të Kryera", totalNotes: "Shënime të Ruajtura", selectLang: "Zgjidh Gjuhën / Izaberi Jezik", navTasks: "Detyrat", navNotes: "Shënim", navStats: "Ecuria", navSettings: "Cilësime" },
+            hr: { titleTasks: "Dnevni Zadaci", titleNotes: "Moje Bilješke", titleStats: "Moj Napredak", titleSettings: "Postavke", placeholderTask: "Dodaj novi zadatak...", placeholderNote: "Napiši novu bilješku ili ideju...", btnAdd: "Dodaj", btnSave: "Spremi", totalTasks: "Ukupno Zadataka", doneTasks: "Završeno", totalNotes: "Ukupno Bilješki", selectLang: "Izaberi Jezik", navTasks: "Zadaci", navNotes: "Bilješke", navStats: "Napredak", navSettings: "Postavke" },
+            en: { titleTasks: "Daily Tasks", titleNotes: "My Notes", titleStats: "My Progress", titleSettings: "Settings", placeholderTask: "Add a new task...", placeholderNote: "Write a new note or idea...", btnAdd: "Add", btnSave: "Save", totalTasks: "Total Tasks", doneTasks: "Completed", totalNotes: "Saved Notes", selectLang: "Select Language", navTasks: "Tasks", navNotes: "Notes", navStats: "Progress", navSettings: "Settings" },
+            fr: { titleTasks: "Tâches Journalières", titleNotes: "Mes Notes", titleStats: "Mon Progrès", titleSettings: "Paramètres", placeholderTask: "Ajouter une tâche...", placeholderNote: "Écrire une note ou une idée...", btnAdd: "Ajouter", btnSave: "Enregistrer", totalTasks: "Total des tâches", doneTasks: "Complétées", totalNotes: "Notes sauvées", selectLang: "Choisir la langue", navTasks: "Tâches", navNotes: "Notes", navStats: "Progrès", navSettings: "Paramètres" },
+            de: { titleTasks: "Tägliche Aufgaben", titleNotes: "Meine Notizen", titleStats: "Mein Fortschritt", titleSettings: "Einstellungen", placeholderTask: "Aufgabe hinzufügen...", placeholderNote: "Notiz oder Idee schreiben...", btnAdd: "Hinzufügen", btnSave: "Speichern", totalTasks: "Aufgaben gesamt", doneTasks: "Erledigt", totalNotes: "Gespeicherte Notizen", selectLang: "Sprache auswählen", navTasks: "Aufgaben", navNotes: "Notizen", navStats: "Fortschritt", navSettings: "Optionen" },
+            it: { titleTasks: "Compiti Giornalieri", titleNotes: "Le Mie Note", titleStats: "I Miei Progressi", titleSettings: "Impostazioni", placeholderTask: "Aggiungi un compito...", placeholderNote: "Scrivi una nota o un'idea...", btnAdd: "Aggiungi", btnSave: "Salva", totalTasks: "Compiti Totali", doneTasks: "Completati", totalNotes: "Note Salvate", selectLang: "Seleziona Lingua", navTasks: "Compiti", navNotes: "Note", navStats: "Progressi", navSettings: "Impostazioni" },
+            es: { titleTasks: "Tareas Diarias", titleNotes: "Mis Notas", titleStats: "Mi Progreso", titleSettings: "Ajustes", placeholderTask: "Añadir una tarea...", placeholderNote: "Escribir una nota o idea...", btnAdd: "Añadir", btnSave: "Guardar", totalTasks: "Total de Tareas", doneTasks: "Completadas", totalNotes: "Notas Guardadas", selectLang: "Seleccionar Idioma", navTasks: "Tareas", navNotes: "Notas", navStats: "Progreso", navSettings: "Ajustes" }
+        };
+
+        function switchPage(pageId, element) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            element.classList.add('active');
+            
+            const data = translations[currentLang];
+            const titles = {tasks:data.titleTasks, notes:data.titleNotes, stats:data.titleStats, settings:data.titleSettings};
+            document.getElementById('app-title').innerText = titles[pageId];
+            updateStats();
+        }
+
+        function renderTasks() {
+            const list = document.getElementById('tasks-list');
+            if(!list) return;
+            list.innerHTML = '';
+            tasks.forEach((task, index) => {
+                const item = document.createElement('div');
+                item.className = `list-item ${task.completed ? 'completed' : ''}`;
+                item.innerHTML = `
+                    <span onclick="toggleTask(${index})" style="cursor:pointer; flex:1; font-size:15px; font-weight:400;">${task.text}</span>
+                    <button class="delete-btn" onclick="deleteTask(${index})">✕</button>
+                `;
+                list.appendChild(item);
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            updateStats();
+        }
+
+        function addTask() {
+            const input = document.getElementById('task-input');
+
