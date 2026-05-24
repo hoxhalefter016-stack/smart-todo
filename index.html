@@ -3,356 +3,389 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Organizer Pro</title>
+    <title>Smart Organizer Pro - Advanced Todo App</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         
-        body { 
+        :root {
+            --primary: #3b82f6;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-dark: #0f172a;
+            --bg-light: #f8fafc;
+            --text-dark: #0f172a;
+            --text-light: #f8fafc;
+            --border: #e2e8f0;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode {
             background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            color: #f8fafc; 
-            min-height: 100vh;
-            padding-bottom: 90px;
-            transition: background 0.3s ease;
+            color: var(--text-light);
         }
 
         body.light-mode {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            color: #0f172a;
+            background: var(--bg-light);
+            color: var(--text-dark);
         }
-        
-        header { 
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            color: #38bdf8; 
-            padding: 16px 20px; 
-            text-align: center; 
-            font-size: 20px; 
-            font-weight: 700;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+        body { min-height: 100vh; padding-bottom: 100px; transition: all 0.3s ease; }
+
+        header {
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        body.dark-mode header {
+            background: rgba(15, 23, 42, 0.9);
+            border-bottom-color: rgba(255, 255, 255, 0.08);
         }
 
         body.light-mode header {
-            background: rgba(15, 23, 42, 0.05);
-            border-bottom-color: rgba(15, 23, 42, 0.1);
+            background: white;
+            border-bottom-color: var(--border);
         }
-        
-        .page { display: none; padding: 20px; animation: fadeIn 0.4s ease-out; }
+
+        #app-title { font-size: 20px; font-weight: 700; color: var(--primary); }
+
+        .header-controls { display: flex; gap: 10px; align-items: center; }
+
+        .theme-toggle, .info-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: inherit;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        body.light-mode .theme-toggle,
+        body.light-mode .info-btn {
+            border-color: var(--border);
+        }
+
+        .theme-toggle:hover, .info-btn:hover { background: rgba(255, 255, 255, 0.1); }
+
+        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .input-group { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-        input, textarea, select { 
-            flex: 1; 
-            min-width: 150px;
-            padding: 12px 16px; 
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 10px; 
-            font-size: 14px; 
-            color: #f8fafc;
+        /* Input Styles */
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        input, textarea, select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 15px;
             outline: none;
             transition: all 0.3s;
         }
 
-        body.light-mode input,
-        body.light-mode textarea,
-        body.light-mode select {
-            background: #ffffff;
-            border-color: #cbd5e1;
-            color: #0f172a;
+        body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
         }
 
-        input:focus, textarea:focus, select:focus {
-            border-color: #38bdf8;
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        body.light-mode input:focus,
-        body.light-mode textarea:focus,
-        body.light-mode select:focus {
-            border-color: #0f172a;
-            background: #f1f5f9;
-            box-shadow: 0 0 12px rgba(15, 23, 42, 0.15);
+        body.light-mode input, body.light-mode textarea, body.light-mode select {
+            background: white;
+            color: var(--text-dark);
+            border-color: var(--border);
         }
 
         input::placeholder, textarea::placeholder { color: #94a3b8; }
 
-        button { 
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
-            color: white; 
-            border: none; 
-            padding: 12px 20px; 
-            border-radius: 10px; 
-            cursor: pointer; 
-            font-weight: 600; 
-            font-size: 14px;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-            transition: all 0.2s;
-            user-select: none;
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
         }
 
-        button:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3); }
-        button:active { transform: scale(0.95); }
+        /* Buttons */
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
 
-        .btn-primary { background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2); }
-        .btn-danger { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
-        .btn-warning { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); }
-        .btn-small { padding: 6px 12px; font-size: 13px; }
-        .btn-block { width: 100%; margin-top: 10px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--secondary); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 13px; }
+        .btn-full { width: 100%; margin-top: 10px; }
 
-        .list-item { 
-            background: rgba(255, 255, 255, 0.03); 
-            padding: 16px; 
-            border-radius: 12px; 
-            margin-bottom: 12px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            gap: 12px;
+        button:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+        button:active { transform: scale(0.98); }
+
+        /* List Items */
+        .list-item {
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .list-item {
+            background: rgba(255, 255, 255, 0.03);
         }
 
         body.light-mode .list-item {
-            background: #ffffff;
-            border-color: #e2e8f0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background: white;
+            border-color: var(--border);
         }
 
-        .list-item:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(56, 189, 248, 0.15); }
-        
-        .list-item.completed { 
-            background: rgba(16, 185, 129, 0.1); 
-            border-left: 4px solid #10b981;
+        .list-item.completed { opacity: 0.6; }
+        .list-item.completed span { text-decoration: line-through; }
+
+        .list-item-content { flex: 1; }
+        .list-item-content span { display: block; margin-bottom: 4px; }
+        .list-item-meta { font-size: 12px; color: #94a3b8; }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
         }
 
-        body.light-mode .list-item.completed {
-            background: #f0fdf4;
-            border-color: #d1fae5;
-        }
+        .priority-high { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .priority-medium { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .priority-low { background: rgba(34, 197, 94, 0.2); color: #86efac; }
 
-        .list-item.completed span { color: #a7f3d0; text-decoration: line-through; }
+        .action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
 
-        .list-item.priority-high { border-left: 4px solid #ef4444; }
-        .list-item.priority-medium { border-left: 4px solid #f59e0b; }
-        .list-item.priority-low { border-left: 4px solid #10b981; }
+        /* Stats Container */
+        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 20px; }
 
-        .task-content { flex: 1; min-width: 0; }
-        .task-meta { font-size: 12px; color: #94a3b8; margin-top: 4px; }
-        .task-date { display: inline-block; margin-right: 8px; }
-        .task-priority { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-        .task-priority-high { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
-        .task-priority-medium { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-        .task-priority-low { background: rgba(16, 185, 129, 0.2); color: #a7f3d0; }
-
-        .action-btns { display: flex; gap: 6px; flex-shrink: 0; }
-        .edit-btn { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-        .delete-btn { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
-
-        .bottom-nav { 
-            position: fixed; 
-            bottom: 0; 
-            left: 0; 
-            width: 100%; 
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(15px);
-            display: flex; 
-            border-top: 1px solid rgba(255, 255, 255, 0.08); 
-            box-shadow: 0 -4px 24px rgba(0,0,0,0.3); 
-            padding: 8px 0;
-            z-index: 1000;
-        }
-
-        body.light-mode .bottom-nav {
-            background: rgba(255, 255, 255, 0.95);
-            border-top-color: rgba(15, 23, 42, 0.1);
-        }
-
-        .nav-item { 
-            flex: 1; 
-            text-align: center; 
-            padding: 10px 8px; 
-            color: #94a3b8; 
-            cursor: pointer; 
-            font-size: 12px; 
-            font-weight: 500; 
+        .stat-card {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s;
-            user-select: none;
         }
 
-        .nav-item.active { color: #38bdf8; transform: translateY(-2px); }
-        body.light-mode .nav-item.active { color: #0f172a; }
-
-        .nav-icon { font-size: 20px; display: block; margin-bottom: 4px; }
-
-        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .stat-card { 
-            background: rgba(255, 255, 255, 0.03); 
-            padding: 20px; 
-            border-radius: 12px; 
-            text-align: center; 
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        body.dark-mode .stat-card {
+            background: rgba(255, 255, 255, 0.03);
         }
 
         body.light-mode .stat-card {
-            background: #ffffff;
-            border-color: #e2e8f0;
+            background: white;
+            border-color: var(--border);
         }
 
-        .stat-number { font-size: 32px; font-weight: 700; color: #38bdf8; margin-top: 8px; }
-        .stat-label { color: #94a3b8; font-size: 13px; }
+        .stat-label { font-size: 12px; color: #94a3b8; margin-bottom: 8px; }
+        .stat-number { font-size: 28px; font-weight: 700; color: var(--primary); }
 
-        .lang-btn { 
-            width: 100%; 
-            padding: 12px 16px; 
-            margin-bottom: 10px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 10px; 
-            background: rgba(255, 255, 255, 0.03); 
-            color: #e2e8f0;
-            font-size: 15px; 
-            font-weight: 500; 
-            text-align: left;
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 999;
+            backdrop-filter: blur(10px);
+        }
+
+        body.dark-mode .bottom-nav {
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        body.light-mode .bottom-nav {
+            background: white;
+            border-top-color: var(--border);
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 12px 8px;
+            color: #94a3b8;
             cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
             transition: all 0.2s;
-            user-select: none;
         }
 
-        body.light-mode .lang-btn {
-            background: #ffffff;
-            border-color: #cbd5e1;
-            color: #334155;
-        }
+        .nav-item.active { color: var(--primary); font-weight: 600; }
+        .nav-icon { font-size: 20px; display: block; margin-bottom: 4px; }
 
-        .lang-btn.active { 
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); 
-            color: white; 
-            border-color: #3b82f6; 
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        .empty-state { 
-            text-align: center; 
-            padding: 40px 20px; 
-            color: #94a3b8; 
-        }
-
-        .empty-state-icon { font-size: 48px; margin-bottom: 16px; }
-        .empty-state-text { font-size: 16px; font-weight: 500; }
-
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
-            z-index: 2000;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
         }
 
-        .modal.active { display: flex; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
 
         .modal-content {
-            background: #0f172a;
+            background: white;
             padding: 24px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             max-width: 500px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
-        body.light-mode .modal-content {
-            background: #ffffff;
-            border-color: #cbd5e1;
+        body.dark-mode .modal-content {
+            background: #1e293b;
+            color: white;
         }
 
-        .modal-title { 
-            font-size: 18px; 
-            font-weight: 700; 
-            margin-bottom: 16px; 
-            color: #f8fafc; 
-        }
+        .modal-header { margin-bottom: 16px; font-size: 18px; font-weight: 700; }
+        .modal-close { float: right; cursor: pointer; font-size: 20px; }
 
-        body.light-mode .modal-title { color: #0f172a; }
-
-        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
-        .modal-buttons button { flex: 1; }
-
-        .tag-input { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
-        .tag { 
-            background: rgba(56, 189, 248, 0.2); 
-            color: #38bdf8; 
-            padding: 4px 10px; 
-            border-radius: 16px; 
-            font-size: 12px; 
-            font-weight: 500;
-            cursor: pointer;
-            border: 1px solid rgba(56, 189, 248, 0.3);
-        }
-
-        .tab-buttons { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-        .tab-button { padding: 10px 16px; background: none; border: none; color: #94a3b8; border-bottom: 2px solid transparent; cursor: pointer; font-weight: 500; }
-        .tab-button.active { color: #38bdf8; border-bottom-color: #38bdf8; }
-
-        .search-box {
+        /* Language Buttons */
+        .lang-btn {
             width: 100%;
-            margin-bottom: 16px;
+            padding: 14px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: transparent;
+            color: inherit;
+            font-size: 15px;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        @media (max-width: 480px) {
-            .input-group { gap: 8px; }
-            input, textarea { font-size: 16px; }
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Search and Filter */
+        .search-box { margin-bottom: 15px; }
+        .filter-group { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 8px 14px;
+            font-size: 13px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active { background: var(--primary); color: white; }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 120px;
+            right: 20px;
+            background: var(--secondary);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease;
+            z-index: 3000;
+        }
+
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body { padding-bottom: 90px; }
+            .input-group { flex-direction: column; }
+            input, textarea, select { min-width: auto; }
             .stats-container { grid-template-columns: 1fr; }
-            .modal-content { width: 95%; }
+            .list-item { flex-wrap: wrap; }
+            .action-btns { width: 100%; margin-top: 10px; }
         }
     </style>
 </head>
-<body>
-    <header id="app-title">Detyrat Ditore</header>
+<body class="dark-mode">
 
+    <header>
+        <div id="app-title">Detyrat e Mia</div>
+        <div class="header-controls">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
+            <button class="info-btn" onclick="showInfo()" title="App Info">ℹ️</button>
+        </div>
+    </header>
+
+    <!-- Tasks Page -->
     <div id="page-tasks" class="page active">
         <div class="input-group">
-            <input type="text" id="task-input" placeholder="Shto një detyrë të re...">
-            <select id="task-priority">
-                <option value="low">📊 Të Ulët</option>
-                <option value="medium" selected>📌 Medium</option>
-                <option value="high">🔴 Të Larta</option>
+            <input type="text" id="task-input" placeholder="Shto një detyrë...">
+            <select id="priority-select">
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="low">Low</option>
             </select>
-            <button onclick="addTask()">Shto</button>
+            <button class="btn-primary" onclick="addTask()">+ Shto</button>
         </div>
 
-        <div class="tab-buttons">
-            <button class="tab-button active" onclick="filterTasks('all')">Të Gjitha</button>
-            <button class="tab-button" onclick="filterTasks('active')">Aktive</button>
-            <button class="tab-button" onclick="filterTasks('completed')">Të Kryera</button>
+        <div class="filter-group">
+            <button class="filter-btn active" onclick="filterTasks('all')">Të Gjitha</button>
+            <button class="filter-btn" onclick="filterTasks('active')">Aktive</button>
+            <button class="filter-btn" onclick="filterTasks('completed')">Të Kryera</button>
+            <button class="filter-btn" onclick="filterTasks('today')">Sot</button>
         </div>
 
-        <input type="text" id="search-tasks" class="search-box" placeholder="🔍 Kërko detyra...">
+        <div class="search-box">
+            <input type="text" id="task-search" placeholder="Kërko detyra..." oninput="searchTasks()">
+        </div>
+
         <div id="tasks-list"></div>
     </div>
 
+    <!-- Notes Page -->
     <div id="page-notes" class="page">
         <div class="input-group" style="flex-direction: column;">
-            <input type="text" id="note-title" placeholder="Titulli i shënimit...">
+            <input type="text" id="note-title" placeholder="Titull i shënimit...">
             <textarea id="note-input" rows="4" placeholder="Shkruaj shënimin..."></textarea>
-            <input type="text" id="note-tags" placeholder="Etiketat (nda me presje)">
-            <button onclick="addNote()" class="btn-primary btn-block">Ruaj Shënimin</button>
+            <input type="text" id="note-tags" placeholder="Tags (ndarë me presje)">
+            <button class="btn-primary btn-full" onclick="addNote()">💾 Ruaj Shënimin</button>
         </div>
 
-        <input type="text" id="search-notes" class="search-box" placeholder="🔍 Kërko shënime...">
+        <div class="search-box">
+            <input type="text" id="note-search" placeholder="Kërko shënime..." oninput="searchNotes()">
+        </div>
+
         <div id="notes-list"></div>
     </div>
 
+    <!-- Stats Page -->
     <div id="page-stats" class="page">
         <div class="stats-container">
             <div class="stat-card">
@@ -364,54 +397,58 @@
                 <div class="stat-number" id="completed-tasks-count">0</div>
             </div>
             <div class="stat-card">
+                <div class="stat-label">% Përfundim</div>
+                <div class="stat-number" id="completion-percentage">0%</div>
+            </div>
+            <div class="stat-card">
                 <div class="stat-label" id="text-total-notes">Shënime</div>
                 <div class="stat-number" id="total-notes-count">0</div>
             </div>
+        </div>
+
+        <h3 style="margin: 20px 0 15px; font-size: 16px;">Shpërndarja e Prioriteteve</h3>
+        <div class="stats-container">
             <div class="stat-card">
-                <div class="stat-label">% Përfunduar</div>
-                <div class="stat-number" id="completion-percent">0%</div>
+                <div class="stat-label">🔴 Të Larta</div>
+                <div class="stat-number" id="priority-high-count" style="color: #ef4444;">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🟡 Mesatare</div>
+                <div class="stat-number" id="priority-medium-count" style="color: #f59e0b;">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🟢 Të Ulëta</div>
+                <div class="stat-number" id="priority-low-count" style="color: #10b981;">0</div>
             </div>
         </div>
 
-        <div class="stat-card" style="margin-top: 20px;">
-            <div class="stat-label">Përparimi i Këtyre 7 Ditëve</div>
-            <div id="weekly-chart" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 16px;"></div>
-        </div>
-
-        <div style="margin-top: 20px;">
-            <button onclick="exportData('json')" class="btn-primary btn-small">📥 Eksporto JSON</button>
-            <button onclick="exportData('csv')" class="btn-primary btn-small">📊 Eksporto CSV</button>
-            <button onclick="openImportModal()" class="btn-warning btn-small">📤 Importo</button>
-            <button onclick="clearAllData()" class="btn-danger btn-small">🗑️ Fshi të Gjitha</button>
+        <div style="margin-top: 20px; padding: 16px; border-radius: 10px; background: rgba(255, 255, 255, 0.05);">
+            <p style="font-size: 13px; color: #94a3b8; margin-bottom: 8px;">💾 Madhësia e të Dhënave</p>
+            <div id="storage-info"></div>
         </div>
     </div>
 
+    <!-- Settings Page -->
     <div id="page-settings" class="page">
-        <div style="margin-bottom: 24px;">
-            <h3 style="margin-bottom: 12px; font-size: 16px; font-weight: 600;">🌓 Temë</h3>
-            <button onclick="toggleTheme()" class="btn-primary btn-block">☀️ Ndërro Temën (Këmundë/Drita)</button>
-        </div>
+        <h3 style="margin-bottom: 16px; font-size: 16px;">🌐 Zgjidh Gjuhën</h3>
+        <button class="lang-btn active" onclick="changeLanguage('sq')">🇦🇱 Shqip</button>
+        <button class="lang-btn" onclick="changeLanguage('en')">🇬🇧 English</button>
+        <button class="lang-btn" onclick="changeLanguage('hr')">🇭🇷 Hrvatski</button>
+        <button class="lang-btn" onclick="changeLanguage('fr')">🇫🇷 Français</button>
+        <button class="lang-btn" onclick="changeLanguage('de')">🇩🇪 Deutsch</button>
+        <button class="lang-btn" onclick="changeLanguage('it')">🇮🇹 Italiano</button>
+        <button class="lang-btn" onclick="changeLanguage('es')">🇪🇸 Español</button>
 
-        <div style="margin-bottom: 24px;">
-            <h3 style="margin-bottom: 12px; font-size: 16px; font-weight: 600;" id="text-select-lang">Zgjidh Gjuhën</h3>
-            <button class="lang-btn" onclick="changeLanguage('sq')">🇦🇱 Shqip</button>
-            <button class="lang-btn" onclick="changeLanguage('en')">🇬🇧 English</button>
-            <button class="lang-btn" onclick="changeLanguage('hr')">🇭🇷 Hrvatski</button>
-            <button class="lang-btn" onclick="changeLanguage('fr')">🇫🇷 Français</button>
-            <button class="lang-btn" onclick="changeLanguage('de')">🇩🇪 Deutsch</button>
-            <button class="lang-btn" onclick="changeLanguage('it')">🇮🇹 Italiano</button>
-            <button class="lang-btn" onclick="changeLanguage('es')">🇪🇸 Español</button>
-        </div>
+        <h3 style="margin-top: 24px; margin-bottom: 16px; font-size: 16px;">💾 Të Dhënat</h3>
+        <button class="btn-primary btn-full" onclick="exportJSON()">📥 Eksporto si JSON</button>
+        <button class="btn-primary btn-full" onclick="exportCSV()">📊 Eksporto si CSV</button>
+        <button class="btn-success btn-full" onclick="importData()">📤 Importo Të Dhënat</button>
+        <button class="btn-danger btn-full" onclick="clearAllData()">🗑️ Fshi Të Gjitha Të Dhënat</button>
 
-        <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 10px; margin-top: 20px;">
-            <div style="font-size: 12px; color: #94a3b8; line-height: 1.6;">
-                <p><strong>📱 Smart Organizer Pro v2.0</strong></p>
-                <p style="margin-top: 8px;">Aplikacion profesional për menaxhimin e detyrave dhe shënimeve.</p>
-                <p style="margin-top: 8px;"><span id="storage-info">Hapësira e përdorur: 0 KB</span></p>
-            </div>
-        </div>
+        <input type="file" id="import-file" accept=".json" style="display:none;" onchange="handleImport(event)">
     </div>
 
+    <!-- Bottom Navigation -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchPage('tasks', this)">
             <span class="nav-icon">📋</span><span id="nav-text-tasks">Detyrat</span>
@@ -427,309 +464,106 @@
         </div>
     </div>
 
-    <div id="import-modal" class="modal">
+    <!-- Info Modal -->
+    <div id="info-modal" class="modal">
         <div class="modal-content">
-            <h2 class="modal-title">📤 Importo të Dhënat</h2>
-            <textarea id="import-data" rows="6" placeholder="Ngjit JSON të eksportuar këtu..."></textarea>
-            <div class="modal-buttons">
-                <button onclick="importData()" class="btn-primary">✓ Importo</button>
-                <button onclick="closeModal('import-modal')" class="btn-danger">✕ Anulo</button>
+            <div class="modal-header">
+                ℹ️ Rreth Aplikacionit
+                <span class="modal-close" onclick="closeModal()">✕</span>
             </div>
+            <p><strong>Smart Organizer Pro v2.0</strong></p>
+            <p style="margin-top: 10px; color: #94a3b8; font-size: 14px;">Një aplikacion profesional për menaxhimin e detyrave dhe shënimeve me opsione të avancuara.</p>
+            <p style="margin-top: 10px; color: #94a3b8; font-size: 14px;">✨ Features: Dark/Light Mode, Prioritete, Kërkim, Export/Import, 7 Gjuhë</p>
         </div>
     </div>
 
     <script>
+        // Data Management
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         let notes = JSON.parse(localStorage.getItem('notes')) || [];
         let currentLang = localStorage.getItem('lang') || 'sq';
-        let currentTheme = localStorage.getItem('theme') || 'dark';
+        let currentFilter = 'all';
         let editingTaskIndex = null;
         let editingNoteIndex = null;
-        let taskFilter = 'all';
-        let taskSearch = '';
-        let noteSearch = '';
 
         const translations = {
-            sq: {
-                titleTasks: "Detyrat Ditore",
-                titleNotes: "Shënimet e Mia",
-                titleStats: "Ecuria ime",
-                titleSettings: "Cilësimet",
-                placeholderTask: "Shto një detyrë të re...",
-                placeholderNote: "Shkruaj një shënim...",
-                btnAdd: "Shto",
-                btnSave: "Ruaj",
-                btnUpdate: "Përditëso",
-                btnDelete: "Fshi",
-                btnEdit: "Redakto",
-                navTasks: "Detyrat",
-                navNotes: "Shënim",
-                navStats: "Ecuria",
-                navSettings: "Cilësime",
-                totalTasks: "Gjithsej Detyra",
-                completedTasks: "Të Kryera",
-                totalNotes: "Gjithsej Shënime",
-                priorityHigh: "Prioriteti i Lartë",
-                priorityMedium: "Prioriteti Mesatar",
-                priorityLow: "Prioriteti i Ulët",
-                noTasks: "Nuk keni detyra akoma",
-                noNotes: "Nuk keni shënime akoma",
-                confirmDelete: "A jeni i sigurt?",
-                selectLang: "Zgjidh Gjuhën"
-            },
-            en: {
-                titleTasks: "Daily Tasks",
-                titleNotes: "My Notes",
-                titleStats: "My Progress",
-                titleSettings: "Settings",
-                placeholderTask: "Add a new task...",
-                placeholderNote: "Write a note...",
-                btnAdd: "Add",
-                btnSave: "Save",
-                btnUpdate: "Update",
-                btnDelete: "Delete",
-                btnEdit: "Edit",
-                navTasks: "Tasks",
-                navNotes: "Notes",
-                navStats: "Progress",
-                navSettings: "Settings",
-                totalTasks: "Total Tasks",
-                completedTasks: "Completed",
-                totalNotes: "Total Notes",
-                priorityHigh: "High Priority",
-                priorityMedium: "Medium Priority",
-                priorityLow: "Low Priority",
-                noTasks: "No tasks yet",
-                noNotes: "No notes yet",
-                confirmDelete: "Are you sure?",
-                selectLang: "Select Language"
-            },
-            hr: {
-                titleTasks: "Dnevni Zadaci",
-                titleNotes: "Moje Bilješke",
-                titleStats: "Moj Napredak",
-                titleSettings: "Postavke",
-                placeholderTask: "Dodaj novi zadatak...",
-                placeholderNote: "Napiši bilješku...",
-                btnAdd: "Dodaj",
-                btnSave: "Spremi",
-                btnUpdate: "Ažuriraj",
-                btnDelete: "Izbriši",
-                btnEdit: "Uredi",
-                navTasks: "Zadaci",
-                navNotes: "Bilješke",
-                navStats: "Napredak",
-                navSettings: "Postavke",
-                totalTasks: "Ukupno Zadataka",
-                completedTasks: "Završeno",
-                totalNotes: "Ukupno Bilješki",
-                priorityHigh: "Visoki Prioritet",
-                priorityMedium: "Srednji Prioritet",
-                priorityLow: "Niski Prioritet",
-                noTasks: "Nema zadataka",
-                noNotes: "Nema bilješki",
-                confirmDelete: "Jeste li sigurni?",
-                selectLang: "Odaberite Jezik"
-            },
-            fr: {
-                titleTasks: "Tâches Quotidiennes",
-                titleNotes: "Mes Notes",
-                titleStats: "Mon Progrès",
-                titleSettings: "Paramètres",
-                placeholderTask: "Ajouter une tâche...",
-                placeholderNote: "Écrire une note...",
-                btnAdd: "Ajouter",
-                btnSave: "Enregistrer",
-                btnUpdate: "Mettre à jour",
-                btnDelete: "Supprimer",
-                btnEdit: "Modifier",
-                navTasks: "Tâches",
-                navNotes: "Notes",
-                navStats: "Progrès",
-                navSettings: "Paramètres",
-                totalTasks: "Total des tâches",
-                completedTasks: "Complétées",
-                totalNotes: "Total des notes",
-                priorityHigh: "Priorité Élevée",
-                priorityMedium: "Priorité Moyenne",
-                priorityLow: "Priorité Basse",
-                noTasks: "Aucune tâche",
-                noNotes: "Aucune note",
-                confirmDelete: "Êtes-vous sûr?",
-                selectLang: "Choisir la Langue"
-            },
-            de: {
-                titleTasks: "Tägliche Aufgaben",
-                titleNotes: "Meine Notizen",
-                titleStats: "Mein Fortschritt",
-                titleSettings: "Einstellungen",
-                placeholderTask: "Aufgabe hinzufügen...",
-                placeholderNote: "Notiz schreiben...",
-                btnAdd: "Hinzufügen",
-                btnSave: "Speichern",
-                btnUpdate: "Aktualisieren",
-                btnDelete: "Löschen",
-                btnEdit: "Bearbeiten",
-                navTasks: "Aufgaben",
-                navNotes: "Notizen",
-                navStats: "Fortschritt",
-                navSettings: "Einstellungen",
-                totalTasks: "Aufgaben gesamt",
-                completedTasks: "Erledigt",
-                totalNotes: "Notizen gesamt",
-                priorityHigh: "Hohe Priorität",
-                priorityMedium: "Mittlere Priorität",
-                priorityLow: "Niedrige Priorität",
-                noTasks: "Keine Aufgaben",
-                noNotes: "Keine Notizen",
-                confirmDelete: "Sind Sie sicher?",
-                selectLang: "Sprache Auswählen"
-            },
-            it: {
-                titleTasks: "Compiti Giornalieri",
-                titleNotes: "Le Mie Note",
-                titleStats: "I Miei Progressi",
-                titleSettings: "Impostazioni",
-                placeholderTask: "Aggiungi un compito...",
-                placeholderNote: "Scrivi una nota...",
-                btnAdd: "Aggiungi",
-                btnSave: "Salva",
-                btnUpdate: "Aggiorna",
-                btnDelete: "Elimina",
-                btnEdit: "Modifica",
-                navTasks: "Compiti",
-                navNotes: "Note",
-                navStats: "Progressi",
-                navSettings: "Impostazioni",
-                totalTasks: "Compiti Totali",
-                completedTasks: "Completati",
-                totalNotes: "Note Totali",
-                priorityHigh: "Priorità Alta",
-                priorityMedium: "Priorità Media",
-                priorityLow: "Priorità Bassa",
-                noTasks: "Nessun compito",
-                noNotes: "Nessuna nota",
-                confirmDelete: "Sei sicuro?",
-                selectLang: "Seleziona Lingua"
-            },
-            es: {
-                titleTasks: "Tareas Diarias",
-                titleNotes: "Mis Notas",
-                titleStats: "Mi Progreso",
-                titleSettings: "Ajustes",
-                placeholderTask: "Añadir una tarea...",
-                placeholderNote: "Escribir una nota...",
-                btnAdd: "Añadir",
-                btnSave: "Guardar",
-                btnUpdate: "Actualizar",
-                btnDelete: "Eliminar",
-                btnEdit: "Editar",
-                navTasks: "Tareas",
-                navNotes: "Notas",
-                navStats: "Progreso",
-                navSettings: "Ajustes",
-                totalTasks: "Total de Tareas",
-                completedTasks: "Completadas",
-                totalNotes: "Total de Notas",
-                priorityHigh: "Prioridad Alta",
-                priorityMedium: "Prioridad Media",
-                priorityLow: "Prioridad Baja",
-                noTasks: "Sin tareas",
-                noNotes: "Sin notas",
-                confirmDelete: "¿Estás seguro?",
-                selectLang: "Seleccionar Idioma"
-            }
+            sq: { titleTasks: "Detyrat e Mia", titleNotes: "Shënimet e Mia", titleStats: "Ecuria ime", titleSettings: "Cilësimet", navTasks: "Detyrat", navNotes: "Shënim", navStats: "Ecuria", navSettings: "Cilësime" },
+            en: { titleTasks: "My Tasks", titleNotes: "My Notes", titleStats: "My Progress", titleSettings: "Settings", navTasks: "Tasks", navNotes: "Notes", navStats: "Progress", navSettings: "Settings" },
+            hr: { titleTasks: "Moji Zadaci", titleNotes: "Moje Bilješke", titleStats: "Moj Napredak", titleSettings: "Postavke", navTasks: "Zadaci", navNotes: "Bilješke", navStats: "Napredak", navSettings: "Postavke" },
+            fr: { titleTasks: "Mes Tâches", titleNotes: "Mes Notes", titleStats: "Mon Progrès", titleSettings: "Paramètres", navTasks: "Tâches", navNotes: "Notes", navStats: "Progrès", navSettings: "Paramètres" },
+            de: { titleTasks: "Meine Aufgaben", titleNotes: "Meine Notizen", titleStats: "Mein Fortschritt", titleSettings: "Einstellungen", navTasks: "Aufgaben", navNotes: "Notizen", navStats: "Fortschritt", navSettings: "Optionen" },
+            it: { titleTasks: "I Miei Compiti", titleNotes: "Le Mie Note", titleStats: "I Miei Progressi", titleSettings: "Impostazioni", navTasks: "Compiti", navNotes: "Note", navStats: "Progressi", navSettings: "Impostazioni" },
+            es: { titleTasks: "Mis Tareas", titleNotes: "Mis Notas", titleStats: "Mi Progreso", titleSettings: "Configuración", navTasks: "Tareas", navNotes: "Notas", navStats: "Progreso", navSettings: "Configuración" }
         };
 
         function switchPage(pageId, element) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
             document.getElementById('page-' + pageId).classList.add('active');
             element.classList.add('active');
-            
-            const data = translations[currentLang];
-            const titles = {
-                tasks: data.titleTasks,
-                notes: data.titleNotes,
-                stats: data.titleStats,
-                settings: data.titleSettings
-            };
-            document.getElementById('app-title').innerText = titles[pageId] || 'Smart Organizer';
-            
+
+            const t = translations[currentLang];
+            const titles = { tasks: t.titleTasks, notes: t.titleNotes, stats: t.titleStats, settings: t.titleSettings };
+            document.getElementById('app-title').innerText = titles[pageId] || 'Smart Organizer Pro';
+
             if (pageId === 'stats') updateStats();
-            updateStorageInfo();
+        }
+
+        function addTask() {
+            const input = document.getElementById('task-input');
+            const priority = document.getElementById('priority-select').value;
+            if (input.value.trim() === '') return;
+
+            tasks.push({
+                text: input.value,
+                priority: priority,
+                completed: false,
+                created: new Date().toISOString(),
+                dueDate: null
+            });
+
+            input.value = '';
+            renderTasks();
+            showToast('✅ Detyra u shtua!');
         }
 
         function renderTasks() {
             const list = document.getElementById('tasks-list');
             let filtered = tasks;
 
-            if (taskFilter === 'active') filtered = tasks.filter(t => !t.completed);
-            if (taskFilter === 'completed') filtered = tasks.filter(t => t.completed);
-            
-            if (taskSearch) {
-                filtered = filtered.filter(t => t.text.toLowerCase().includes(taskSearch.toLowerCase()));
-            }
+            if (currentFilter === 'active') filtered = tasks.filter(t => !t.completed);
+            if (currentFilter === 'completed') filtered = tasks.filter(t => t.completed);
+            if (currentFilter === 'today') filtered = tasks.filter(t => {
+                const today = new Date().toDateString();
+                return new Date(t.created).toDateString() === today;
+            });
 
-            if (filtered.length === 0) {
-                list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">${translations[currentLang].noTasks}</div></div>`;
-                return;
-            }
+            list.innerHTML = filtered.length === 0 ? '<p style="text-align:center; color:#94a3b8; padding:20px;">Nuk ka detyra 📭</p>' : '';
 
-            list.innerHTML = '';
             filtered.forEach((task, index) => {
-                const actualIndex = tasks.indexOf(task);
+                const realIndex = tasks.indexOf(task);
                 const item = document.createElement('div');
-                item.className = 'list-item' + (task.completed ? ' completed' : '') + (task.priority ? ' priority-' + task.priority : '');
-                
-                const date = new Date(task.created || new Date()).toLocaleDateString(currentLang === 'sq' ? 'sq-AL' : 'en-US');
-                
+                item.className = 'list-item' + (task.completed ? ' completed' : '');
+
+                const createdDate = new Date(task.created).toLocaleDateString('sq-AL', { month: 'short', day: 'numeric' });
+
                 item.innerHTML = `
-                    <div style="flex: 1; min-width: 0;">
-                        <div style="cursor:pointer; font-size:15px; word-break: break-word;" onclick="toggleTask(${actualIndex})">${task.text}</div>
-                        <div class="task-meta">
-                            <span class="task-date">${date}</span>
-                            <span class="task-priority task-priority-${task.priority || 'low'}">${task.priority ? task.priority.toUpperCase() : 'LOW'}</span>
-                        </div>
+                    <div class="list-item-content" onclick="toggleTask(${realIndex})" style="cursor:pointer; flex:1;">
+                        <input type="checkbox" ${task.completed ? 'checked' : ''} style="margin-right:8px; cursor:pointer;">
+                        <span class="priority-badge priority-${task.priority}">🎯 ${task.priority.toUpperCase()}</span>
+                        <span>${task.text}</span>
+                        <div class="list-item-meta">📅 ${createdDate}</div>
                     </div>
                     <div class="action-btns">
-                        <button class="edit-btn btn-small" onclick="editTask(${actualIndex})">✏️</button>
-                        <button class="delete-btn btn-small" onclick="deleteTask(${actualIndex})">✕</button>
+                        <button class="btn-warning btn-sm" onclick="editTask(${realIndex})">✏️</button>
+                        <button class="btn-danger btn-sm" onclick="deleteTask(${realIndex})">🗑️</button>
                     </div>
                 `;
                 list.appendChild(item);
             });
+
             localStorage.setItem('tasks', JSON.stringify(tasks));
             updateStats();
-        }
-
-        function addTask() {
-            const input = document.getElementById('task-input');
-            const priority = document.getElementById('task-priority').value;
-            if (input.value.trim() === '') return;
-            
-            if (editingTaskIndex !== null) {
-                tasks[editingTaskIndex].text = input.value;
-                tasks[editingTaskIndex].priority = priority;
-                editingTaskIndex = null;
-            } else {
-                tasks.push({ 
-                    text: input.value, 
-                    completed: false,
-                    priority: priority,
-                    created: new Date().toISOString()
-                });
-            }
-            input.value = '';
-            renderTasks();
-        }
-
-        function editTask(index) {
-            document.getElementById('task-input').value = tasks[index].text;
-            document.getElementById('task-priority').value = tasks[index].priority || 'medium';
-            editingTaskIndex = index;
-            window.scrollTo(0, 0);
         }
 
         function toggleTask(index) {
@@ -737,254 +571,277 @@
             renderTasks();
         }
 
+        function editTask(index) {
+            const task = tasks[index];
+            const input = document.getElementById('task-input');
+            const priority = document.getElementById('priority-select');
+            input.value = task.text;
+            priority.value = task.priority;
+            editingTaskIndex = index;
+            input.focus();
+        }
+
         function deleteTask(index) {
-            if (confirm(translations[currentLang].confirmDelete)) {
+            if (confirm('Jeni të sigurt që dëshironi ta fshini këtë detyrë?')) {
                 tasks.splice(index, 1);
                 renderTasks();
+                showToast('🗑️ Detyra u fshi!');
             }
         }
 
         function filterTasks(filter) {
-            taskFilter = filter;
-            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
             renderTasks();
         }
 
-        document.getElementById('search-tasks')?.addEventListener('input', (e) => {
-            taskSearch = e.target.value;
-            renderTasks();
-        });
-
-        function renderNotes() {
-            const list = document.getElementById('notes-list');
-            let filtered = notes;
-
-            if (noteSearch) {
-                filtered = filtered.filter(n => 
-                    (n.title?.toLowerCase() || '').includes(noteSearch.toLowerCase()) ||
-                    (n.text?.toLowerCase() || '').includes(noteSearch.toLowerCase())
-                );
-            }
-
-            if (filtered.length === 0) {
-                list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">${translations[currentLang].noNotes}</div></div>`;
-                return;
-            }
-
+        function searchTasks() {
+            const search = document.getElementById('task-search').value.toLowerCase();
+            const filtered = tasks.filter(t => t.text.toLowerCase().includes(search));
+            const list = document.getElementById('tasks-list');
             list.innerHTML = '';
-            filtered.forEach((note, index) => {
-                const actualIndex = notes.indexOf(note);
+
+            filtered.forEach((task, index) => {
+                const realIndex = tasks.indexOf(task);
                 const item = document.createElement('div');
-                item.className = 'list-item';
-                
-                const date = new Date(note.created || new Date()).toLocaleDateString();
-                
+                item.className = 'list-item' + (task.completed ? ' completed' : '');
+                const createdDate = new Date(task.created).toLocaleDateString('sq-AL');
                 item.innerHTML = `
-                    <div style="flex: 1; min-width: 0;">
-                        <div style="font-weight: 600; font-size: 15px; word-break: break-word;">${note.title || 'Shënim pa titull'}</div>
-                        <div style="font-size: 14px; color: #94a3b8; margin-top: 4px; word-break: break-word;">${note.text?.substring(0, 50) || ''}${note.text?.length > 50 ? '...' : ''}</div>
-                        <div class="task-meta">${date}</div>
+                    <div class="list-item-content" onclick="toggleTask(${realIndex})" style="cursor:pointer; flex:1;">
+                        <input type="checkbox" ${task.completed ? 'checked' : ''} style="margin-right:8px;">
+                        <span class="priority-badge priority-${task.priority}">🎯</span>
+                        <span>${task.text}</span>
+                        <div class="list-item-meta">📅 ${createdDate}</div>
                     </div>
                     <div class="action-btns">
-                        <button class="edit-btn btn-small" onclick="editNote(${actualIndex})">✏️</button>
-                        <button class="delete-btn btn-small" onclick="deleteNote(${actualIndex})">✕</button>
+                        <button class="btn-danger btn-sm" onclick="deleteTask(${realIndex})">🗑️</button>
                     </div>
                 `;
                 list.appendChild(item);
             });
+        }
+
+        function addNote() {
+            const title = document.getElementById('note-title');
+            const content = document.getElementById('note-input');
+            const tags = document.getElementById('note-tags');
+
+            if (content.value.trim() === '') return;
+
+            notes.push({
+                title: title.value || 'Shënim pa titull',
+                content: content.value,
+                tags: tags.value.split(',').map(t => t.trim()).filter(t => t),
+                created: new Date().toISOString()
+            });
+
+            title.value = '';
+            content.value = '';
+            tags.value = '';
+            renderNotes();
+            showToast('✅ Shënimi u ruaj!');
+        }
+
+        function renderNotes() {
+            const list = document.getElementById('notes-list');
+            list.innerHTML = notes.length === 0 ? '<p style="text-align:center; color:#94a3b8; padding:20px;">Nuk ka shënime 📭</p>' : '';
+
+            notes.forEach((note, index) => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                const createdDate = new Date(note.created).toLocaleDateString('sq-AL');
+
+                item.innerHTML = `
+                    <div style="flex:1;">
+                        <span style="font-weight:600; display:block; margin-bottom:4px;">${note.title}</span>
+                        <span style="display:block; margin-bottom:8px; color:#94a3b8; white-space:pre-wrap;">${note.content.substring(0, 100)}...</span>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:6px;">
+                            ${note.tags.map(tag => `<span style="background:rgba(59,130,246,0.2); color:var(--primary); padding:2px 8px; border-radius:4px; font-size:12px;">#${tag}</span>`).join('')}
+                        </div>
+                        <div class="list-item-meta">📅 ${createdDate}</div>
+                    </div>
+                    <div class="action-btns">
+                        <button class="btn-danger btn-sm" onclick="deleteNote(${index})">🗑️</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+
             localStorage.setItem('notes', JSON.stringify(notes));
             updateStats();
         }
 
-        function addNote() {
-            const input = document.getElementById('note-input');
-            const title = document.getElementById('note-title');
-            if (input.value.trim() === '') return;
-            
-            if (editingNoteIndex !== null) {
-                notes[editingNoteIndex] = {
-                    title: title.value,
-                    text: input.value,
-                    tags: document.getElementById('note-tags').value.split(',').map(t => t.trim()),
-                    created: notes[editingNoteIndex].created
-                };
-                editingNoteIndex = null;
-            } else {
-                notes.push({
-                    title: title.value,
-                    text: input.value,
-                    tags: document.getElementById('note-tags').value.split(',').map(t => t.trim()),
-                    created: new Date().toISOString()
-                });
-            }
-            input.value = '';
-            title.value = '';
-            document.getElementById('note-tags').value = '';
-            renderNotes();
-        }
-
-        function editNote(index) {
-            document.getElementById('note-title').value = notes[index].title || '';
-            document.getElementById('note-input').value = notes[index].text;
-            document.getElementById('note-tags').value = (notes[index].tags || []).join(', ');
-            editingNoteIndex = index;
-            window.scrollTo(0, 0);
-        }
-
         function deleteNote(index) {
-            if (confirm(translations[currentLang].confirmDelete)) {
+            if (confirm('Fshi shënimin?')) {
                 notes.splice(index, 1);
                 renderNotes();
+                showToast('🗑️ Shënimi u fshi!');
             }
         }
 
-        document.getElementById('search-notes')?.addEventListener('input', (e) => {
-            noteSearch = e.target.value;
-            renderNotes();
-        });
+        function searchNotes() {
+            const search = document.getElementById('note-search').value.toLowerCase();
+            const filtered = notes.filter(n => n.title.toLowerCase().includes(search) || n.content.toLowerCase().includes(search));
+            const list = document.getElementById('notes-list');
+            list.innerHTML = '';
+
+            filtered.forEach((note, index) => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.innerHTML = `
+                    <div style="flex:1;">
+                        <span style="font-weight:600; display:block;">${note.title}</span>
+                        <span style="color:#94a3b8; font-size:13px;">${note.content.substring(0, 80)}...</span>
+                    </div>
+                    <button class="btn-danger btn-sm" onclick="deleteNote(${index})">🗑️</button>
+                `;
+                list.appendChild(item);
+            });
+        }
 
         function updateStats() {
-            const total = tasks.length;
             const completed = tasks.filter(t => t.completed).length;
-            const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+            const total = tasks.length;
+            const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
 
             document.getElementById('total-tasks-count').innerText = total;
             document.getElementById('completed-tasks-count').innerText = completed;
+            document.getElementById('completion-percentage').innerText = percentage + '%';
             document.getElementById('total-notes-count').innerText = notes.length;
-            document.getElementById('completion-percent').innerText = percent + '%';
 
-            const weekChart = document.getElementById('weekly-chart');
-            if (weekChart) {
-                weekChart.innerHTML = '';
-                for (let i = 6; i >= 0; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
-                    const count = tasks.filter(t => new Date(t.created || new Date()).toDateString() === date.toDateString()).length;
-                    const bar = document.createElement('div');
-                    bar.style.cssText = `background: linear-gradient(180deg, #38bdf8 0%, #0ea5e9 100%); height: ${Math.max(count * 20, 30)}px; border-radius: 6px; cursor: pointer; font-size: 10px; display: flex; align-items: flex-end; justify-content: center; color: white; font-weight: 600;`;
-                    bar.innerText = count;
-                    weekChart.appendChild(bar);
-                }
-            }
-        }
+            document.getElementById('priority-high-count').innerText = tasks.filter(t => t.priority === 'high').length;
+            document.getElementById('priority-medium-count').innerText = tasks.filter(t => t.priority === 'medium').length;
+            document.getElementById('priority-low-count').innerText = tasks.filter(t => t.priority === 'low').length;
 
-        function exportData(format) {
-            const data = { tasks, notes, exportDate: new Date().toISOString() };
-            
-            if (format === 'json') {
-                const json = JSON.stringify(data, null, 2);
-                downloadFile(json, 'smart-organizer-backup.json', 'application/json');
-            } else if (format === 'csv') {
-                let csv = 'Type,Title,Content,Priority,Completed,Date\n';
-                tasks.forEach(t => {
-                    csv += `Task,"${t.text.replace(/"/g, '""')}","",${t.priority || 'N/A'},${t.completed},${t.created || ''}\n`;
-                });
-                notes.forEach(n => {
-                    csv += `Note,"${n.title?.replace(/"/g, '""') || ''}","${n.text?.replace(/"/g, '""') || ''}","",N/A,${n.created || ''}\n`;
-                });
-                downloadFile(csv, 'smart-organizer-backup.csv', 'text/csv');
-            }
-        }
-
-        function downloadFile(content, filename, type) {
-            const blob = new Blob([content], { type });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function openImportModal() {
-            document.getElementById('import-modal').classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        function importData() {
-            const input = document.getElementById('import-data').value;
-            try {
-                const data = JSON.parse(input);
-                tasks = data.tasks || [];
-                notes = data.notes || [];
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-                localStorage.setItem('notes', JSON.stringify(notes));
-                alert('✓ Të dhënat u importuan me sukses!');
-                closeModal('import-modal');
-                renderTasks();
-                renderNotes();
-                updateStats();
-            } catch (e) {
-                alert('✕ Gabim në importimin e të dhënave. Verifikoni formatin JSON.');
-            }
-        }
-
-        function clearAllData() {
-            if (confirm('🚨 A jeni i sigurt? Kjo do të fshijë të gjitha të dhënat!')) {
-                tasks = [];
-                notes = [];
-                localStorage.removeItem('tasks');
-                localStorage.removeItem('notes');
-                renderTasks();
-                renderNotes();
-                updateStats();
-                alert('✓ Të gjitha të dhënat u fshinë.');
-            }
+            const dataSize = (new Blob([JSON.stringify({ tasks, notes })]).size / 1024).toFixed(2);
+            document.getElementById('storage-info').innerHTML = `📊 ${dataSize} KB të përdorura`;
         }
 
         function changeLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('lang', lang);
-            
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('lang-' + lang)?.classList.add('active');
-            
-            const d = translations[lang];
-            const activePageId = document.querySelector('.page.active')?.id.replace('page-','');
-            
-            const titles = {
-                tasks: d.titleTasks,
-                notes: d.titleNotes,
-                stats: d.titleStats,
-                settings: d.titleSettings
-            };
-            document.getElementById('app-title').innerText = titles[activePageId] || 'Smart Organizer';
-            
-            document.getElementById('task-input').placeholder = d.placeholderTask;
-            document.getElementById('note-input').placeholder = d.placeholderNote;
-            document.getElementById('text-select-lang').innerText = d.selectLang;
-            
-            document.getElementById('nav-text-tasks').innerText = d.navTasks;
-            document.getElementById('nav-text-notes').innerText = d.navNotes;
-            document.getElementById('nav-text-stats').innerText = d.navStats;
-            document.getElementById('nav-text-settings').innerText = d.navSettings;
+            document.getElementById('lang-' + lang).classList.add('active');
+
+            const t = translations[lang];
+            document.getElementById('app-title').innerText = t.titleTasks;
+            document.getElementById('nav-text-tasks').innerText = t.navTasks;
+            document.getElementById('nav-text-notes').innerText = t.navNotes;
+            document.getElementById('nav-text-stats').innerText = t.navStats;
+            document.getElementById('nav-text-settings').innerText = t.navSettings;
         }
 
         function toggleTheme() {
-            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', currentTheme);
+            document.body.classList.toggle('dark-mode');
             document.body.classList.toggle('light-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.querySelector('.theme-toggle').innerText = isDark ? '🌙' : '☀️';
         }
 
-        function updateStorageInfo() {
-            const size = JSON.stringify(tasks).length + JSON.stringify(notes).length;
-            const kb = (size / 1024).toFixed(2);
-            document.getElementById('storage-info').innerText = `💾 Hapësira e përdorur: ${kb} KB`;
+        function exportJSON() {
+            const data = { tasks, notes, exported: new Date().toISOString() };
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `organizer-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            showToast('📥 JSON Eksportuar!');
+        }
+
+        function exportCSV() {
+            let csv = 'Teksti,Prioriteti,Statusi,Data\n';
+            tasks.forEach(task => {
+                csv += `"${task.text}","${task.priority}","${task.completed ? 'Kryerë' : 'Aktive'}","${new Date(task.created).toLocaleDateString('sq-AL')}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `organizer-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            showToast('📊 CSV Eksportuar!');
+        }
+
+        function importData() {
+            document.getElementById('import-file').click();
+        }
+
+        function handleImport(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    tasks = data.tasks || tasks;
+                    notes = data.notes || notes;
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    localStorage.setItem('notes', JSON.stringify(notes));
+                    renderTasks();
+                    renderNotes();
+                    updateStats();
+                    showToast('📤 Të dhënat u importuan!');
+                } catch (err) {
+                    showToast('❌ Gabim në importimin e skedarit!');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearAllData() {
+            if (confirm('Jeni të sigurt? Të gjitha të dhënat do të fshihen përgjithmonë!')) {
+                tasks = [];
+                notes = [];
+                localStorage.clear();
+                renderTasks();
+                renderNotes();
+                updateStats();
+                showToast('🗑️ Të gjitha të dhënat u fshihen!');
+            }
+        }
+
+        function showInfo() {
+            document.getElementById('info-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('info-modal').classList.remove('active');
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
 
         // Initialize
-        if (currentTheme === 'light') document.body.classList.add('light-mode');
+        const theme = localStorage.getItem('theme') || 'dark';
+        if (theme === 'light') {
+            document.body.classList.remove('dark-mode');
+            document.body.classList.add('light-mode');
+            document.querySelector('.theme-toggle').innerText = '☀️';
+        }
+
         renderTasks();
         renderNotes();
-        changeLanguage(currentLang);
         updateStats();
-        updateStorageInfo();
+        changeLanguage(currentLang);
 
-        document.getElementById('lang-' + currentLang)?.classList.add('active');
+        // Keyboard shortcut for adding task
+        document.getElementById('task-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTask();
+        });
+
+        // Close modal on outside click
+        document.getElementById('info-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'info-modal') closeModal();
+        });
     </script>
 </body>
-</html>
+	</html>
