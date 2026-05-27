@@ -1,728 +1,565 @@
 <!DOCTYPE html>
 <html lang="sq">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindList Pro</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#6366f1">
-    
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YHFZ1M5X5X"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-YHFZ1M5X5X');
-    </script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MindList Pro</title>
 
-    <style>
-        :root {
-            --bg-main: #0b0f19;
-            --bg-card: #1e293b;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;
-            --high-prio: #ef4444;
-            --med-prio: #f97316;
-            --low-prio: #22c55e;
-        }
+<link rel="manifest" href="manifest.json">
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YHFZ1M5X5X"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-YHFZ1M5X5X');
+</script>
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+<style>
+:root{
+--bg:#f8fafc;
+--card:#ffffff;
+--sidebar:#f1f5f9;
+--accent:#4f46e5;
+--high:#ef4444;
+--medium:#f97316;
+--low:#22c55e;
+}
 
-        /* Sidebar - PLOTËSISHT OPAKE (JO TRANSPARENTE) */
-        .sidebar {
-            width: 280px;
-            background-color: var(--bg-card);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            border-right: 1px solid #334155;
-            transition: transform 0.3s ease;
-            z-index: 1000;
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--text-main);
-        }
+body{
+background:var(--bg);
+color:#111827;
+height:100vh;
+overflow:hidden;
+}
 
-        .logo-svg {
-            width: 32px;
-            height: 32px;
-        }
+.app{
+display:flex;
+height:100vh;
+}
 
-        .nav-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            list-style: none;
-        }
+/* SIDEBAR */
 
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 8px;
-            color: var(--text-muted);
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
+.sidebar{
+width:280px;
+background:var(--sidebar);
+padding:20px;
+display:flex;
+flex-direction:column;
+gap:20px;
+border-right:1px solid #dbeafe;
+}
 
-        .nav-item.active, .nav-item:hover {
-            background-color: var(--accent);
-            color: var(--text-main);
-        }
+.logo{
+font-size:24px;
+font-weight:bold;
+color:var(--accent);
+}
 
-        .section-title-menu {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #64748b;
-            margin-top: 15px;
-            font-weight: 700;
-        }
+.nav-btn{
+padding:12px;
+border:none;
+border-radius:10px;
+background:white;
+cursor:pointer;
+font-weight:bold;
+transition:.2s;
+}
 
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
+.nav-btn.active{
+background:var(--accent);
+color:white;
+}
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
+/* MAIN */
 
-        .welcome-text h1 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
+.main{
+flex:1;
+padding:20px;
+overflow:auto;
+}
 
-        .welcome-text p {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
+.card{
+background:var(--card);
+padding:20px;
+border-radius:16px;
+box-shadow:0 4px 10px rgba(0,0,0,0.05);
+margin-bottom:20px;
+}
 
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+h2{
+margin-bottom:15px;
+}
 
-        /* Language Buttons */
-        .lang-switcher {
-            display: flex;
-            gap: 6px;
-            background: #0f172a;
-            padding: 4px;
-            border-radius: 8px;
-            border: 1px solid #334155;
-        }
+.input-group{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+flex-wrap:wrap;
+}
 
-        .lang-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 6px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
+input, select{
+padding:12px;
+border:1px solid #cbd5e1;
+border-radius:10px;
+flex:1;
+}
 
-        .lang-btn.active {
-            background-color: var(--accent);
-            color: var(--text-main);
-        }
+button{
+padding:12px 16px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+background:var(--accent);
+color:white;
+}
 
-        .hamburger {
-            display: none;
-            background: var(--bg-card);
-            border: 1px solid #334155;
-            color: var(--text-main);
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 20px;
-        }
+.task{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px;
+border:1px solid #e2e8f0;
+border-radius:12px;
+margin-bottom:10px;
+background:white;
+}
 
-        /* Dashboard Grid */
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+.task-left{
+display:flex;
+align-items:center;
+gap:10px;
+}
 
-        /* Form Inputs */
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+.completed{
+text-decoration:line-through;
+opacity:0.6;
+}
 
-        input, select, textarea {
-            width: 100%;
-            background-color: #0f172a;
-            border: 1px solid #334155;
-            color: var(--text-main);
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-        }
+.badge{
+padding:4px 10px;
+border-radius:20px;
+font-size:12px;
+color:white;
+font-weight:bold;
+}
 
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--accent);
-        }
+.high{background:var(--high);}
+.medium{background:var(--medium);}
+.low{background:var(--low);}
 
-        .btn-primary {
-            background-color: var(--accent);
-            color: var(--text-main);
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+.note{
+padding:12px;
+background:#f8fafc;
+border-radius:10px;
+margin-bottom:10px;
+border:1px solid #e2e8f0;
+}
 
-        .btn-primary:hover {
-            background-color: var(--accent-hover);
-        }
+/* MOBILE */
 
-        /* Filter Chips */
-        .filters {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+.mobile-header{
+display:none;
+height:60px;
+background:white;
+padding:10px 15px;
+align-items:center;
+justify-content:space-between;
+border-bottom:1px solid #e2e8f0;
+}
 
-        .chip {
-            background-color: #334155;
-            color: var(--text-muted);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            border: none;
-            font-weight: 500;
-        }
+.hamburger{
+font-size:24px;
+cursor:pointer;
+}
 
-        .chip.active {
-            background-color: var(--accent);
-            color: var(--text-main);
-        }
+.mobile-sidebar{
+position:fixed;
+top:0;
+left:-100%;
+width:280px;
+height:100%;
+background:white;
+z-index:999;
+padding:20px;
+transition:.3s;
+overflow:auto;
+}
 
-        /* Lists */
-        .item-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
-        }
+.mobile-sidebar.active{
+left:0;
+}
 
-        .list-item {
-            background: #0f172a;
-            padding: 14px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 4px solid var(--accent);
-        }
+.overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.3);
+display:none;
+z-index:998;
+}
 
-        .list-item.high { border-left-color: var(--high-prio); }
-        .list-item.medium { border-left-color: var(--med-prio); }
-        .list-item.low { border-left-color: var(--low-prio); }
+.overlay.active{
+display:block;
+}
 
-        .list-item.completed span {
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
+.language{
+margin-top:auto;
+}
 
-        .item-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+@media(max-width:768px){
 
-        .checkbox {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
+body{
+overflow:auto;
+}
 
-        .delete-btn {
-            background: transparent;
-            border: none;
-            color: var(--high-prio);
-            cursor: pointer;
-            font-size: 14px;
-        }
+.app{
+flex-direction:column;
+}
 
-        /* Bottom Section Grid */
-        .bottom-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
+.sidebar{
+display:none;
+}
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
+.mobile-header{
+display:flex;
+}
 
-        .stat-card {
-            background: #0f172a;
-            border: 1px solid #334155;
-            padding: 16px;
-            border-radius: 10px;
-            text-align: center;
-        }
+.main{
+padding:15px;
+}
 
-        .stat-card h3 {
-            font-size: 24px;
-            color: var(--accent);
-            margin-bottom: 4px;
-        }
-
-        .stat-card p {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        /* Mobile Responsive Core */
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                position: fixed;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                height: calc(100vh - 60px);
-                transform: translateX(-100%);
-                background-color: #1e293b !important; /* JO TRANSPARENTE */
-                opacity: 1 !important;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                padding: 20px;
-                margin-top: 60px;
-            }
-
-            .mobile-header-fixed {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 60px;
-                background-color: var(--bg-card);
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 0 20px;
-                border-bottom: 1px solid #334155;
-                z-index: 1100;
-            }
-
-            .hamburger {
-                display: block;
-            }
-
-            .bottom-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .header-controls {
-                margin-top: 0;
-            }
-        }
-    </style>
+}
+</style>
 </head>
+
 <body>
 
-    <div class="mobile-header-fixed">
-        <div class="logo-container">
-            <svg class="logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" fill="url(#purpleGrad)" />
-                <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <defs>
-                    <linearGradient id="purpleGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#8b5cf6"/>
-                        <stop offset="1" stop-color="#6366f1"/>
-                    </linearGradient>
-                </defs>
-            </svg>
-            <span>MindList Pro</span>
-        </div>
-        <button class="hamburger" id="menuToggle">☰</button>
-    </div>
+<div class="mobile-header">
+<div class="logo">MindList Pro</div>
+<div class="hamburger" onclick="toggleMenu()">☰</div>
+</div>
 
-    <div class="sidebar" id="sidebar">
-        <div class="logo-container" style="@media(max-width:768px){display:none;}">
-            <svg class="logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" fill="url(#purpleGrad2)" />
-                <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <defs>
-                    <linearGradient id="purpleGrad2" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#8b5cf6"/>
-                        <stop offset="1" stop-color="#6366f1"/>
-                    </linearGradient>
-                </defs>
-            </svg>
-            <span>MindList Pro</span>
-        </div>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-        <p class="section-title-menu" id="menuTitleSpace">My Space</p>
-        <ul class="nav-menu">
-            <li class="nav-item active" id="menuTasks">✓ Detyrat e Mia</li>
-            <li class="nav-item" id="menuNotes">📝 Shënimet e Mia</li>
-            <li class="nav-item" id="menuStats">📊 Statistika</li>
-        </ul>
+<div class="mobile-sidebar" id="mobileSidebar">
+<div class="logo">MindList Pro</div>
+<br>
 
-        <p class="section-title-menu" id="menuTitleSystem">System</p>
-        <ul class="nav-menu">
-            <li class="nav-item" id="menuSettings">⚙ Cilësimet</li>
-        </ul>
-    </div>
+<button class="nav-btn active">Tasks</button>
+<button class="nav-btn">Notes</button>
 
-    <div class="main-content">
-        <div class="header">
-            <div class="welcome-text">
-                <h1 id="mainTitle">Detyrat e Mia</h1>
-                <p id="mainSubtitle">Organizoni punën tuaj të përditshme në mënyrë efikase.</p>
-            </div>
-            <div class="header-controls">
-                <div class="lang-switcher">
-                    <button class="lang-btn" onclick="setLanguage('en')">EN</button>
-                    <button class="lang-btn active" onclick="setLanguage('sq')">SQ</button>
-                    <button class="lang-btn" onclick="setLanguage('de')">DE</button>
-                </div>
-            </div>
-        </div>
+<div class="language">
+<select id="languageSelect">
+<option value="sq">Shqip</option>
+<option value="en">English</option>
+<option value="hr">Hrvatski</option>
+<option value="fr">Français</option>
+<option value="de">Deutsch</option>
+<option value="it">Italiano</option>
+<option value="es">Español</option>
+</select>
+</div>
+</div>
 
-        <div class="card">
-            <div class="input-group">
-                <input type="text" id="taskInput" placeholder="Titulla Detyrës">
-                <select id="prioritySelect">
-                    <option value="low">Low Priority</option>
-                    <option value="medium">Medium Priority</option>
-                    <option value="high">High Priority</option>
-                </select>
-                <button class="btn-primary" id="addTaskBtn" onclick="addTask()">+ Add Task</button>
-            </div>
+<div class="app">
 
-            <div class="filters">
-                <button class="chip active" onclick="filterTasks('all')" id="filterAll">Të Gjitha</button>
-                <button class="chip" onclick="filterTasks('active')" id="filterActive">Aktive</button>
-                <button class="chip" onclick="filterTasks('completed')" id="filterCompleted">Të Kryera</button>
-            </div>
+<div class="sidebar">
+<div class="logo">MindList Pro</div>
 
-            <div class="item-list" id="taskList"></div>
-        </div>
+<button class="nav-btn active">Tasks</button>
+<button class="nav-btn">Notes</button>
 
-        <div class="bottom-grid">
-            <div class="card">
-                <h2 id="noteTitle">Shënim i Shpejtë</h2>
-                <textarea id="noteInput" rows="4" placeholder="Shkruaj shënimin tënd këtu..."></textarea>
-                <button class="btn-primary" id="saveNoteBtn" onclick="saveNote()">Ruaj Shënimin</button>
-                <div class="item-list" id="noteList" style="margin-top: 10px; max-height: 150px; overflow-y: auto;"></div>
-            </div>
+<div class="language">
+<select id="desktopLanguage">
+<option value="sq">Shqip</option>
+<option value="en">English</option>
+<option value="hr">Hrvatski</option>
+<option value="fr">Français</option>
+<option value="de">Deutsch</option>
+<option value="it">Italiano</option>
+<option value="es">Español</option>
+</select>
+</div>
+</div>
 
-            <div class="card">
-                <h2 id="statsTitle">Statistika</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3 id="statTotal">0</h3>
-                        <p id="lblTotal">Gjithsej</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3 id="statDone">0</h3>
-                        <p id="lblDone">Të Kryera</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3 id="statActive">0</h3>
-                        <p id="lblActive">Aktive</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3 id="statPending">0</h3>
-                        <p id="lblPending">Pezull</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="main">
 
-    <script>
-        // Full System Translation Dictionary (TË GJITHA TË PLOTA)
-        const translations = {
-            en: {
-                mainTitle: "My Tasks",
-                mainSubtitle: "Organize your daily workflow efficiently.",
-                taskPlaceholder: "Task Title",
-                addBtn: "+ Add Task",
-                filterAll: "All",
-                filterActive: "Active",
-                filterCompleted: "Completed",
-                noteTitle: "Quick Note",
-                notePlaceholder: "Write your note here...",
-                saveNoteBtn: "Save Note",
-                statsTitle: "Statistics",
-                lblTotal: "Total Tasks",
-                lblDone: "Completed",
-                lblActive: "Active",
-                lblPending: "Pending",
-                spaceTitle: "My Space",
-                sysTitle: "System",
-                mTasks: "✓ My Tasks",
-                mNotes: "📝 My Notes",
-                mStats: "📊 Statistics",
-                mSettings: "⚙ Settings"
-            },
-            sq: {
-                mainTitle: "Detyrat e Mia",
-                mainSubtitle: "Organizoni punën tuaj të përditshme në mënyrë efikase.",
-                taskPlaceholder: "Titulla Detyrës",
-                addBtn: "+ Shto Detyrë",
-                filterAll: "Të Gjitha",
-                filterActive: "Aktive",
-                filterCompleted: "Të Kryera",
-                noteTitle: "Shënim i Shpejtë",
-                notePlaceholder: "Shkruaj shënimin tënd këtu...",
-                saveNoteBtn: "Ruaj Shënimin",
-                statsTitle: "Statistika",
-                lblTotal: "Gjithsej",
-                lblDone: "Të Kryera",
-                lblActive: "Aktive",
-                lblPending: "Pezull",
-                spaceTitle: "Hapësira Ime",
-                sysTitle: "Sistemi",
-                mTasks: "✓ Detyrat e Mia",
-                mNotes: "📝 Shënimet e Mia",
-                mStats: "📊 Statistika",
-                mSettings: "⚙ Cilësimet"
-            },
-            de: {
-                mainTitle: "Meine Aufgaben",
-                mainSubtitle: "Organisieren Sie Ihren Workflow effizient.",
-                taskPlaceholder: "Aufgabentitel",
-                addBtn: "+ Aufgabe hinzufügen",
-                filterAll: "Alle",
-                filterActive: "Aktiv",
-                filterCompleted: "Abgeschlossen",
-                noteTitle: "Schnelle Notiz",
-                notePlaceholder: "Schreiben Sie Ihre Notiz hier...",
-                saveNoteBtn: "Notiz Speichern",
-                statsTitle: "Statistiken",
-                lblTotal: "Gesamt",
-                lblDone: "Erledigt",
-                lblActive: "Aktiv",
-                lblPending: "Ausstehend",
-                spaceTitle: "Mein Bereich",
-                sysTitle: "System",
-                mTasks: "✓ Meine Aufgaben",
-                mNotes: "📝 Meine Notizen",
-                mStats: "📊 Statistiken",
-                mSettings: "⚙ Einstellungen"
-            }
-        };
+<!-- TASKS -->
 
-        let tasks = JSON.parse(localStorage.getItem('mindlist_tasks')) || [];
-        let notes = JSON.parse(localStorage.getItem('mindlist_notes')) || [];
-        let currentFilter = 'all';
-        let currentLang = 'sq';
+<div class="card">
+<h2 id="taskTitle">Detyrat</h2>
 
-        // Hamburger Responsive Handler
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-        });
-        document.addEventListener('click', (e) => {
-            if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-                sidebar.classList.remove('open');
-            }
-        });
+<div class="input-group">
+<input type="text" id="taskInput" placeholder="Shkruaj detyrën...">
 
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.innerText.toLowerCase() === lang);
-            });
-            
-            // Apply Translations
-            document.getElementById('mainTitle').innerText = translations[lang].mainTitle;
-            document.getElementById('mainSubtitle').innerText = translations[lang].mainSubtitle;
-            document.getElementById('taskInput').placeholder = translations[lang].taskPlaceholder;
-            document.getElementById('addTaskBtn').innerText = translations[lang].addBtn;
-            document.getElementById('filterAll').innerText = translations[lang].filterAll;
-            document.getElementById('filterActive').innerText = translations[lang].filterActive;
-            document.getElementById('filterCompleted').innerText = translations[lang].filterCompleted;
-            document.getElementById('noteTitle').innerText = translations[lang].noteTitle;
-            document.getElementById('noteInput').placeholder = translations[lang].notePlaceholder;
-            document.getElementById('saveNoteBtn').innerText = translations[lang].saveNoteBtn;
-            document.getElementById('statsTitle').innerText = translations[lang].statsTitle;
-            document.getElementById('lblTotal').innerText = translations[lang].lblTotal;
-            document.getElementById('lblDone').innerText = translations[lang].lblDone;
-            document.getElementById('lblActive').innerText = translations[lang].lblActive;
-            document.getElementById('lblPending').innerText = translations[lang].lblPending;
-            document.getElementById('menuTitleSpace').innerText = translations[lang].spaceTitle;
-            document.getElementById('menuTitleSystem').innerText = translations[lang].sysTitle;
-            document.getElementById('menuTasks').innerText = translations[lang].mTasks;
-            document.getElementById('menuNotes').innerText = translations[lang].mNotes;
-            document.getElementById('menuStats').innerText = translations[lang].mStats;
-            document.getElementById('menuSettings').innerText = translations[lang].mSettings;
-        }
+<select id="priority">
+<option value="high">High</option>
+<option value="medium">Medium</option>
+<option value="low">Low</option>
+</select>
 
-        // Engine Code for Core Features (Tasks & Notes)
-        function updateStorageAndUI() {
-            localStorage.setItem('mindlist_tasks', JSON.stringify(tasks));
-            localStorage.setItem('mindlist_notes', JSON.stringify(notes));
-            renderTasks();
-            renderNotes();
-            calculateStats();
-        }
+<button onclick="addTask()">Shto</button>
+</div>
 
-        function addTask() {
-            const text = document.getElementById('taskInput').value.trim();
-            const priority = document.getElementById('prioritySelect').value;
-            if (!text) return;
+<div id="taskList"></div>
+</div>
 
-            tasks.push({ id: Date.now(), text, priority, completed: false });
-            document.getElementById('taskInput').value = '';
-            updateStorageAndUI();
-        }
+<!-- NOTES -->
 
-        function toggleTask(id) {
-            tasks = tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
-            updateStorageAndUI();
-        }
+<div class="card">
+<h2 id="noteTitle">Shënime</h2>
 
-        function deleteTask(id) {
-            tasks = tasks.filter(t => t.id !== id);
-            updateStorageAndUI();
-        }
+<div class="input-group">
+<input type="text" id="noteInput" placeholder="Shkruaj shënimin...">
+<button onclick="addNote()">Ruaj</button>
+</div>
 
-        function filterTasks(f) {
-            currentFilter = f;
-            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-            event.target.classList.add('active');
-            renderTasks();
-        }
+<div id="notesList"></div>
+</div>
 
-        function renderTasks() {
-            const container = document.getElementById('taskList');
-            container.innerHTML = '';
-            
-            let filtered = tasks;
-            if (currentFilter === 'active') filtered = tasks.filter(t => !t.completed);
-            if (currentFilter === 'completed') filtered = tasks.filter(t => t.completed);
+</div>
+</div>
 
-            filtered.forEach(t => {
-                const item = document.createElement('div');
-                item.className = `list-item ${t.priority} ${t.completed ? 'completed' : ''}`;
-                item.innerHTML = `
-                    <div class="item-left">
-                        <input type="checkbox" class="checkbox" ${t.completed ? 'checked' : ''} onclick="toggleTask(${t.id})">
-                        <span>${t.text}</span>
-                    </div>
-                    <button class="delete-btn" onclick="deleteTask(${t.id})">✕</button>
-                `;
-                container.appendChild(item);
-            });
-        }
+<script>
 
-        // Notes Feature - FULLY FIXED CRITICAL STORAGE BUG
-        function saveNote() {
-            const noteText = document.getElementById('noteInput').value.trim();
-            if (!noteText) return;
+/* STORAGE */
 
-            notes.push({ id: Date.now(), text: noteText });
-            document.getElementById('noteInput').value = '';
-            updateStorageAndUI();
-        }
+let tasks = JSON.parse(localStorage.getItem("mindlist_tasks")) || [];
+let notes = JSON.parse(localStorage.getItem("mindlist_notes")) || [];
+let language = localStorage.getItem("mindlist_language") || "sq";
 
-        function deleteNote(id) {
-            notes = notes.filter(n => n.id !== id);
-            updateStorageAndUI();
-        }
+/* TRANSLATIONS */
 
-        function renderNotes() {
-            const container = document.getElementById('noteList');
-            container.innerHTML = '';
-            notes.forEach(n => {
-                const item = document.createElement('div');
-                item.className = 'list-item';
-                item.style.padding = '8px 12px';
-                item.innerHTML = `
-                    <span>${n.text}</span>
-                    <button class="delete-btn" onclick="deleteNote(${n.id})">✕</button>
-                `;
-                container.appendChild(item);
-            });
-        }
+const translations = {
+sq:{
+tasks:"Detyrat",
+notes:"Shënime",
+taskPlaceholder:"Shkruaj detyrën...",
+notePlaceholder:"Shkruaj shënimin..."
+},
+en:{
+tasks:"Tasks",
+notes:"Notes",
+taskPlaceholder:"Write task...",
+notePlaceholder:"Write note..."
+},
+hr:{
+tasks:"Zadaci",
+notes:"Bilješke",
+taskPlaceholder:"Upiši zadatak...",
+notePlaceholder:"Upiši bilješku..."
+},
+fr:{
+tasks:"Tâches",
+notes:"Notes",
+taskPlaceholder:"Écrire tâche...",
+notePlaceholder:"Écrire note..."
+},
+de:{
+tasks:"Aufgaben",
+notes:"Notizen",
+taskPlaceholder:"Aufgabe schreiben...",
+notePlaceholder:"Notiz schreiben..."
+},
+it:{
+tasks:"Compiti",
+notes:"Note",
+taskPlaceholder:"Scrivi compito...",
+notePlaceholder:"Scrivi nota..."
+},
+es:{
+tasks:"Tareas",
+notes:"Notas",
+taskPlaceholder:"Escribir tarea...",
+notePlaceholder:"Escribir nota..."
+}
+};
 
-        function calculateStats() {
-            document.getElementById('statTotal').innerText = tasks.length;
-            document.getElementById('statDone').innerText = tasks.filter(t => t.completed).length;
-            document.getElementById('statActive').innerText = tasks.filter(t => !t.completed).length;
-            document.getElementById('statPending').innerText = tasks.filter(t => !t.completed && t.priority === 'high').length;
-        }
+/* LANGUAGE */
 
-        // Initial Executions
-        setLanguage('sq');
-        updateStorageAndUI();
+function applyLanguage(){
 
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(err => console.log(err));
-            });
-        }
-    </script>
+const t = translations[language];
+
+document.getElementById("taskTitle").innerText = t.tasks;
+document.getElementById("noteTitle").innerText = t.notes;
+
+document.getElementById("taskInput").placeholder = t.taskPlaceholder;
+document.getElementById("noteInput").placeholder = t.notePlaceholder;
+
+localStorage.setItem("mindlist_language", language);
+}
+
+document.getElementById("languageSelect").addEventListener("change",(e)=>{
+language = e.target.value;
+applyLanguage();
+});
+
+document.getElementById("desktopLanguage").addEventListener("change",(e)=>{
+language = e.target.value;
+applyLanguage();
+});
+
+/* TASKS */
+
+function saveTasks(){
+localStorage.setItem("mindlist_tasks", JSON.stringify(tasks));
+}
+
+function renderTasks(){
+
+const list = document.getElementById("taskList");
+list.innerHTML = "";
+
+tasks.forEach((task,index)=>{
+
+const div = document.createElement("div");
+div.className = "task";
+
+div.innerHTML = `
+<div class="task-left">
+<input type="checkbox" ${task.completed ? "checked":""}
+onclick="toggleTask(${index})">
+
+<span class="${task.completed ? "completed":""}">
+${task.text}
+</span>
+
+<div class="badge ${task.priority}">
+${task.priority}
+</div>
+</div>
+
+<button onclick="deleteTask(${index})">X</button>
+`;
+
+list.appendChild(div);
+
+});
+}
+
+function addTask(){
+
+const input = document.getElementById("taskInput");
+const priority = document.getElementById("priority").value;
+
+if(!input.value.trim()) return;
+
+tasks.push({
+text:input.value,
+priority,
+completed:false
+});
+
+saveTasks();
+renderTasks();
+
+input.value = "";
+}
+
+function toggleTask(index){
+
+tasks[index].completed = !tasks[index].completed;
+
+saveTasks();
+renderTasks();
+}
+
+function deleteTask(index){
+
+tasks.splice(index,1);
+
+saveTasks();
+renderTasks();
+}
+
+/* NOTES */
+
+function saveNotes(){
+localStorage.setItem("mindlist_notes", JSON.stringify(notes));
+}
+
+function renderNotes(){
+
+const list = document.getElementById("notesList");
+list.innerHTML = "";
+
+notes.forEach((note,index)=>{
+
+const div = document.createElement("div");
+
+div.className = "note";
+
+div.innerHTML = `
+${note}
+
+<button style="float:right;background:red;"
+onclick="deleteNote(${index})">
+X
+</button>
+`;
+
+list.appendChild(div);
+
+});
+}
+
+function addNote(){
+
+const input = document.getElementById("noteInput");
+
+if(!input.value.trim()) return;
+
+notes.push(input.value);
+
+saveNotes();
+renderNotes();
+
+input.value = "";
+}
+
+function deleteNote(index){
+
+notes.splice(index,1);
+
+saveNotes();
+renderNotes();
+}
+
+/* MOBILE MENU */
+
+function toggleMenu(){
+
+document.getElementById("mobileSidebar")
+.classList.toggle("active");
+
+document.getElementById("overlay")
+.classList.toggle("active");
+}
+
+/* PWA */
+
+if("serviceWorker" in navigator){
+window.addEventListener("load",()=>{
+navigator.serviceWorker.register("sw.js");
+});
+}
+
+/* INIT */
+
+applyLanguage();
+renderTasks();
+renderNotes();
+
+</script>
+
 </body>
 </html>
