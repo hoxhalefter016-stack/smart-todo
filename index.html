@@ -1,129 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>VALORA Notes MVP</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VALORA Advanced</title>
 
 <style>
-  :root {
-    --bg: #f6f7fb;
-    --panel: #ffffff;
-    --text: #111;
-    --accent: #4f46e5;
-    --border: #e5e7eb;
-  }
+:root {
+  --bg: #f5f6fa;
+  --panel: #ffffff;
+  --text: #111;
+  --muted: #6b7280;
+  --accent: #4f46e5;
+  --border: #e5e7eb;
+}
 
-  [data-theme="dark"] {
-    --bg: #0f172a;
-    --panel: #111827;
-    --text: #f9fafb;
-    --border: #1f2937;
-  }
+[data-theme="dark"] {
+  --bg: #0b1220;
+  --panel: #111827;
+  --text: #f9fafb;
+  --muted: #9ca3af;
+  --border: #1f2937;
+}
 
-  * {
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-  }
+* {
+  box-sizing: border-box;
+  font-family: system-ui, Arial;
+}
 
-  body {
-    margin: 0;
-    display: flex;
-    height: 100vh;
-    background: var(--bg);
-    color: var(--text);
-  }
+body {
+  margin: 0;
+  display: flex;
+  height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
 
-  /* Sidebar */
-  .sidebar {
-    width: 280px;
-    background: var(--panel);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-  }
+/* SIDEBAR */
+.sidebar {
+  width: 300px;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+}
 
-  .logo {
-    font-size: 20px;
-    font-weight: bold;
-    padding: 10px;
-    color: var(--accent);
-  }
+.logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
 
-  button {
-    cursor: pointer;
-  }
+.btn {
+  background: var(--accent);
+  border: none;
+  color: white;
+  padding: 8px;
+  margin: 4px 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
-  .btn {
-    padding: 8px;
-    margin: 5px 0;
-    border: none;
-    background: var(--accent);
-    color: white;
-    border-radius: 6px;
-  }
+.btn.secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
 
-  .note-list {
-    overflow-y: auto;
-    flex: 1;
-  }
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin: 6px 0;
+  background: transparent;
+  color: var(--text);
+}
 
-  .note-item {
-    padding: 10px;
-    border-radius: 6px;
-    margin: 5px 0;
-    background: transparent;
-    border: 1px solid var(--border);
-    cursor: pointer;
-  }
+/* NOTE LIST */
+.note-list {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+}
 
-  .note-item.active {
-    background: var(--accent);
-    color: white;
-  }
+.note {
+  padding: 10px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
 
-  /* Main */
-  .main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
+.note.active {
+  background: var(--accent);
+  color: white;
+}
 
-  .topbar {
-    padding: 10px;
-    background: var(--panel);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    gap: 10px;
-  }
+.note small {
+  display: block;
+  opacity: 0.7;
+}
 
-  input, textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--panel);
-    color: var(--text);
-  }
+/* MAIN */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-  textarea {
-    flex: 1;
-    resize: none;
-  }
+.topbar {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
 
-  .editor {
-    flex: 1;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+.editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 10px;
+}
 
-  .small {
-    font-size: 12px;
-    opacity: 0.7;
-  }
+textarea {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  resize: none;
+}
+
+.meta {
+  font-size: 12px;
+  color: var(--muted);
+}
 </style>
 </head>
 
@@ -133,148 +149,177 @@
   <div class="logo">VALORA</div>
 
   <button class="btn" onclick="createNote()">+ New Note</button>
-  <button class="btn" onclick="toggleTheme()">🌙 Toggle Theme</button>
+  <button class="btn secondary" onclick="toggleTheme()">🌙 Theme</button>
 
-  <input placeholder="Search..." oninput="searchNotes(this.value)" />
+  <input placeholder="Search notes..." oninput="setSearch(this.value)">
 
-  <div class="note-list" id="noteList"></div>
+  <div class="note-list" id="list"></div>
 </div>
 
 <div class="main">
+
   <div class="topbar">
-    <input id="title" placeholder="Note title..." oninput="updateNote()" />
-    <button class="btn" onclick="deleteNote()">Delete</button>
-    <button class="btn" onclick="togglePin()">Pin</button>
+    <input id="title" placeholder="Title..." oninput="updateNote()">
+    <input id="tags" placeholder="#tags (comma separated)" oninput="updateNote()">
+    <button class="btn secondary" onclick="pinNote()">📌</button>
+    <button class="btn secondary" onclick="deleteNote()">🗑</button>
   </div>
 
   <div class="editor">
-    <textarea id="content" placeholder="Write your note..." oninput="updateNote()"></textarea>
-    <div class="small" id="info"></div>
+    <textarea id="content" placeholder="Write anything..." oninput="updateNote()"></textarea>
+    <div class="meta" id="meta"></div>
   </div>
+
 </div>
 
 <script>
-let notes = JSON.parse(localStorage.getItem("valora_notes") || "[]");
-let activeId = null;
+
+let notes = JSON.parse(localStorage.getItem("valora_v2") || "[]");
+let active = null;
+let search = "";
 
 /* INIT */
-function init() {
-  if (notes.length === 0) {
-    createNote(true);
+function init(){
+  if(notes.length === 0){
+    createNote();
   } else {
-    activeId = notes[0].id;
+    active = notes[0].id;
   }
   render();
 }
 
-/* CREATE NOTE */
-function createNote(skipRender=false) {
-  const note = {
+/* CREATE */
+function createNote(){
+  const n = {
     id: Date.now(),
-    title: "Untitled",
+    title: "New note",
     content: "",
+    tags: [],
     pinned: false,
-    created: new Date().toISOString()
+    created: new Date(),
+    updated: new Date(),
+    deleted: false
   };
 
-  notes.unshift(note);
-  activeId = note.id;
+  notes.unshift(n);
+  active = n.id;
   save();
-
-  if (!skipRender) render();
+  render();
 }
 
-/* UPDATE NOTE */
-function updateNote() {
-  const note = notes.find(n => n.id === activeId);
-  if (!note) return;
+/* UPDATE */
+function updateNote(){
+  const n = getActive();
+  if(!n) return;
 
-  note.title = document.getElementById("title").value;
-  note.content = document.getElementById("content").value;
+  n.title = title.value;
+  n.content = content.value;
+  n.tags = tags.value.split(",").map(t => t.trim()).filter(Boolean);
+  n.updated = new Date();
 
   save();
   renderList();
-}
-
-/* DELETE */
-function deleteNote() {
-  notes = notes.filter(n => n.id !== activeId);
-  activeId = notes[0]?.id || null;
-  save();
-  render();
+  updateMeta();
 }
 
 /* PIN */
-function togglePin() {
-  const note = notes.find(n => n.id === activeId);
-  if (!note) return;
-  note.pinned = !note.pinned;
+function pinNote(){
+  const n = getActive();
+  if(!n) return;
+  n.pinned = !n.pinned;
   save();
   renderList();
 }
 
-/* SEARCH */
-function searchNotes(q) {
-  renderList(q);
-}
-
-/* SELECT NOTE */
-function selectNote(id) {
-  activeId = id;
+/* DELETE → TRASH */
+function deleteNote(){
+  const n = getActive();
+  if(!n) return;
+  n.deleted = true;
+  active = notes.find(x => !x.deleted)?.id || null;
+  save();
   render();
 }
 
-/* RENDER */
-function render() {
-  const note = notes.find(n => n.id === activeId);
-
-  document.getElementById("title").value = note?.title || "";
-  document.getElementById("content").value = note?.content || "";
-
+/* SEARCH */
+function setSearch(v){
+  search = v.toLowerCase();
   renderList();
-  updateInfo();
 }
 
-function renderList(query="") {
-  const list = document.getElementById("noteList");
+/* GET ACTIVE */
+function getActive(){
+  return notes.find(n => n.id === active);
+}
+
+/* RENDER */
+function render(){
+  renderList();
+
+  const n = getActive();
+  if(!n){
+    title.value = "";
+    content.value = "";
+    tags.value = "";
+    return;
+  }
+
+  title.value = n.title;
+  content.value = n.content;
+  tags.value = n.tags.join(", ");
+  updateMeta();
+}
+
+/* LIST */
+function renderList(){
+  const list = document.getElementById("list");
   list.innerHTML = "";
 
   let filtered = notes.filter(n =>
-    n.title.toLowerCase().includes(query.toLowerCase()) ||
-    n.content.toLowerCase().includes(query.toLowerCase())
+    !n.deleted &&
+    (
+      n.title.toLowerCase().includes(search) ||
+      n.content.toLowerCase().includes(search) ||
+      n.tags.join(",").toLowerCase().includes(search)
+    )
   );
 
-  // pinned first
-  filtered.sort((a,b) => b.pinned - a.pinned);
+  filtered.sort((a,b)=> b.pinned - a.pinned || b.updated - a.updated);
 
-  filtered.forEach(n => {
+  filtered.forEach(n=>{
     const div = document.createElement("div");
-    div.className = "note-item" + (n.id === activeId ? " active" : "");
-    div.innerHTML = (n.pinned ? "📌 " : "") + n.title;
-    div.onclick = () => selectNote(n.id);
+    div.className = "note" + (n.id === active ? " active" : "");
+    div.innerHTML = `
+      <b>${n.pinned ? "📌 " : ""}${n.title}</b>
+      <small>${n.tags.map(t=>"#"+t).join(" ")}</small>
+    `;
+    div.onclick = ()=>{ active = n.id; render(); };
     list.appendChild(div);
   });
 }
 
+/* META */
+function updateMeta(){
+  const n = getActive();
+  if(!n) return;
+  meta.innerText = 
+    "Created: " + new Date(n.created).toLocaleString() +
+    " | Updated: " + new Date(n.updated).toLocaleString();
+}
+
 /* SAVE */
-function save() {
-  localStorage.setItem("valora_notes", JSON.stringify(notes));
+function save(){
+  localStorage.setItem("valora_v2", JSON.stringify(notes));
 }
 
 /* THEME */
-function toggleTheme() {
+function toggleTheme(){
   const t = document.body.getAttribute("data-theme");
   document.body.setAttribute("data-theme", t === "dark" ? "light" : "dark");
 }
 
-/* INFO */
-function updateInfo() {
-  const note = notes.find(n => n.id === activeId);
-  document.getElementById("info").innerText =
-    note ? `Created: ${new Date(note.created).toLocaleString()}` : "";
-}
-
 init();
+
 </script>
 
 </body>
