@@ -1,44 +1,48 @@
 <!DOCTYPE html>
-<html lang="sq">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>MindList Pro</title>
-
-<link rel="manifest" href="manifest.json">
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YHFZ1M5X5X"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-YHFZ1M5X5X');
-</script>
+<title>Velora</title>
 
 <style>
+
+/* =========================
+   DESIGN SYSTEM
+========================= */
+
 :root{
 --bg:#f8fafc;
---card:#ffffff;
---sidebar:#f1f5f9;
---accent:#4f46e5;
+--panel:#ffffff;
+--text:#0f172a;
+--muted:#64748b;
+
+--primary:#4f46e5;
+
 --high:#ef4444;
---medium:#f97316;
+--med:#f97316;
 --low:#22c55e;
+
+--border:#e2e8f0;
+--radius:14px;
+--shadow:0 10px 25px rgba(0,0,0,0.06);
 }
 
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial,sans-serif;
+font-family:system-ui,Arial;
 }
 
 body{
 background:var(--bg);
-color:#111827;
-height:100vh;
-overflow:hidden;
+color:var(--text);
 }
+
+/* =========================
+   APP LAYOUT
+========================= */
 
 .app{
 display:flex;
@@ -48,33 +52,34 @@ height:100vh;
 /* SIDEBAR */
 
 .sidebar{
-width:280px;
-background:var(--sidebar);
+width:260px;
+background:white;
+border-right:1px solid var(--border);
 padding:20px;
 display:flex;
 flex-direction:column;
 gap:20px;
-border-right:1px solid #dbeafe;
 }
 
-.logo{
-font-size:24px;
-font-weight:bold;
-color:var(--accent);
+.brand{
+font-size:22px;
+font-weight:800;
+color:var(--primary);
 }
 
-.nav-btn{
+.nav button{
+width:100%;
 padding:12px;
 border:none;
+background:transparent;
 border-radius:10px;
-background:white;
 cursor:pointer;
-font-weight:bold;
-transition:.2s;
+text-align:left;
+font-weight:600;
 }
 
-.nav-btn.active{
-background:var(--accent);
+.nav button.active{
+background:var(--primary);
 color:white;
 }
 
@@ -82,482 +87,340 @@ color:white;
 
 .main{
 flex:1;
-padding:20px;
+display:flex;
+flex-direction:column;
+}
+
+/* HEADER */
+
+.header{
+height:65px;
+background:white;
+border-bottom:1px solid var(--border);
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 16px;
+}
+
+.header input{
+padding:10px 12px;
+border:1px solid var(--border);
+border-radius:10px;
+width:240px;
+}
+
+/* CONTENT */
+
+.content{
+padding:16px;
 overflow:auto;
 }
 
+/* CARD */
+
 .card{
-background:var(--card);
-padding:20px;
-border-radius:16px;
-box-shadow:0 4px 10px rgba(0,0,0,0.05);
-margin-bottom:20px;
+background:var(--panel);
+padding:14px;
+border-radius:var(--radius);
+box-shadow:var(--shadow);
+margin-bottom:12px;
 }
 
-h2{
-margin-bottom:15px;
-}
-
-.input-group{
-display:flex;
-gap:10px;
-margin-bottom:15px;
-flex-wrap:wrap;
-}
-
-input, select{
-padding:12px;
-border:1px solid #cbd5e1;
-border-radius:10px;
-flex:1;
-}
-
-button{
-padding:12px 16px;
-border:none;
-border-radius:10px;
-cursor:pointer;
-font-weight:bold;
-background:var(--accent);
-color:white;
-}
+/* TASK */
 
 .task{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:12px;
-border:1px solid #e2e8f0;
-border-radius:12px;
-margin-bottom:10px;
-background:white;
+padding:10px;
+border:1px solid var(--border);
+border-radius:10px;
+margin-top:8px;
 }
 
-.task-left{
+.left{
 display:flex;
-align-items:center;
 gap:10px;
-}
-
-.completed{
-text-decoration:line-through;
-opacity:0.6;
+align-items:center;
 }
 
 .badge{
-padding:4px 10px;
-border-radius:20px;
+padding:4px 8px;
+border-radius:999px;
 font-size:12px;
 color:white;
-font-weight:bold;
 }
 
 .high{background:var(--high);}
-.medium{background:var(--medium);}
+.med{background:var(--med);}
 .low{background:var(--low);}
 
-.note{
-padding:12px;
-background:#f8fafc;
+/* BUTTON */
+
+.btn{
+padding:10px 12px;
+border:none;
+background:var(--primary);
+color:white;
 border-radius:10px;
-margin-bottom:10px;
-border:1px solid #e2e8f0;
+cursor:pointer;
 }
 
 /* MOBILE */
 
-.mobile-header{
-display:none;
-height:60px;
-background:white;
-padding:10px 15px;
-align-items:center;
-justify-content:space-between;
-border-bottom:1px solid #e2e8f0;
-}
-
-.hamburger{
-font-size:24px;
-cursor:pointer;
-}
-
-.mobile-sidebar{
-position:fixed;
-top:0;
-left:-100%;
-width:280px;
-height:100%;
-background:white;
-z-index:999;
-padding:20px;
-transition:.3s;
-overflow:auto;
-}
-
-.mobile-sidebar.active{
-left:0;
-}
-
-.overlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.3);
-display:none;
-z-index:998;
-}
-
-.overlay.active{
-display:block;
-}
-
-.language{
-margin-top:auto;
-}
-
 @media(max-width:768px){
-
-body{
-overflow:auto;
+.sidebar{display:none;}
+.header input{width:100%;}
 }
 
-.app{
-flex-direction:column;
-}
-
-.sidebar{
-display:none;
-}
-
-.mobile-header{
-display:flex;
-}
-
-.main{
-padding:15px;
-}
-
-}
 </style>
 </head>
 
 <body>
 
-<div class="mobile-header">
-<div class="logo">MindList Pro</div>
-<div class="hamburger" onclick="toggleMenu()">☰</div>
-</div>
-
-<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-<div class="mobile-sidebar" id="mobileSidebar">
-<div class="logo">MindList Pro</div>
-<br>
-
-<button class="nav-btn active">Tasks</button>
-<button class="nav-btn">Notes</button>
-
-<div class="language">
-<select id="languageSelect">
-<option value="sq">Shqip</option>
-<option value="en">English</option>
-<option value="hr">Hrvatski</option>
-<option value="fr">Français</option>
-<option value="de">Deutsch</option>
-<option value="it">Italiano</option>
-<option value="es">Español</option>
-</select>
-</div>
-</div>
-
 <div class="app">
 
+<!-- SIDEBAR -->
 <div class="sidebar">
-<div class="logo">MindList Pro</div>
 
-<button class="nav-btn active">Tasks</button>
-<button class="nav-btn">Notes</button>
+<div class="brand">VELORA</div>
 
-<div class="language">
-<select id="desktopLanguage">
-<option value="sq">Shqip</option>
-<option value="en">English</option>
-<option value="hr">Hrvatski</option>
-<option value="fr">Français</option>
-<option value="de">Deutsch</option>
-<option value="it">Italiano</option>
-<option value="es">Español</option>
-</select>
-</div>
+<div class="nav">
+<button class="active" onclick="setView('dashboard')">Dashboard</button>
+<button onclick="setView('tasks')">Tasks</button>
+<button onclick="setView('notes')">Notes</button>
 </div>
 
+</div>
+
+<!-- MAIN -->
 <div class="main">
 
-<!-- TASKS -->
-
-<div class="card">
-<h2 id="taskTitle">Detyrat</h2>
-
-<div class="input-group">
-<input type="text" id="taskInput" placeholder="Shkruaj detyrën...">
-
-<select id="priority">
-<option value="high">High</option>
-<option value="medium">Medium</option>
-<option value="low">Low</option>
-</select>
-
-<button onclick="addTask()">Shto</button>
+<div class="header">
+<div><b id="title">Dashboard</b></div>
+<input id="search" placeholder="Search..." oninput="render()">
 </div>
 
-<div id="taskList"></div>
-</div>
-
-<!-- NOTES -->
-
-<div class="card">
-<h2 id="noteTitle">Shënime</h2>
-
-<div class="input-group">
-<input type="text" id="noteInput" placeholder="Shkruaj shënimin...">
-<button onclick="addNote()">Ruaj</button>
-</div>
-
-<div id="notesList"></div>
-</div>
+<div class="content" id="app"></div>
 
 </div>
+
 </div>
 
 <script>
 
-/* STORAGE */
+/* =========================
+   STATE (SINGLE SOURCE OF TRUTH)
+========================= */
 
-let tasks = JSON.parse(localStorage.getItem("mindlist_tasks")) || [];
-let notes = JSON.parse(localStorage.getItem("mindlist_notes")) || [];
-let language = localStorage.getItem("mindlist_language") || "sq";
-
-/* TRANSLATIONS */
-
-const translations = {
-sq:{
-tasks:"Detyrat",
-notes:"Shënime",
-taskPlaceholder:"Shkruaj detyrën...",
-notePlaceholder:"Shkruaj shënimin..."
-},
-en:{
-tasks:"Tasks",
-notes:"Notes",
-taskPlaceholder:"Write task...",
-notePlaceholder:"Write note..."
-},
-hr:{
-tasks:"Zadaci",
-notes:"Bilješke",
-taskPlaceholder:"Upiši zadatak...",
-notePlaceholder:"Upiši bilješku..."
-},
-fr:{
-tasks:"Tâches",
-notes:"Notes",
-taskPlaceholder:"Écrire tâche...",
-notePlaceholder:"Écrire note..."
-},
-de:{
-tasks:"Aufgaben",
-notes:"Notizen",
-taskPlaceholder:"Aufgabe schreiben...",
-notePlaceholder:"Notiz schreiben..."
-},
-it:{
-tasks:"Compiti",
-notes:"Note",
-taskPlaceholder:"Scrivi compito...",
-notePlaceholder:"Scrivi nota..."
-},
-es:{
-tasks:"Tareas",
-notes:"Notas",
-taskPlaceholder:"Escribir tarea...",
-notePlaceholder:"Escribir nota..."
-}
+const state = {
+view:"dashboard",
+search:"",
+tasks:load("v2_tasks") || [],
+notes:load("v2_notes") || []
 };
 
-/* LANGUAGE */
+/* =========================
+   STORAGE LAYER
+========================= */
 
-function applyLanguage(){
-
-const t = translations[language];
-
-document.getElementById("taskTitle").innerText = t.tasks;
-document.getElementById("noteTitle").innerText = t.notes;
-
-document.getElementById("taskInput").placeholder = t.taskPlaceholder;
-document.getElementById("noteInput").placeholder = t.notePlaceholder;
-
-localStorage.setItem("mindlist_language", language);
+function save(key,data){
+localStorage.setItem(key,JSON.stringify(data));
 }
 
-document.getElementById("languageSelect").addEventListener("change",(e)=>{
-language = e.target.value;
-applyLanguage();
+function load(key){
+return JSON.parse(localStorage.getItem(key));
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function setView(v){
+state.view = v;
+render();
+}
+
+/* =========================
+   TASK ENGINE
+========================= */
+
+function addTask(text,priority){
+
+state.tasks.unshift({
+id:crypto.randomUUID(),
+text,
+priority,
+done:false,
+created:Date.now()
 });
 
-document.getElementById("desktopLanguage").addEventListener("change",(e)=>{
-language = e.target.value;
-applyLanguage();
+save("v2_tasks",state.tasks);
+render();
+
+}
+
+function toggleTask(id){
+
+state.tasks = state.tasks.map(t =>
+t.id===id ? {...t,done:!t.done} : t
+);
+
+save("v2_tasks",state.tasks);
+render();
+
+}
+
+function deleteTask(id){
+
+state.tasks = state.tasks.filter(t=>t.id!==id);
+
+save("v2_tasks",state.tasks);
+render();
+
+}
+
+/* =========================
+   NOTES ENGINE
+========================= */
+
+function addNote(text){
+
+state.notes.unshift({
+id:crypto.randomUUID(),
+text,
+created:Date.now()
 });
+
+save("v2_notes",state.notes);
+render();
+
+}
+
+function deleteNote(id){
+
+state.notes = state.notes.filter(n=>n.id!==id);
+
+save("v2_notes",state.notes);
+render();
+
+}
+
+/* =========================
+   UI ACTIONS
+========================= */
+
+function handleAddTask(){
+const t = document.getElementById("t").value;
+const p = document.getElementById("p").value;
+if(!t) return;
+addTask(t,p);
+}
+
+function handleAddNote(){
+const n = document.getElementById("n").value;
+if(!n) return;
+addNote(n);
+}
+
+/* =========================
+   RENDER ENGINE (PURE)
+========================= */
+
+function render(){
+
+const root = document.getElementById("app");
+const search = document.getElementById("search").value.toLowerCase();
+
+document.getElementById("title").innerText =
+state.view.toUpperCase();
+
+root.innerHTML="";
+
+/* DASHBOARD */
+
+if(state.view==="dashboard"){
+
+root.innerHTML=`
+<div class="card">
+<h3>Velora Dashboard</h3>
+<p>Tasks: ${state.tasks.length}</p>
+<p>Completed: ${state.tasks.filter(t=>t.done).length}</p>
+</div>
+`;
+
+}
 
 /* TASKS */
 
-function saveTasks(){
-localStorage.setItem("mindlist_tasks", JSON.stringify(tasks));
-}
+if(state.view==="tasks"){
 
-function renderTasks(){
-
-const list = document.getElementById("taskList");
-list.innerHTML = "";
-
-tasks.forEach((task,index)=>{
-
-const div = document.createElement("div");
-div.className = "task";
-
-div.innerHTML = `
-<div class="task-left">
-<input type="checkbox" ${task.completed ? "checked":""}
-onclick="toggleTask(${index})">
-
-<span class="${task.completed ? "completed":""}">
-${task.text}
-</span>
-
-<div class="badge ${task.priority}">
-${task.priority}
+root.innerHTML=`
+<div class="card">
+<h3>Add Task</h3>
+<input id="t" placeholder="Task">
+<select id="p">
+<option value="high">High</option>
+<option value="med">Medium</option>
+<option value="low">Low</option>
+</select>
+<button class="btn" onclick="handleAddTask()">Add</button>
 </div>
-</div>
-
-<button onclick="deleteTask(${index})">X</button>
 `;
 
-list.appendChild(div);
+state.tasks
+.filter(t=>t.text.toLowerCase().includes(search))
+.forEach(t=>{
+root.innerHTML+=`
+<div class="task">
+<div class="left">
+<input type="checkbox" ${t.done?"checked":""}
+onclick="toggleTask('${t.id}')">
 
+<div>${t.text}</div>
+
+<span class="badge ${t.priority}">
+${t.priority}
+</span>
+
+</div>
+
+<button onclick="deleteTask('${t.id}')">x</button>
+</div>
+`;
 });
-}
 
-function addTask(){
-
-const input = document.getElementById("taskInput");
-const priority = document.getElementById("priority").value;
-
-if(!input.value.trim()) return;
-
-tasks.push({
-text:input.value,
-priority,
-completed:false
-});
-
-saveTasks();
-renderTasks();
-
-input.value = "";
-}
-
-function toggleTask(index){
-
-tasks[index].completed = !tasks[index].completed;
-
-saveTasks();
-renderTasks();
-}
-
-function deleteTask(index){
-
-tasks.splice(index,1);
-
-saveTasks();
-renderTasks();
 }
 
 /* NOTES */
 
-function saveNotes(){
-localStorage.setItem("mindlist_notes", JSON.stringify(notes));
-}
+if(state.view==="notes"){
 
-function renderNotes(){
-
-const list = document.getElementById("notesList");
-list.innerHTML = "";
-
-notes.forEach((note,index)=>{
-
-const div = document.createElement("div");
-
-div.className = "note";
-
-div.innerHTML = `
-${note}
-
-<button style="float:right;background:red;"
-onclick="deleteNote(${index})">
-X
-</button>
+root.innerHTML=`
+<div class="card">
+<h3>Add Note</h3>
+<input id="n" placeholder="Note">
+<button class="btn" onclick="handleAddNote()">Add</button>
+</div>
 `;
 
-list.appendChild(div);
-
+state.notes.forEach(n=>{
+root.innerHTML+=`
+<div class="card">
+${n.text}
+<button onclick="deleteNote('${n.id}')">x</button>
+</div>
+`;
 });
+
 }
 
-function addNote(){
-
-const input = document.getElementById("noteInput");
-
-if(!input.value.trim()) return;
-
-notes.push(input.value);
-
-saveNotes();
-renderNotes();
-
-input.value = "";
-}
-
-function deleteNote(index){
-
-notes.splice(index,1);
-
-saveNotes();
-renderNotes();
-}
-
-/* MOBILE MENU */
-
-function toggleMenu(){
-
-document.getElementById("mobileSidebar")
-.classList.toggle("active");
-
-document.getElementById("overlay")
-.classList.toggle("active");
-}
-
-/* PWA */
-
-if("serviceWorker" in navigator){
-window.addEventListener("load",()=>{
-navigator.serviceWorker.register("sw.js");
-});
 }
 
 /* INIT */
 
-applyLanguage();
-renderTasks();
-renderNotes();
+render();
 
 </script>
 
