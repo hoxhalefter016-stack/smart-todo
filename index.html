@@ -1,204 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>VELORA</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f8fafc;
-  display: flex;
+:root{
+  --bg:#f8fafc;
+  --card:#fff;
+  --side:#f1f5f9;
+  --acc:#4f46e5;
+  --text:#0f172a;
+  --muted:#64748b;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 260px;
-  background: #f1f5f9;
-  height: 100vh;
-  padding: 20px;
+*{box-sizing:border-box;font-family:system-ui;}
+
+body{
+  margin:0;
+  display:flex;
+  background:var(--bg);
 }
 
-.sidebar h2 {
-  color: #4f46e5;
+/* sidebar */
+.sidebar{
+  width:260px;
+  height:100vh;
+  position:fixed;
+  background:var(--side);
+  padding:20px;
 }
 
-/* Main */
-.main {
-  flex: 1;
-  padding: 20px;
+.sidebar h1{color:var(--acc);}
+
+/* main */
+.main{
+  margin-left:260px;
+  padding:20px;
+  width:100%;
 }
 
-.card {
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+.card{
+  background:var(--card);
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:15px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
 }
 
-/* Inputs */
-input, textarea, select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+input,select{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:10px;
+  border:1px solid #e2e8f0;
 }
 
-button {
-  margin-top: 10px;
-  padding: 10px;
-  background: #4f46e5;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+button{
+  background:var(--acc);
+  color:#fff;
+  border:none;
+  padding:10px;
+  border-radius:10px;
+  cursor:pointer;
 }
 
-.task {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px;
-  border-bottom: 1px solid #eee;
+/* task */
+.task{
+  padding:10px;
+  border-bottom:1px solid #eef2f7;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.done {
-  text-decoration: line-through;
-  opacity: 0.6;
+.done{
+  text-decoration:line-through;
+  color:var(--muted);
 }
 
-.badge {
-  font-size: 12px;
-  padding: 2px 6px;
-  border-radius: 6px;
-  color: white;
+.badge{
+  font-size:11px;
+  padding:3px 8px;
+  border-radius:8px;
+  color:#fff;
+  margin-left:5px;
 }
 
-.high { background: #ef4444; }
-.medium { background: #f97316; }
-.low { background: #22c55e; }
+.high{background:#ef4444;}
+.medium{background:#f97316;}
+.low{background:#22c55e;}
 
+.small{
+  padding:6px 10px;
+  font-size:12px;
+  background:#ef4444;
+}
+
+.progress{
+  height:10px;
+  background:#e2e8f0;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.bar{
+  height:100%;
+  background:var(--acc);
+  width:0%;
+}
 </style>
 </head>
 
 <body>
 
 <div class="sidebar">
-  <h2>VELORA</h2>
-  <p>Tasks & Notes</p>
+  <h1>VELORA</h1>
+  <p>Advanced System</p>
+
+  <input id="search" placeholder="Search tasks..." />
+  <button onclick="app.clearCompleted()">Clear Completed</button>
+
+  <div class="progress" style="margin-top:15px;">
+    <div class="bar" id="bar"></div>
+  </div>
 </div>
 
 <div class="main">
 
-  <!-- TASKS -->
   <div class="card">
-    <h3>Tasks</h3>
-    <input id="taskInput" placeholder="New task..." />
-    
+    <h2>Add Task</h2>
+    <input id="text" placeholder="Task..." />
     <select id="priority">
       <option value="low">Low</option>
       <option value="medium">Medium</option>
       <option value="high">High</option>
     </select>
-
-    <button onclick="addTask()">Add Task</button>
-    <div id="taskList"></div>
+    <input id="date" type="date" />
+    <button onclick="app.add()">Add</button>
   </div>
 
-  <!-- NOTES -->
   <div class="card">
-    <h3>Notes</h3>
-    <textarea id="noteInput" placeholder="Write a note..."></textarea>
-    <button onclick="saveNote()">Save Note</button>
-    <div id="notesList"></div>
+    <h2>Tasks</h2>
+    <div id="list"></div>
   </div>
 
 </div>
 
 <script>
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-let notes = JSON.parse(localStorage.getItem("notes")) || [];
 
-/* TASKS */
-function renderTasks(){
-  const list = document.getElementById("taskList");
-  list.innerHTML = "";
+/* STORAGE */
+const Store = {
+  get:k=>JSON.parse(localStorage.getItem(k)||"[]"),
+  set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))
+};
 
-  tasks.forEach((t, i) => {
-    list.innerHTML += `
-      <div class="task ${t.done ? 'done' : ''}">
-        <div onclick="toggleTask(${i})">
-          ${t.text} 
-          <span class="badge ${t.priority}">${t.priority}</span>
+/* APP */
+class Velora {
+
+  constructor(){
+    this.tasks = Store.get("tasks");
+    this.search = "";
+    this.bind();
+    this.render();
+  }
+
+  bind(){
+    document.getElementById("search").addEventListener("input",(e)=>{
+      this.search = e.target.value.toLowerCase();
+      this.render();
+    });
+
+    document.addEventListener("keydown",(e)=>{
+      if(e.key==="Enter") this.add();
+    });
+  }
+
+  save(){
+    Store.set("tasks",this.tasks);
+  }
+
+  add(){
+    const t = document.getElementById("text");
+    const p = document.getElementById("priority");
+    const d = document.getElementById("date");
+
+    if(!t.value.trim()) return;
+
+    this.tasks.push({
+      id:Date.now(),
+      text:t.value,
+      priority:p.value,
+      date:d.value,
+      done:false,
+      sub:[]
+    });
+
+    t.value="";
+    this.save();
+    this.render();
+  }
+
+  toggle(id){
+    this.tasks = this.tasks.map(t=>
+      t.id===id ? {...t,done:!t.done}:t
+    );
+    this.save();
+    this.render();
+  }
+
+  remove(id){
+    this.tasks = this.tasks.filter(t=>t.id!==id);
+    this.save();
+    this.render();
+  }
+
+  clearCompleted(){
+    this.tasks = this.tasks.filter(t=>!t.done);
+    this.save();
+    this.render();
+  }
+
+  filtered(){
+    let arr = this.tasks;
+
+    if(this.search){
+      arr = arr.filter(t=>t.text.toLowerCase().includes(this.search));
+    }
+
+    return arr;
+  }
+
+  progress(){
+    if(!this.tasks.length) return 0;
+    let done = this.tasks.filter(t=>t.done).length;
+    return (done/this.tasks.length)*100;
+  }
+
+  render(){
+
+    document.getElementById("bar").style.width =
+      this.progress()+"%";
+
+    const list = document.getElementById("list");
+    list.innerHTML="";
+
+    this.filtered()
+    .sort((a,b)=>b.id-a.id)
+    .forEach(t=>{
+
+      list.innerHTML+=`
+        <div class="task ${t.done?'done':''}">
+          <div onclick="app.toggle(${t.id})">
+            ${t.text}
+            <span class="badge ${t.priority}">${t.priority}</span>
+          </div>
+
+          <button class="small" onclick="app.remove(${t.id})">X</button>
         </div>
-        <button onclick="deleteTask(${i})">X</button>
-      </div>
-    `;
-  });
-
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+      `;
+    });
+  }
 }
 
-function addTask(){
-  const text = document.getElementById("taskInput").value;
-  const priority = document.getElementById("priority").value;
+const app = new Velora();
 
-  if(!text) return;
-
-  tasks.push({text, priority, done:false});
-  document.getElementById("taskInput").value = "";
-
-  renderTasks();
-}
-
-function toggleTask(i){
-  tasks[i].done = !tasks[i].done;
-  renderTasks();
-}
-
-function deleteTask(i){
-  tasks.splice(i,1);
-  renderTasks();
-}
-
-/* NOTES */
-function renderNotes(){
-  const list = document.getElementById("notesList");
-  list.innerHTML = "";
-
-  notes.forEach((n,i)=>{
-    list.innerHTML += `
-      <div class="task">
-        ${n}
-        <button onclick="deleteNote(${i})">X</button>
-      </div>
-    `;
-  });
-
-  localStorage.setItem("notes", JSON.stringify(notes));
-}
-
-function saveNote(){
-  const text = document.getElementById("noteInput").value;
-  if(!text) return;
-
-  notes.push(text);
-  document.getElementById("noteInput").value = "";
-
-  renderNotes();
-}
-
-function deleteNote(i){
-  notes.splice(i,1);
-  renderNotes();
-}
-
-/* INIT */
-renderTasks();
-renderNotes();
 </script>
 
 </body>
