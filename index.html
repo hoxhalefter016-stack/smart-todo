@@ -3,425 +3,202 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Velora</title>
+<title>VELORA</title>
 
 <style>
-
-/* =========================
-   DESIGN SYSTEM
-========================= */
-
-:root{
---bg:#f8fafc;
---panel:#ffffff;
---text:#0f172a;
---muted:#64748b;
-
---primary:#4f46e5;
-
---high:#ef4444;
---med:#f97316;
---low:#22c55e;
-
---border:#e2e8f0;
---radius:14px;
---shadow:0 10px 25px rgba(0,0,0,0.06);
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f8fafc;
+  display: flex;
 }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:system-ui,Arial;
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: #f1f5f9;
+  height: 100vh;
+  padding: 20px;
 }
 
-body{
-background:var(--bg);
-color:var(--text);
+.sidebar h2 {
+  color: #4f46e5;
 }
 
-/* =========================
-   APP LAYOUT
-========================= */
-
-.app{
-display:flex;
-height:100vh;
+/* Main */
+.main {
+  flex: 1;
+  padding: 20px;
 }
 
-/* SIDEBAR */
-
-.sidebar{
-width:260px;
-background:white;
-border-right:1px solid var(--border);
-padding:20px;
-display:flex;
-flex-direction:column;
-gap:20px;
+.card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.brand{
-font-size:22px;
-font-weight:800;
-color:var(--primary);
+/* Inputs */
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
-.nav button{
-width:100%;
-padding:12px;
-border:none;
-background:transparent;
-border-radius:10px;
-cursor:pointer;
-text-align:left;
-font-weight:600;
+button {
+  margin-top: 10px;
+  padding: 10px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-.nav button.active{
-background:var(--primary);
-color:white;
+.task {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
 }
 
-/* MAIN */
-
-.main{
-flex:1;
-display:flex;
-flex-direction:column;
+.done {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
 
-/* HEADER */
-
-.header{
-height:65px;
-background:white;
-border-bottom:1px solid var(--border);
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 16px;
+.badge {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: white;
 }
 
-.header input{
-padding:10px 12px;
-border:1px solid var(--border);
-border-radius:10px;
-width:240px;
-}
-
-/* CONTENT */
-
-.content{
-padding:16px;
-overflow:auto;
-}
-
-/* CARD */
-
-.card{
-background:var(--panel);
-padding:14px;
-border-radius:var(--radius);
-box-shadow:var(--shadow);
-margin-bottom:12px;
-}
-
-/* TASK */
-
-.task{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:10px;
-border:1px solid var(--border);
-border-radius:10px;
-margin-top:8px;
-}
-
-.left{
-display:flex;
-gap:10px;
-align-items:center;
-}
-
-.badge{
-padding:4px 8px;
-border-radius:999px;
-font-size:12px;
-color:white;
-}
-
-.high{background:var(--high);}
-.med{background:var(--med);}
-.low{background:var(--low);}
-
-/* BUTTON */
-
-.btn{
-padding:10px 12px;
-border:none;
-background:var(--primary);
-color:white;
-border-radius:10px;
-cursor:pointer;
-}
-
-/* MOBILE */
-
-@media(max-width:768px){
-.sidebar{display:none;}
-.header input{width:100%;}
-}
+.high { background: #ef4444; }
+.medium { background: #f97316; }
+.low { background: #22c55e; }
 
 </style>
 </head>
 
 <body>
 
-<div class="app">
-
-<!-- SIDEBAR -->
 <div class="sidebar">
-
-<div class="brand">VELORA</div>
-
-<div class="nav">
-<button class="active" onclick="setView('dashboard')">Dashboard</button>
-<button onclick="setView('tasks')">Tasks</button>
-<button onclick="setView('notes')">Notes</button>
+  <h2>VELORA</h2>
+  <p>Tasks & Notes</p>
 </div>
 
-</div>
-
-<!-- MAIN -->
 <div class="main">
 
-<div class="header">
-<div><b id="title">Dashboard</b></div>
-<input id="search" placeholder="Search..." oninput="render()">
-</div>
+  <!-- TASKS -->
+  <div class="card">
+    <h3>Tasks</h3>
+    <input id="taskInput" placeholder="New task..." />
+    
+    <select id="priority">
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+    </select>
 
-<div class="content" id="app"></div>
+    <button onclick="addTask()">Add Task</button>
+    <div id="taskList"></div>
+  </div>
 
-</div>
+  <!-- NOTES -->
+  <div class="card">
+    <h3>Notes</h3>
+    <textarea id="noteInput" placeholder="Write a note..."></textarea>
+    <button onclick="saveNote()">Save Note</button>
+    <div id="notesList"></div>
+  </div>
 
 </div>
 
 <script>
-
-/* =========================
-   STATE (SINGLE SOURCE OF TRUTH)
-========================= */
-
-const state = {
-view:"dashboard",
-search:"",
-tasks:load("v2_tasks") || [],
-notes:load("v2_notes") || []
-};
-
-/* =========================
-   STORAGE LAYER
-========================= */
-
-function save(key,data){
-localStorage.setItem(key,JSON.stringify(data));
-}
-
-function load(key){
-return JSON.parse(localStorage.getItem(key));
-}
-
-/* =========================
-   NAVIGATION
-========================= */
-
-function setView(v){
-state.view = v;
-render();
-}
-
-/* =========================
-   TASK ENGINE
-========================= */
-
-function addTask(text,priority){
-
-state.tasks.unshift({
-id:crypto.randomUUID(),
-text,
-priority,
-done:false,
-created:Date.now()
-});
-
-save("v2_tasks",state.tasks);
-render();
-
-}
-
-function toggleTask(id){
-
-state.tasks = state.tasks.map(t =>
-t.id===id ? {...t,done:!t.done} : t
-);
-
-save("v2_tasks",state.tasks);
-render();
-
-}
-
-function deleteTask(id){
-
-state.tasks = state.tasks.filter(t=>t.id!==id);
-
-save("v2_tasks",state.tasks);
-render();
-
-}
-
-/* =========================
-   NOTES ENGINE
-========================= */
-
-function addNote(text){
-
-state.notes.unshift({
-id:crypto.randomUUID(),
-text,
-created:Date.now()
-});
-
-save("v2_notes",state.notes);
-render();
-
-}
-
-function deleteNote(id){
-
-state.notes = state.notes.filter(n=>n.id!==id);
-
-save("v2_notes",state.notes);
-render();
-
-}
-
-/* =========================
-   UI ACTIONS
-========================= */
-
-function handleAddTask(){
-const t = document.getElementById("t").value;
-const p = document.getElementById("p").value;
-if(!t) return;
-addTask(t,p);
-}
-
-function handleAddNote(){
-const n = document.getElementById("n").value;
-if(!n) return;
-addNote(n);
-}
-
-/* =========================
-   RENDER ENGINE (PURE)
-========================= */
-
-function render(){
-
-const root = document.getElementById("app");
-const search = document.getElementById("search").value.toLowerCase();
-
-document.getElementById("title").innerText =
-state.view.toUpperCase();
-
-root.innerHTML="";
-
-/* DASHBOARD */
-
-if(state.view==="dashboard"){
-
-root.innerHTML=`
-<div class="card">
-<h3>Velora Dashboard</h3>
-<p>Tasks: ${state.tasks.length}</p>
-<p>Completed: ${state.tasks.filter(t=>t.done).length}</p>
-</div>
-`;
-
-}
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
 
 /* TASKS */
+function renderTasks(){
+  const list = document.getElementById("taskList");
+  list.innerHTML = "";
 
-if(state.view==="tasks"){
+  tasks.forEach((t, i) => {
+    list.innerHTML += `
+      <div class="task ${t.done ? 'done' : ''}">
+        <div onclick="toggleTask(${i})">
+          ${t.text} 
+          <span class="badge ${t.priority}">${t.priority}</span>
+        </div>
+        <button onclick="deleteTask(${i})">X</button>
+      </div>
+    `;
+  });
 
-root.innerHTML=`
-<div class="card">
-<h3>Add Task</h3>
-<input id="t" placeholder="Task">
-<select id="p">
-<option value="high">High</option>
-<option value="med">Medium</option>
-<option value="low">Low</option>
-</select>
-<button class="btn" onclick="handleAddTask()">Add</button>
-</div>
-`;
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
-state.tasks
-.filter(t=>t.text.toLowerCase().includes(search))
-.forEach(t=>{
-root.innerHTML+=`
-<div class="task">
-<div class="left">
-<input type="checkbox" ${t.done?"checked":""}
-onclick="toggleTask('${t.id}')">
+function addTask(){
+  const text = document.getElementById("taskInput").value;
+  const priority = document.getElementById("priority").value;
 
-<div>${t.text}</div>
+  if(!text) return;
 
-<span class="badge ${t.priority}">
-${t.priority}
-</span>
+  tasks.push({text, priority, done:false});
+  document.getElementById("taskInput").value = "";
 
-</div>
+  renderTasks();
+}
 
-<button onclick="deleteTask('${t.id}')">x</button>
-</div>
-`;
-});
+function toggleTask(i){
+  tasks[i].done = !tasks[i].done;
+  renderTasks();
+}
 
+function deleteTask(i){
+  tasks.splice(i,1);
+  renderTasks();
 }
 
 /* NOTES */
+function renderNotes(){
+  const list = document.getElementById("notesList");
+  list.innerHTML = "";
 
-if(state.view==="notes"){
+  notes.forEach((n,i)=>{
+    list.innerHTML += `
+      <div class="task">
+        ${n}
+        <button onclick="deleteNote(${i})">X</button>
+      </div>
+    `;
+  });
 
-root.innerHTML=`
-<div class="card">
-<h3>Add Note</h3>
-<input id="n" placeholder="Note">
-<button class="btn" onclick="handleAddNote()">Add</button>
-</div>
-`;
-
-state.notes.forEach(n=>{
-root.innerHTML+=`
-<div class="card">
-${n.text}
-<button onclick="deleteNote('${n.id}')">x</button>
-</div>
-`;
-});
-
+  localStorage.setItem("notes", JSON.stringify(notes));
 }
 
+function saveNote(){
+  const text = document.getElementById("noteInput").value;
+  if(!text) return;
+
+  notes.push(text);
+  document.getElementById("noteInput").value = "";
+
+  renderNotes();
+}
+
+function deleteNote(i){
+  notes.splice(i,1);
+  renderNotes();
 }
 
 /* INIT */
-
-render();
-
+renderTasks();
+renderNotes();
 </script>
 
 </body>
