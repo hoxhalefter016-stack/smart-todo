@@ -1,271 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
+<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>VELORA</title>
+<title>VALORA Notes MVP</title>
 
 <style>
-:root{
-  --bg:#f8fafc;
-  --card:#fff;
-  --side:#f1f5f9;
-  --acc:#4f46e5;
-  --text:#0f172a;
-  --muted:#64748b;
-}
+  :root {
+    --bg: #f6f7fb;
+    --panel: #ffffff;
+    --text: #111;
+    --accent: #4f46e5;
+    --border: #e5e7eb;
+  }
 
-*{box-sizing:border-box;font-family:system-ui;}
+  [data-theme="dark"] {
+    --bg: #0f172a;
+    --panel: #111827;
+    --text: #f9fafb;
+    --border: #1f2937;
+  }
 
-body{
-  margin:0;
-  display:flex;
-  background:var(--bg);
-}
+  * {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
 
-/* sidebar */
-.sidebar{
-  width:260px;
-  height:100vh;
-  position:fixed;
-  background:var(--side);
-  padding:20px;
-}
+  body {
+    margin: 0;
+    display: flex;
+    height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+  }
 
-.sidebar h1{color:var(--acc);}
+  /* Sidebar */
+  .sidebar {
+    width: 280px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
 
-/* main */
-.main{
-  margin-left:260px;
-  padding:20px;
-  width:100%;
-}
+  .logo {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px;
+    color: var(--accent);
+  }
 
-.card{
-  background:var(--card);
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:15px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.05);
-}
+  button {
+    cursor: pointer;
+  }
 
-input,select{
-  width:100%;
-  padding:10px;
-  margin-top:8px;
-  border-radius:10px;
-  border:1px solid #e2e8f0;
-}
+  .btn {
+    padding: 8px;
+    margin: 5px 0;
+    border: none;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+  }
 
-button{
-  background:var(--acc);
-  color:#fff;
-  border:none;
-  padding:10px;
-  border-radius:10px;
-  cursor:pointer;
-}
+  .note-list {
+    overflow-y: auto;
+    flex: 1;
+  }
 
-/* task */
-.task{
-  padding:10px;
-  border-bottom:1px solid #eef2f7;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
+  .note-item {
+    padding: 10px;
+    border-radius: 6px;
+    margin: 5px 0;
+    background: transparent;
+    border: 1px solid var(--border);
+    cursor: pointer;
+  }
 
-.done{
-  text-decoration:line-through;
-  color:var(--muted);
-}
+  .note-item.active {
+    background: var(--accent);
+    color: white;
+  }
 
-.badge{
-  font-size:11px;
-  padding:3px 8px;
-  border-radius:8px;
-  color:#fff;
-  margin-left:5px;
-}
+  /* Main */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 
-.high{background:#ef4444;}
-.medium{background:#f97316;}
-.low{background:#22c55e;}
+  .topbar {
+    padding: 10px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+  }
 
-.small{
-  padding:6px 10px;
-  font-size:12px;
-  background:#ef4444;
-}
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--panel);
+    color: var(--text);
+  }
 
-.progress{
-  height:10px;
-  background:#e2e8f0;
-  border-radius:20px;
-  overflow:hidden;
-}
+  textarea {
+    flex: 1;
+    resize: none;
+  }
 
-.bar{
-  height:100%;
-  background:var(--acc);
-  width:0%;
-}
+  .editor {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .small {
+    font-size: 12px;
+    opacity: 0.7;
+  }
 </style>
 </head>
 
 <body>
 
 <div class="sidebar">
-  <h1>VELORA</h1>
-  <p>Advanced System</p>
+  <div class="logo">VALORA</div>
 
-  <input id="search" placeholder="Search tasks..." />
-  <button onclick="app.clearCompleted()">Clear Completed</button>
+  <button class="btn" onclick="createNote()">+ New Note</button>
+  <button class="btn" onclick="toggleTheme()">🌙 Toggle Theme</button>
 
-  <div class="progress" style="margin-top:15px;">
-    <div class="bar" id="bar"></div>
-  </div>
+  <input placeholder="Search..." oninput="searchNotes(this.value)" />
+
+  <div class="note-list" id="noteList"></div>
 </div>
 
 <div class="main">
-
-  <div class="card">
-    <h2>Add Task</h2>
-    <input id="text" placeholder="Task..." />
-    <select id="priority">
-      <option value="low">Low</option>
-      <option value="medium">Medium</option>
-      <option value="high">High</option>
-    </select>
-    <input id="date" type="date" />
-    <button onclick="app.add()">Add</button>
+  <div class="topbar">
+    <input id="title" placeholder="Note title..." oninput="updateNote()" />
+    <button class="btn" onclick="deleteNote()">Delete</button>
+    <button class="btn" onclick="togglePin()">Pin</button>
   </div>
 
-  <div class="card">
-    <h2>Tasks</h2>
-    <div id="list"></div>
+  <div class="editor">
+    <textarea id="content" placeholder="Write your note..." oninput="updateNote()"></textarea>
+    <div class="small" id="info"></div>
   </div>
-
 </div>
 
 <script>
+let notes = JSON.parse(localStorage.getItem("valora_notes") || "[]");
+let activeId = null;
 
-/* STORAGE */
-const Store = {
-  get:k=>JSON.parse(localStorage.getItem(k)||"[]"),
-  set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))
-};
-
-/* APP */
-class Velora {
-
-  constructor(){
-    this.tasks = Store.get("tasks");
-    this.search = "";
-    this.bind();
-    this.render();
+/* INIT */
+function init() {
+  if (notes.length === 0) {
+    createNote(true);
+  } else {
+    activeId = notes[0].id;
   }
-
-  bind(){
-    document.getElementById("search").addEventListener("input",(e)=>{
-      this.search = e.target.value.toLowerCase();
-      this.render();
-    });
-
-    document.addEventListener("keydown",(e)=>{
-      if(e.key==="Enter") this.add();
-    });
-  }
-
-  save(){
-    Store.set("tasks",this.tasks);
-  }
-
-  add(){
-    const t = document.getElementById("text");
-    const p = document.getElementById("priority");
-    const d = document.getElementById("date");
-
-    if(!t.value.trim()) return;
-
-    this.tasks.push({
-      id:Date.now(),
-      text:t.value,
-      priority:p.value,
-      date:d.value,
-      done:false,
-      sub:[]
-    });
-
-    t.value="";
-    this.save();
-    this.render();
-  }
-
-  toggle(id){
-    this.tasks = this.tasks.map(t=>
-      t.id===id ? {...t,done:!t.done}:t
-    );
-    this.save();
-    this.render();
-  }
-
-  remove(id){
-    this.tasks = this.tasks.filter(t=>t.id!==id);
-    this.save();
-    this.render();
-  }
-
-  clearCompleted(){
-    this.tasks = this.tasks.filter(t=>!t.done);
-    this.save();
-    this.render();
-  }
-
-  filtered(){
-    let arr = this.tasks;
-
-    if(this.search){
-      arr = arr.filter(t=>t.text.toLowerCase().includes(this.search));
-    }
-
-    return arr;
-  }
-
-  progress(){
-    if(!this.tasks.length) return 0;
-    let done = this.tasks.filter(t=>t.done).length;
-    return (done/this.tasks.length)*100;
-  }
-
-  render(){
-
-    document.getElementById("bar").style.width =
-      this.progress()+"%";
-
-    const list = document.getElementById("list");
-    list.innerHTML="";
-
-    this.filtered()
-    .sort((a,b)=>b.id-a.id)
-    .forEach(t=>{
-
-      list.innerHTML+=`
-        <div class="task ${t.done?'done':''}">
-          <div onclick="app.toggle(${t.id})">
-            ${t.text}
-            <span class="badge ${t.priority}">${t.priority}</span>
-          </div>
-
-          <button class="small" onclick="app.remove(${t.id})">X</button>
-        </div>
-      `;
-    });
-  }
+  render();
 }
 
-const app = new Velora();
+/* CREATE NOTE */
+function createNote(skipRender=false) {
+  const note = {
+    id: Date.now(),
+    title: "Untitled",
+    content: "",
+    pinned: false,
+    created: new Date().toISOString()
+  };
 
+  notes.unshift(note);
+  activeId = note.id;
+  save();
+
+  if (!skipRender) render();
+}
+
+/* UPDATE NOTE */
+function updateNote() {
+  const note = notes.find(n => n.id === activeId);
+  if (!note) return;
+
+  note.title = document.getElementById("title").value;
+  note.content = document.getElementById("content").value;
+
+  save();
+  renderList();
+}
+
+/* DELETE */
+function deleteNote() {
+  notes = notes.filter(n => n.id !== activeId);
+  activeId = notes[0]?.id || null;
+  save();
+  render();
+}
+
+/* PIN */
+function togglePin() {
+  const note = notes.find(n => n.id === activeId);
+  if (!note) return;
+  note.pinned = !note.pinned;
+  save();
+  renderList();
+}
+
+/* SEARCH */
+function searchNotes(q) {
+  renderList(q);
+}
+
+/* SELECT NOTE */
+function selectNote(id) {
+  activeId = id;
+  render();
+}
+
+/* RENDER */
+function render() {
+  const note = notes.find(n => n.id === activeId);
+
+  document.getElementById("title").value = note?.title || "";
+  document.getElementById("content").value = note?.content || "";
+
+  renderList();
+  updateInfo();
+}
+
+function renderList(query="") {
+  const list = document.getElementById("noteList");
+  list.innerHTML = "";
+
+  let filtered = notes.filter(n =>
+    n.title.toLowerCase().includes(query.toLowerCase()) ||
+    n.content.toLowerCase().includes(query.toLowerCase())
+  );
+
+  // pinned first
+  filtered.sort((a,b) => b.pinned - a.pinned);
+
+  filtered.forEach(n => {
+    const div = document.createElement("div");
+    div.className = "note-item" + (n.id === activeId ? " active" : "");
+    div.innerHTML = (n.pinned ? "📌 " : "") + n.title;
+    div.onclick = () => selectNote(n.id);
+    list.appendChild(div);
+  });
+}
+
+/* SAVE */
+function save() {
+  localStorage.setItem("valora_notes", JSON.stringify(notes));
+}
+
+/* THEME */
+function toggleTheme() {
+  const t = document.body.getAttribute("data-theme");
+  document.body.setAttribute("data-theme", t === "dark" ? "light" : "dark");
+}
+
+/* INFO */
+function updateInfo() {
+  const note = notes.find(n => n.id === activeId);
+  document.getElementById("info").innerText =
+    note ? `Created: ${new Date(note.created).toLocaleString()}` : "";
+}
+
+init();
 </script>
 
 </body>
