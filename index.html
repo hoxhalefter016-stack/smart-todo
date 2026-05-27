@@ -1,1566 +1,727 @@
-            flex: 1;
-            min-width: 200px;
-            padding: 12px 16px;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            color: var(--text-primary);
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
-            outline: none;
-            transition: all 0.2s;
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindList Pro</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YHFZ1M5X5X"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YHFZ1M5X5X');
+    </script>
+
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #1e293b;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --high-prio: #ef4444;
+            --med-prio: #f97316;
+            --low-prio: #22c55e;
         }
 
-        body.light-mode input[type="text"],
-        body.light-mode input[type="email"],
-        body.light-mode input[type="password"],
-        body.light-mode textarea,
-        body.light-mode select {
-            background: rgba(248, 250, 252, 0.8);
-            border-color: rgba(99, 102, 241, 0.15);
-            color: #1e293b;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        input::placeholder,
-        textarea::placeholder {
-            color: var(--text-tertiary);
-        }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-            border-color: var(--primary);
-            background: rgba(30, 41, 59, 0.8);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-
-        body.light-mode input:focus,
-        body.light-mode textarea:focus,
-        body.light-mode select:focus {
-            background: rgba(248, 250, 252, 1);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
-        }
-
-        /* ============ BUTTONS ============ */
-        button {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-            white-space: nowrap;
-            letter-spacing: 0.3px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(99, 102, 241, 0.15);
-            color: var(--primary);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(99, 102, 241, 0.25);
-            border-color: var(--primary);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-        }
-
-        .btn-warning:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
-        }
-
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-
-        .btn-full {
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        /* ============ FILTER BUTTONS ============ */
-        .filter-group {
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .filter-btn {
-            padding: 8px 16px;
-            font-size: 13px;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            background: rgba(30, 41, 59, 0.4);
-            color: var(--text-secondary);
+        /* Sidebar - PLOTËSISHT OPAKE (JO TRANSPARENTE) */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-card);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            border-right: 1px solid #334155;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .logo-svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            list-style: none;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
             border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
             cursor: pointer;
             transition: all 0.2s;
             font-weight: 500;
         }
 
-        .filter-btn:hover {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary);
+        .nav-item.active, .nav-item:hover {
+            background-color: var(--accent);
+            color: var(--text-main);
         }
 
-        .filter-btn.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        .section-title-menu {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-top: 15px;
+            font-weight: 700;
         }
 
-        /* ============ TASK ITEM ============ */
-        .task-item {
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            padding: 16px;
-            background: rgba(30, 41, 59, 0.3);
-            border: 1px solid rgba(99, 102, 241, 0.1);
-            border-radius: 10px;
-            margin-bottom: 12px;
-            transition: all 0.2s;
+            align-items: center;
+            width: 100%;
         }
 
-        .task-item:hover {
-            background: rgba(30, 41, 59, 0.5);
-            border-color: rgba(99, 102, 241, 0.2);
+        .welcome-text h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
 
-        .task-item.completed {
-            opacity: 0.6;
-        }
-
-        .task-item.completed .task-text {
-            text-decoration: line-through;
-            color: var(--text-tertiary);
-        }
-
-        .task-checkbox {
-            width: 20px;
-            height: 20px;
-            margin-right: 12px;
-            margin-top: 2px;
-            cursor: pointer;
-            accent-color: var(--primary);
-        }
-
-        .task-content {
-            flex: 1;
-        }
-
-        .task-text {
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-        }
-
-        .task-meta {
-            display: flex;
-            gap: 12px;
-            font-size: 12px;
-            color: var(--text-tertiary);
-        }
-
-        .priority-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
-
-        .priority-high {
-            background: rgba(139, 92, 246, 0.15);
-            color: #d8b4fe;
-        }
-
-        .priority-medium {
-            background: rgba(245, 158, 11, 0.15);
-            color: #fcd34d;
-        }
-
-        .priority-low {
-            background: rgba(16, 185, 129, 0.15);
-            color: #a7f3d0;
-        }
-
-        .task-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        /* ============ NOTE ITEM ============ */
-        .note-item {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(99, 102, 241, 0.1);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            transition: all 0.2s;
-        }
-
-        .note-item:hover {
-            border-color: rgba(99, 102, 241, 0.3);
-            background: rgba(30, 41, 59, 0.6);
-        }
-
-        .note-title {
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 8px;
-            font-size: 15px;
-        }
-
-        .note-content {
-            color: var(--text-primary);
-            margin-bottom: 10px;
-            line-height: 1.5;
+        .welcome-text p {
+            color: var(--text-muted);
             font-size: 14px;
         }
 
-        .note-tags {
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Language Buttons */
+        .lang-switcher {
             display: flex;
             gap: 6px;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-
-        .note-tag {
-            background: rgba(99, 102, 241, 0.2);
-            color: var(--primary);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .note-date {
-            font-size: 12px;
-            color: var(--text-tertiary);
-        }
-
-        /* ============ STATS GRID ============ */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 32px;
-        }
-
-        .stat-card {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(99, 102, 241, 0.1);
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-            transition: all 0.2s;
-        }
-
-        .stat-card:hover {
-            border-color: rgba(99, 102, 241, 0.3);
-            background: rgba(30, 41, 59, 0.6);
-            transform: translateY(-4px);
-        }
-
-        .stat-icon {
-            font-size: 32px;
-            margin-bottom: 12px;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-tertiary);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-
-        .stat-number {
-            font-size: 32px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* ============ SETTINGS GRID ============ */
-        .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
+            background: #0f172a;
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid #334155;
         }
 
         .lang-btn {
-            padding: 16px 12px;
-            border: 2px solid rgba(99, 102, 241, 0.2);
-            background: rgba(30, 41, 59, 0.3);
-            color: var(--text-primary);
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 10px;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
             transition: all 0.2s;
-            text-align: center;
-        }
-
-        .lang-btn:hover {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.1);
         }
 
         .lang-btn.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            background-color: var(--accent);
+            color: var(--text-main);
         }
 
-        /* ============ TOAST NOTIFICATION ============ */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 10px;
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
-            animation: slideIn 0.3s ease;
-            z-index: 3000;
-            max-width: 300px;
+        .hamburger {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid #334155;
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* Dashboard Grid */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Form Inputs */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--text-main);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Filter Chips */
+        .filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            background-color: #334155;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
             font-weight: 500;
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        .chip.active {
+            background-color: var(--accent);
+            color: var(--text-main);
         }
 
-        /* ============ MODAL ============ */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal.active {
+        /* Lists */
+        .item-list {
             display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
         }
 
-        .modal-content {
-            background: var(--surface-dark);
-            padding: 32px;
-            border-radius: 16px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-        }
-
-        body.light-mode .modal-content {
-            background: var(--surface-light);
-            border-color: rgba(99, 102, 241, 0.15);
-        }
-
-        .modal-header {
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 20px;
+        .list-item {
+            background: #0f172a;
+            padding: 14px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            border-left: 4px solid var(--accent);
         }
 
-        .modal-close {
+        .list-item.high { border-left-color: var(--high-prio); }
+        .list-item.medium { border-left-color: var(--med-prio); }
+        .list-item.low { border-left-color: var(--low-prio); }
+
+        .list-item.completed span {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
             cursor: pointer;
-            font-size: 24px;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-            background: none;
+        }
+
+        .delete-btn {
+            background: transparent;
             border: none;
-            padding: 0;
+            color: var(--high-prio);
+            cursor: pointer;
+            font-size: 14px;
         }
 
-        .modal-close:hover {
-            color: var(--text-primary);
-            transform: rotate(90deg);
+        /* Bottom Section Grid */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
         }
 
-        /* ============ RESPONSIVE ============ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 24px;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .stat-card p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Mobile Responsive Core */
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-                width: 260px;
-                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.3);
+            body {
+                flex-direction: column;
             }
 
-            .sidebar.active {
+            .sidebar {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                height: calc(100vh - 60px);
+                transform: translateX(-100%);
+                background-color: #1e293b !important; /* JO TRANSPARENTE */
+                opacity: 1 !important;
+            }
+
+            .sidebar.open {
                 transform: translateX(0);
             }
 
             .main-content {
-                margin-left: 0;
                 padding: 20px;
+                margin-top: 60px;
             }
 
-            .container {
-                flex-direction: column;
+            .mobile-header-fixed {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 60px;
+                background-color: var(--bg-card);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 20px;
+                border-bottom: 1px solid #334155;
+                z-index: 1100;
             }
 
-            .page-title {
-                font-size: 22px;
+            .hamburger {
+                display: block;
             }
 
-            .stats-grid {
+            .bottom-grid {
                 grid-template-columns: 1fr;
             }
-
-            .input-group {
-                flex-direction: column;
+            
+            .header-controls {
+                margin-top: 0;
             }
-
-            input[type="text"],
-            textarea,
-            select {
-                min-width: auto;
-            }
-
-            .task-item {
-                flex-direction: column;
-            }
-
-            .task-actions {
-                width: 100%;
-                margin-top: 12px;
-            }
-
-            .btn-sm {
-                flex: 1;
-            }
-        }
-
-        /* ============ SCROLLBAR ============ */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(99, 102, 241, 0.05);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(99, 102, 241, 0.3);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(99, 102, 241, 0.5);
-        }
-
-        body.light-mode ::-webkit-scrollbar-track {
-            background: rgba(99, 102, 241, 0.05);
-        }
-
-        body.light-mode ::-webkit-scrollbar-thumb {
-            background: rgba(99, 102, 241, 0.2);
-        }
-
-        body.light-mode ::-webkit-scrollbar-thumb:hover {
-            background: rgba(99, 102, 241, 0.4);
         }
     </style>
 </head>
 <body>
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YHFZ1M5X5X"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-YHFZ1M5X5X');
-    </script>
 
-    <!-- HEADER -->
-    <header>
-        <div class="header-logo">
-            <svg class="logo-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div class="mobile-header-fixed">
+        <div class="logo-container">
+            <svg class="logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" fill="url(#purpleGrad)" />
+                <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <defs>
-                    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                    <linearGradient id="purpleGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#8b5cf6"/>
+                        <stop offset="1" stop-color="#6366f1"/>
                     </linearGradient>
                 </defs>
-                <rect x="6" y="6" width="20" height="20" rx="4" fill="url(#logoGrad)" opacity="0.2"/>
-                <rect x="6" y="6" width="20" height="20" rx="4" fill="none" stroke="url(#logoGrad)" stroke-width="2"/>
-                <path d="M13 17L16 20L23 11" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>MindList Pro</span>
+        </div>
+        <button class="hamburger" id="menuToggle">☰</button>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="logo-container" style="@media(max-width:768px){display:none;}">
+            <svg class="logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" fill="url(#purpleGrad2)" />
+                <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                    <linearGradient id="purpleGrad2" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#8b5cf6"/>
+                        <stop offset="1" stop-color="#6366f1"/>
+                    </linearGradient>
+                </defs>
             </svg>
             <span>MindList Pro</span>
         </div>
 
-        <div class="header-controls">
-            <button class="btn-icon" id="theme-btn" title="Dark/Light Mode">🌙</button>
-            <button class="btn-icon" id="menu-btn" title="Menu">☰</button>
+        <p class="section-title-menu" id="menuTitleSpace">My Space</p>
+        <ul class="nav-menu">
+            <li class="nav-item active" id="menuTasks">✓ Detyrat e Mia</li>
+            <li class="nav-item" id="menuNotes">📝 Shënimet e Mia</li>
+            <li class="nav-item" id="menuStats">📊 Statistika</li>
+        </ul>
+
+        <p class="section-title-menu" id="menuTitleSystem">System</p>
+        <ul class="nav-menu">
+            <li class="nav-item" id="menuSettings">⚙ Cilësimet</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="welcome-text">
+                <h1 id="mainTitle">Detyrat e Mia</h1>
+                <p id="mainSubtitle">Organizoni punën tuaj të përditshme në mënyrë efikase.</p>
+            </div>
+            <div class="header-controls">
+                <div class="lang-switcher">
+                    <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+                    <button class="lang-btn active" onclick="setLanguage('sq')">SQ</button>
+                    <button class="lang-btn" onclick="setLanguage('de')">DE</button>
+                </div>
+            </div>
         </div>
-    </header>
 
-    <!-- MAIN CONTAINER -->
-    <div class="container">
-        <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-section">
-                <div class="sidebar-title">📋 My Space</div>
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <div class="nav-link active" onclick="navigateTo('tasks')">
-                            <span class="nav-icon">✓</span>
-                            <span id="nav-tasks">My Tasks</span>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-link" onclick="navigateTo('notes')">
-                            <span class="nav-icon">📝</span>
-                            <span id="nav-notes">My Notes</span>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-link" onclick="navigateTo('stats')">
-                            <span class="nav-icon">📊</span>
-                            <span id="nav-stats">Statistics</span>
-                        </div>
-                    </li>
-                </ul>
+        <div class="card">
+            <div class="input-group">
+                <input type="text" id="taskInput" placeholder="Titulla Detyrës">
+                <select id="prioritySelect">
+                    <option value="low">Low Priority</option>
+                    <option value="medium">Medium Priority</option>
+                    <option value="high">High Priority</option>
+                </select>
+                <button class="btn-primary" id="addTaskBtn" onclick="addTask()">+ Add Task</button>
             </div>
 
-            <div class="sidebar-divider"></div>
-
-            <div class="sidebar-section">
-                <div class="sidebar-title">⚙️ System</div>
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <div class="nav-link" onclick="navigateTo('settings')">
-                            <span class="nav-icon">⚙️</span>
-                            <span id="nav-settings">Settings</span>
-                        </div>
-                    </li>
-                </ul>
+            <div class="filters">
+                <button class="chip active" onclick="filterTasks('all')" id="filterAll">Të Gjitha</button>
+                <button class="chip" onclick="filterTasks('active')" id="filterActive">Aktive</button>
+                <button class="chip" onclick="filterTasks('completed')" id="filterCompleted">Të Kryera</button>
             </div>
 
-            <div class="sidebar-divider"></div>
+            <div class="item-list" id="taskList"></div>
+        </div>
 
-            <div class="sidebar-section">
-                <div class="sidebar-title">🌐 Language</div>
-                <div class="settings-grid" style="grid-template-columns: 1fr;">
-                    <button class="lang-btn active" onclick="changeLang('sq')">🇦🇱 SQ</button>
-                    <button class="lang-btn" onclick="changeLang('en')">🇬🇧 EN</button>
-                    <button class="lang-btn" onclick="changeLang('de')">🇩🇪 DE</button>
-                </div>
+        <div class="bottom-grid">
+            <div class="card">
+                <h2 id="noteTitle">Shënim i Shpejtë</h2>
+                <textarea id="noteInput" rows="4" placeholder="Shkruaj shënimin tënd këtu..."></textarea>
+                <button class="btn-primary" id="saveNoteBtn" onclick="saveNote()">Ruaj Shënimin</button>
+                <div class="item-list" id="noteList" style="margin-top: 10px; max-height: 150px; overflow-y: auto;"></div>
             </div>
-        </aside>
 
-        <!-- MAIN CONTENT -->
-        <main class="main-content">
-            <!-- TASKS PAGE -->
-            <div id="tasks-page" class="page active">
-                <div class="page-title" id="title-tasks">My Tasks</div>
-                <div class="page-subtitle" id="subtitle-tasks">Organize your daily work efficiently</div>
-
-                <div class="card">
-                    <div class="input-group">
-                        <input type="text" id="task-input" placeholder="Add a new task...">
-                        <select id="priority-select">
-                            <option value="low">Low Priority</option>
-                            <option value="medium">Medium Priority</option>
-                            <option value="high">High Priority</option>
-                        </select>
-                        <button class="btn-primary" onclick="TaskManager.add()">+ Add Task</button>
+            <div class="card">
+                <h2 id="statsTitle">Statistika</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="statTotal">0</h3>
+                        <p id="lblTotal">Gjithsej</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="statDone">0</h3>
+                        <p id="lblDone">Të Kryera</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="statActive">0</h3>
+                        <p id="lblActive">Aktive</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="statPending">0</h3>
+                        <p id="lblPending">Pezull</p>
                     </div>
                 </div>
-
-                <div class="filter-group" id="filter-group"></div>
-
-                <div class="card">
-                    <input type="text" id="task-search" placeholder="Search tasks..." onkeyup="TaskManager.search(this.value)">
-                </div>
-
-                <div id="tasks-list"></div>
             </div>
-
-            <!-- NOTES PAGE -->
-            <div id="notes-page" class="page">
-                <div class="page-title" id="title-notes">My Notes</div>
-                <div class="page-subtitle" id="subtitle-notes">Quick notes for your ideas</div>
-
-                <div class="card">
-                    <div class="input-group" style="flex-direction: column;">
-                        <input type="text" id="note-title" placeholder="Note title...">
-                        <textarea id="note-input" rows="5" placeholder="Write your note..."></textarea>
-                        <input type="text" id="note-tags" placeholder="Tags (comma separated)">
-                        <button class="btn-primary btn-full" onclick="NoteManager.add()">💾 Save Note</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <input type="text" id="note-search" placeholder="Search notes..." onkeyup="NoteManager.search(this.value)">
-                </div>
-
-                <div id="notes-list"></div>
-            </div>
-
-            <!-- STATISTICS PAGE -->
-            <div id="stats-page" class="page">
-                <div class="page-title" id="title-stats">Statistics</div>
-                <div class="page-subtitle" id="subtitle-stats">Track your productivity</div>
-
-                <div class="stats-grid" id="stats-main"></div>
-
-                <h3 style="font-size: 18px; font-weight: 700; margin: 32px 0 20px; color: var(--text-primary);" id="text-priority-dist">Priority Distribution</h3>
-                <div class="stats-grid" id="stats-priority"></div>
-
-                <div class="card" style="margin-top: 32px;">
-                    <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;" id="text-storage">💾 Storage Information</div>
-                    <div id="storage-info"></div>
-                </div>
-            </div>
-
-            <!-- SETTINGS PAGE -->
-            <div id="settings-page" class="page">
-                <div class="page-title" id="title-settings">Settings</div>
-                <div class="page-subtitle" id="subtitle-settings">Manage your preferences</div>
-
-                <div class="card">
-                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);" id="text-select-lang">Select Language</h3>
-                    <div class="settings-grid">
-                        <button class="lang-btn active" onclick="changeLang('sq')">🇦🇱 Shqip (Albanian)</button>
-                        <button class="lang-btn" onclick="changeLang('en')">🇬🇧 English</button>
-                        <button class="lang-btn" onclick="changeLang('de')">🇩🇪 Deutsch</button>
-                        <button class="lang-btn" onclick="changeLang('fr')">🇫🇷 Français</button>
-                        <button class="lang-btn" onclick="changeLang('it')">🇮🇹 Italiano</button>
-                        <button class="lang-btn" onclick="changeLang('es')">🇪🇸 Español</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);" id="text-data-section">Data Management</h3>
-                    <button class="btn-primary btn-full" onclick="exportJSON()">📥 Export as JSON</button>
-                    <button class="btn-primary btn-full" onclick="exportCSV()">📊 Export as CSV</button>
-                    <button class="btn-success btn-full" onclick="importData()">📤 Import Data</button>
-                    <button class="btn-danger btn-full" onclick="clearAllData()">🗑️ Delete All Data</button>
-                    <input type="file" id="import-file" accept=".json" style="display:none;">
-                </div>
-
-                <div class="card">
-                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);" id="text-about">About MindList Pro</h3>
-                    <p style="color: var(--text-secondary); line-height: 1.6; font-size: 14px;">
-                        <strong>MindList Pro v3.0</strong><br>
-                        A premium task and note management application designed for maximum productivity.<br><br>
-                        ✨ Features: Dark/Light Theme, Multi-Language Support, Task Prioritization, 
-                        Quick Notes, Statistics, Data Export/Import, Beautiful UI<br><br>
-                        © 2025 MindList Pro. All rights reserved.
-                    </p>
-                </div>
-            </div>
-        </main>
+        </div>
     </div>
 
     <script>
-        // ============ TRANSLATIONS ============
+        // Full System Translation Dictionary (TË GJITHA TË PLOTA)
         const translations = {
-            sq: {
-                titleTasks: "Detyrat e Mia",
-                subtitleTasks: "Organizoni punën tuaj të përditshme në mënyrë efikase",
-                titleNotes: "Shënimet e Mia",
-                subtitleNotes: "Shënime të shpejta për idetë tuaja",
-                titleStats: "Statistika",
-                subtitleStats: "Gjurmuani produktivitetin tuaj",
-                titleSettings: "Cilësimet",
-                subtitleSettings: "Menaxhoni preferencat tuaja",
-                navTasks: "Detyrat e Mia",
-                navNotes: "Shënimet e Mia",
-                navStats: "Statistika",
-                navSettings: "Cilësimet",
-                addTask: "+ Shto Detyrën",
-                addNote: "💾 Ruaj Shënimin",
-                searchTasks: "Kërko detyra...",
-                searchNotes: "Kërko shënime...",
-                noTasks: "Nuk ka detyra 📭",
-                noNotes: "Nuk ka shënime 📭",
-                taskAdded: "✅ Detyra u shtua me sukses!",
-                taskDeleted: "🗑️ Detyra u fshi!",
-                noteAdded: "✅ Shënimi u ruaj me sukses!",
-                noteDeleted: "🗑️ Shënimi u fshi!",
-                confirmDeleteTask: "Jeni i sigurt që dëshironi ta fshini këtë detyrë?",
-                confirmDeleteNote: "Fshi shënimin?",
-                confirmClearAll: "Jeni i sigurt? Të gjitha të dhënat do të fshihen përgjithmonë!",
-                dataCleared: "🗑️ Të gjitha të dhënat u fshihen!",
-                dataImported: "📤 Të dhënat u importuan me sukses!",
-                importError: "❌ Gabim në importimin e skedarit!",
-                jsonExported: "📥 JSON u eksportua me sukses!",
-                csvExported: "📊 CSV u eksportua me sukses!",
-                totalTasks: "Gjithsej Detyra",
-                completedTasks: "Të Kryera",
-                activeTasks: "Detyra Aktive",
-                todayTasks: "Sot",
-                totalNotes: "Shënime",
-                priorityDist: "Shpërndarja e Prioriteteve",
-                priorityHigh: "Prioritet i Lartë",
-                priorityMedium: "Prioritet Mesatar",
-                priorityLow: "Prioritet i Ulët",
-                storage: "💾 Informacioni i Ruajtjes",
-                selectLang: "Zgjidh Gjuhën",
-                dataSection: "Menaxhimi i të Dhënave",
-                about: "Rreth MindList Pro",
-                filterAll: "Të Gjitha",
-                filterActive: "Aktive",
-                filterCompleted: "Të Kryera",
-                filterToday: "Sot",
-                lowPriority: "Prioritet i Ulët",
-                mediumPriority: "Prioritet Mesatar",
-                highPriority: "Prioritet i Lartë",
-                taskTitle: "Titulla Detyrës",
-                noteTitle: "Titulla Shënimit",
-                noteTags: "Etiketa (të ndara me presje)"
-            },
             en: {
-                titleTasks: "My Tasks",
-                subtitleTasks: "Organize your daily work efficiently",
-                titleNotes: "My Notes",
-                subtitleNotes: "Quick notes for your ideas",
-                titleStats: "Statistics",
-                subtitleStats: "Track your productivity",
-                titleSettings: "Settings",
-                subtitleSettings: "Manage your preferences",
-                navTasks: "My Tasks",
-                navNotes: "My Notes",
-                navStats: "Statistics",
-                navSettings: "Settings",
-                addTask: "+ Add Task",
-                addNote: "💾 Save Note",
-                searchTasks: "Search tasks...",
-                searchNotes: "Search notes...",
-                noTasks: "No tasks 📭",
-                noNotes: "No notes 📭",
-                taskAdded: "✅ Task added successfully!",
-                taskDeleted: "🗑️ Task deleted!",
-                noteAdded: "✅ Note saved successfully!",
-                noteDeleted: "🗑️ Note deleted!",
-                confirmDeleteTask: "Are you sure you want to delete this task?",
-                confirmDeleteNote: "Delete note?",
-                confirmClearAll: "Are you sure? All data will be deleted forever!",
-                dataCleared: "🗑️ All data deleted!",
-                dataImported: "📤 Data imported successfully!",
-                importError: "❌ Error importing file!",
-                jsonExported: "📥 JSON exported successfully!",
-                csvExported: "📊 CSV exported successfully!",
-                totalTasks: "Total Tasks",
-                completedTasks: "Completed",
-                activeTasks: "Active Tasks",
-                todayTasks: "Today",
-                totalNotes: "Notes",
-                priorityDist: "Priority Distribution",
-                priorityHigh: "High Priority",
-                priorityMedium: "Medium Priority",
-                priorityLow: "Low Priority",
-                storage: "💾 Storage Information",
-                selectLang: "Select Language",
-                dataSection: "Data Management",
-                about: "About MindList Pro",
+                mainTitle: "My Tasks",
+                mainSubtitle: "Organize your daily workflow efficiently.",
+                taskPlaceholder: "Task Title",
+                addBtn: "+ Add Task",
                 filterAll: "All",
                 filterActive: "Active",
                 filterCompleted: "Completed",
-                filterToday: "Today",
-                lowPriority: "Low Priority",
-                mediumPriority: "Medium Priority",
-                highPriority: "High Priority",
-                taskTitle: "Task Title",
-                noteTitle: "Note Title",
-                noteTags: "Tags (comma separated)"
+                noteTitle: "Quick Note",
+                notePlaceholder: "Write your note here...",
+                saveNoteBtn: "Save Note",
+                statsTitle: "Statistics",
+                lblTotal: "Total Tasks",
+                lblDone: "Completed",
+                lblActive: "Active",
+                lblPending: "Pending",
+                spaceTitle: "My Space",
+                sysTitle: "System",
+                mTasks: "✓ My Tasks",
+                mNotes: "📝 My Notes",
+                mStats: "📊 Statistics",
+                mSettings: "⚙ Settings"
+            },
+            sq: {
+                mainTitle: "Detyrat e Mia",
+                mainSubtitle: "Organizoni punën tuaj të përditshme në mënyrë efikase.",
+                taskPlaceholder: "Titulla Detyrës",
+                addBtn: "+ Shto Detyrë",
+                filterAll: "Të Gjitha",
+                filterActive: "Aktive",
+                filterCompleted: "Të Kryera",
+                noteTitle: "Shënim i Shpejtë",
+                notePlaceholder: "Shkruaj shënimin tënd këtu...",
+                saveNoteBtn: "Ruaj Shënimin",
+                statsTitle: "Statistika",
+                lblTotal: "Gjithsej",
+                lblDone: "Të Kryera",
+                lblActive: "Aktive",
+                lblPending: "Pezull",
+                spaceTitle: "Hapësira Ime",
+                sysTitle: "Sistemi",
+                mTasks: "✓ Detyrat e Mia",
+                mNotes: "📝 Shënimet e Mia",
+                mStats: "📊 Statistika",
+                mSettings: "⚙ Cilësimet"
             },
             de: {
-                titleTasks: "Meine Aufgaben",
-                subtitleTasks: "Organisieren Sie Ihre tägliche Arbeit effizient",
-                titleNotes: "Meine Notizen",
-                subtitleNotes: "Schnelle Notizen für Ihre Ideen",
-                titleStats: "Statistiken",
-                subtitleStats: "Verfolgen Sie Ihre Produktivität",
-                titleSettings: "Einstellungen",
-                subtitleSettings: "Verwalten Sie Ihre Präferenzen",
-                navTasks: "Meine Aufgaben",
-                navNotes: "Meine Notizen",
-                navStats: "Statistiken",
-                navSettings: "Einstellungen",
-                addTask: "+ Aufgabe Hinzufügen",
-                addNote: "💾 Notiz Speichern",
-                searchTasks: "Aufgaben suchen...",
-                searchNotes: "Notizen suchen...",
-                noTasks: "Keine Aufgaben 📭",
-                noNotes: "Keine Notizen 📭",
-                taskAdded: "✅ Aufgabe erfolgreich hinzugefügt!",
-                taskDeleted: "🗑️ Aufgabe gelöscht!",
-                noteAdded: "✅ Notiz erfolgreich gespeichert!",
-                noteDeleted: "🗑️ Notiz gelöscht!",
-                confirmDeleteTask: "Sind Sie sicher, dass Sie diese Aufgabe löschen möchten?",
-                confirmDeleteNote: "Notiz löschen?",
-                confirmClearAll: "Sind Sie sicher? Alle Daten werden dauerhaft gelöscht!",
-                dataCleared: "🗑️ Alle Daten gelöscht!",
-                dataImported: "📤 Daten erfolgreich importiert!",
-                importError: "❌ Fehler beim Importieren der Datei!",
-                jsonExported: "📥 JSON erfolgreich exportiert!",
-                csvExported: "📊 CSV erfolgreich exportiert!",
-                totalTasks: "Gesamtaufgaben",
-                completedTasks: "Abgeschlossen",
-                activeTasks: "Aktive Aufgaben",
-                todayTasks: "Heute",
-                totalNotes: "Notizen",
-                priorityDist: "Prioritätsverteilung",
-                priorityHigh: "Hohe Priorität",
-                priorityMedium: "Mittlere Priorität",
-                priorityLow: "Niedrige Priorität",
-                storage: "💾 Speicherinformationen",
-                selectLang: "Sprache Wählen",
-                dataSection: "Datenverwaltung",
-                about: "Über MindList Pro",
+                mainTitle: "Meine Aufgaben",
+                mainSubtitle: "Organisieren Sie Ihren Workflow effizient.",
+                taskPlaceholder: "Aufgabentitel",
+                addBtn: "+ Aufgabe hinzufügen",
                 filterAll: "Alle",
                 filterActive: "Aktiv",
                 filterCompleted: "Abgeschlossen",
-                filterToday: "Heute",
-                lowPriority: "Niedrige Priorität",
-                mediumPriority: "Mittlere Priorität",
-                highPriority: "Hohe Priorität",
-                taskTitle: "Aufgabentitel",
-                noteTitle: "Notiztitel",
-                noteTags: "Etiketten (durch Komma getrennt)"
-            },
-            fr: {
-                titleTasks: "Mes Tâches",
-                subtitleTasks: "Organisez votre travail quotidien efficacement",
-                titleNotes: "Mes Notes",
-                subtitleNotes: "Notes rapides pour vos idées",
-                titleStats: "Statistiques",
-                subtitleStats: "Suivez votre productivité",
-                titleSettings: "Paramètres",
-                subtitleSettings: "Gérez vos préférences",
-                navTasks: "Mes Tâches",
-                navNotes: "Mes Notes",
-                navStats: "Statistiques",
-                navSettings: "Paramètres",
-                addTask: "+ Ajouter Tâche",
-                addNote: "💾 Enregistrer Note",
-                searchTasks: "Rechercher des tâches...",
-                searchNotes: "Rechercher des notes...",
-                noTasks: "Aucune tâche 📭",
-                noNotes: "Aucune note 📭",
-                taskAdded: "✅ Tâche ajoutée avec succès!",
-                taskDeleted: "🗑️ Tâche supprimée!",
-                noteAdded: "✅ Note enregistrée avec succès!",
-                noteDeleted: "🗑️ Note supprimée!",
-                confirmDeleteTask: "Êtes-vous sûr de vouloir supprimer cette tâche?",
-                confirmDeleteNote: "Supprimer la note?",
-                confirmClearAll: "Êtes-vous sûr? Toutes les données seront supprimées définitivement!",
-                dataCleared: "🗑️ Toutes les données supprimées!",
-                dataImported: "📤 Données importées avec succès!",
-                importError: "❌ Erreur lors de l'importation du fichier!",
-                jsonExported: "📥 JSON exporté avec succès!",
-                csvExported: "📊 CSV exporté avec succès!",
-                totalTasks: "Total Tâches",
-                completedTasks: "Terminées",
-                activeTasks: "Tâches Actives",
-                todayTasks: "Aujourd'hui",
-                totalNotes: "Notes",
-                priorityDist: "Distribution des Priorités",
-                priorityHigh: "Priorité Élevée",
-                priorityMedium: "Priorité Moyenne",
-                priorityLow: "Priorité Basse",
-                storage: "💾 Informations de Stockage",
-                selectLang: "Sélectionner la Langue",
-                dataSection: "Gestion des Données",
-                about: "À Propos de MindList Pro",
-                filterAll: "Tous",
-                filterActive: "Actif",
-                filterCompleted: "Terminé",
-                filterToday: "Aujourd'hui",
-                lowPriority: "Priorité Basse",
-                mediumPriority: "Priorité Moyenne",
-                highPriority: "Priorité Élevée",
-                taskTitle: "Titre de la Tâche",
-                noteTitle: "Titre de la Note",
-                noteTags: "Étiquettes (séparées par des virgules)"
-            },
-            it: {
-                titleTasks: "I Miei Compiti",
-                subtitleTasks: "Organizza il tuo lavoro quotidiano in modo efficiente",
-                titleNotes: "Le Mie Note",
-                subtitleNotes: "Note rapide per le tue idee",
-                titleStats: "Statistiche",
-                subtitleStats: "Traccia la tua produttività",
-                titleSettings: "Impostazioni",
-                subtitleSettings: "Gestisci le tue preferenze",
-                navTasks: "I Miei Compiti",
-                navNotes: "Le Mie Note",
-                navStats: "Statistiche",
-                navSettings: "Impostazioni",
-                addTask: "+ Aggiungi Compito",
-                addNote: "💾 Salva Nota",
-                searchTasks: "Cerca compiti...",
-                searchNotes: "Cerca note...",
-                noTasks: "Nessun compito 📭",
-                noNotes: "Nessuna nota 📭",
-                taskAdded: "✅ Compito aggiunto con successo!",
-                taskDeleted: "🗑️ Compito eliminato!",
-                noteAdded: "✅ Nota salvata con successo!",
-                noteDeleted: "🗑️ Nota eliminata!",
-                confirmDeleteTask: "Sei sicuro di voler eliminare questo compito?",
-                confirmDeleteNote: "Eliminare la nota?",
-                confirmClearAll: "Sei sicuro? Tutti i dati verranno eliminati per sempre!",
-                dataCleared: "🗑️ Tutti i dati eliminati!",
-                dataImported: "📤 Dati importati con successo!",
-                importError: "❌ Errore nell'importazione del file!",
-                jsonExported: "📥 JSON esportato con successo!",
-                csvExported: "📊 CSV esportato con successo!",
-                totalTasks: "Compiti Totali",
-                completedTasks: "Completati",
-                activeTasks: "Compiti Attivi",
-                todayTasks: "Oggi",
-                totalNotes: "Note",
-                priorityDist: "Distribuzione Priorità",
-                priorityHigh: "Priorità Alta",
-                priorityMedium: "Priorità Media",
-                priorityLow: "Priorità Bassa",
-                storage: "💾 Informazioni di Archiviazione",
-                selectLang: "Seleziona Lingua",
-                dataSection: "Gestione Dati",
-                about: "Su MindList Pro",
-                filterAll: "Tutti",
-                filterActive: "Attivo",
-                filterCompleted: "Completato",
-                filterToday: "Oggi",
-                lowPriority: "Priorità Bassa",
-                mediumPriority: "Priorità Media",
-                highPriority: "Priorità Alta",
-                taskTitle: "Titolo Compito",
-                noteTitle: "Titolo Nota",
-                noteTags: "Etichette (separate da virgole)"
-            },
-            es: {
-                titleTasks: "Mis Tareas",
-                subtitleTasks: "Organiza tu trabajo diario de manera eficiente",
-                titleNotes: "Mis Notas",
-                subtitleNotes: "Notas rápidas para tus ideas",
-                titleStats: "Estadísticas",
-                subtitleStats: "Sigue tu productividad",
-                titleSettings: "Configuración",
-                subtitleSettings: "Administra tus preferencias",
-                navTasks: "Mis Tareas",
-                navNotes: "Mis Notas",
-                navStats: "Estadísticas",
-                navSettings: "Configuración",
-                addTask: "+ Agregar Tarea",
-                addNote: "💾 Guardar Nota",
-                searchTasks: "Buscar tareas...",
-                searchNotes: "Buscar notas...",
-                noTasks: "Sin tareas 📭",
-                noNotes: "Sin notas 📭",
-                taskAdded: "✅ ¡Tarea agregada con éxito!",
-                taskDeleted: "🗑️ ¡Tarea eliminada!",
-                noteAdded: "✅ ¡Nota guardada con éxito!",
-                noteDeleted: "🗑️ ¡Nota eliminada!",
-                confirmDeleteTask: "¿Estás seguro de que deseas eliminar esta tarea?",
-                confirmDeleteNote: "¿Eliminar nota?",
-                confirmClearAll: "¿Estás seguro? ¡Todos los datos se eliminarán para siempre!",
-                dataCleared: "🗑️ ¡Todos los datos eliminados!",
-                dataImported: "📤 ¡Datos importados con éxito!",
-                importError: "❌ ¡Error al importar archivo!",
-                jsonExported: "📥 ¡JSON exportado con éxito!",
-                csvExported: "📊 ¡CSV exportado con éxito!",
-                totalTasks: "Total de Tareas",
-                completedTasks: "Completadas",
-                activeTasks: "Tareas Activas",
-                todayTasks: "Hoy",
-                totalNotes: "Notas",
-                priorityDist: "Distribución de Prioridades",
-                priorityHigh: "Prioridad Alta",
-                priorityMedium: "Prioridad Media",
-                priorityLow: "Prioridad Baja",
-                storage: "💾 Información de Almacenamiento",
-                selectLang: "Seleccionar Idioma",
-                dataSection: "Gestión de Datos",
-                about: "Acerca de MindList Pro",
-                filterAll: "Todas",
-                filterActive: "Activas",
-                filterCompleted: "Completadas",
-                filterToday: "Hoy",
-                lowPriority: "Prioridad Baja",
-                mediumPriority: "Prioridad Media",
-                highPriority: "Prioridad Alta",
-                taskTitle: "Título de la Tarea",
-                noteTitle: "Título de la Nota",
-                noteTags: "Etiquetas (separadas por comas)"
+                noteTitle: "Schnelle Notiz",
+                notePlaceholder: "Schreiben Sie Ihre Notiz hier...",
+                saveNoteBtn: "Notiz Speichern",
+                statsTitle: "Statistiken",
+                lblTotal: "Gesamt",
+                lblDone: "Erledigt",
+                lblActive: "Aktiv",
+                lblPending: "Ausstehend",
+                spaceTitle: "Mein Bereich",
+                sysTitle: "System",
+                mTasks: "✓ Meine Aufgaben",
+                mNotes: "📝 Meine Notizen",
+                mStats: "📊 Statistiken",
+                mSettings: "⚙ Einstellungen"
             }
         };
 
-        // ============ APP STATE ============
-        const AppState = {
-            tasks: [],
-            notes: [],
-            currentLang: localStorage.getItem('mindlist-lang') || 'sq',
-            currentTheme: localStorage.getItem('mindlist-theme') || 'dark',
-            currentFilter: 'all'
-        };
+        let tasks = JSON.parse(localStorage.getItem('mindlist_tasks')) || [];
+        let notes = JSON.parse(localStorage.getItem('mindlist_notes')) || [];
+        let currentFilter = 'all';
+        let currentLang = 'sq';
 
-        // ============ UTILITY FUNCTIONS ============
-        function tr(key) {
-            return translations[AppState.currentLang]?.[key] || key;
-        }
-
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        function formatDate(date) {
-            return new Date(date).toLocaleDateString(AppState.currentLang === 'sq' ? 'sq-AL' : AppState.currentLang, {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric'
-            });
-        }
-
-        // ============ STORAGE FUNCTIONS ============
-        function saveTasks() {
-            localStorage.setItem('mindlist-tasks', JSON.stringify(AppState.tasks));
-        }
-
-        function loadTasks() {
-            AppState.tasks = JSON.parse(localStorage.getItem('mindlist-tasks')) || [];
-        }
-
-        function saveNotes() {
-            localStorage.setItem('mindlist-notes', JSON.stringify(AppState.notes));
-        }
-
-        function loadNotes() {
-            AppState.notes = JSON.parse(localStorage.getItem('mindlist-notes')) || [];
-        }
-
-        function getDataSize() {
-            const data = JSON.stringify({ tasks: AppState.tasks, notes: AppState.notes });
-            return (new Blob([data]).size / 1024).toFixed(2);
-        }
-
-        // ============ NAVIGATION ============
-        function navigateTo(page) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(page + '-page').classList.add('active');
-
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            event.target.closest('.nav-link').classList.add('active');
-
-            document.getElementById('sidebar').classList.remove('active');
-            updateUI();
-        }
-
-        function changeLang(lang) {
-            AppState.currentLang = lang;
-            localStorage.setItem('mindlist-lang', lang);
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            updateUI();
-        }
-
-        function toggleTheme() {
-            AppState.currentTheme = AppState.currentTheme === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('mindlist-theme', AppState.currentTheme);
-            document.body.classList.toggle('light-mode');
-            document.getElementById('theme-btn').textContent = AppState.currentTheme === 'dark' ? '🌙' : '☀️';
-        }
-
-        // ============ TASK MANAGER ============
-        const TaskManager = {
-            add() {
-                const input = document.getElementById('task-input');
-                const priority = document.getElementById('priority-select').value;
-                if (!input.value.trim()) return;
-
-                AppState.tasks.push({
-                    id: Date.now(),
-                    text: input.value,
-                    priority: priority,
-                    completed: false,
-                    created: new Date().toISOString()
-                });
-
-                input.value = '';
-                saveTasks();
-                this.render();
-                showToast(tr('taskAdded'));
-            },
-
-            toggle(id) {
-                const task = AppState.tasks.find(t => t.id === id);
-                if (task) {
-                    task.completed = !task.completed;
-                    saveTasks();
-                    this.render();
-                }
-            },
-
-            delete(id) {
-                if (confirm(tr('confirmDeleteTask'))) {
-                    AppState.tasks = AppState.tasks.filter(t => t.id !== id);
-                    saveTasks();
-                    this.render();
-                    showToast(tr('taskDeleted'));
-                }
-            },
-
-            getFiltered() {
-                let filtered = AppState.tasks;
-                if (AppState.currentFilter === 'active') {
-                    filtered = AppState.tasks.filter(t => !t.completed);
-                }
-                if (AppState.currentFilter === 'completed') {
-                    filtered = AppState.tasks.filter(t => t.completed);
-                }
-                if (AppState.currentFilter === 'today') {
-                    const today = new Date().toDateString();
-                    filtered = AppState.tasks.filter(t => new Date(t.created).toDateString() === today);
-                }
-                return filtered;
-            },
-
-            render() {
-                const list = document.getElementById('tasks-list');
-                const filtered = this.getFiltered();
-                list.innerHTML = '';
-
-                if (filtered.length === 0) {
-                    list.innerHTML = `<div class="card" style="text-align:center; padding: 40px;"><p style="color:var(--text-tertiary); font-size: 16px;">${tr('noTasks')}</p></div>`;
-                    return;
-                }
-
-                filtered.forEach(task => {
-                    const item = document.createElement('div');
-                    item.className = 'task-item' + (task.completed ? ' completed' : '');
-                    item.innerHTML = `
-                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="TaskManager.toggle(${task.id})">
-                        <div class="task-content">
-                            <div class="task-text">${task.text}</div>
-                            <div class="task-meta">
-                                <span class="priority-badge priority-${task.priority}">🎯 ${tr('priority' + task.priority.charAt(0).toUpperCase() + task.priority.slice(1))}</span>
-                                <span>📅 ${formatDate(task.created)}</span>
-                            </div>
-                        </div>
-                        <div class="task-actions">
-                            <button class="btn-sm btn-danger" onclick="TaskManager.delete(${task.id})">🗑️ Delete</button>
-                        </div>
-                    `;
-                    list.appendChild(item);
-                });
-            },
-
-            search(query) {
-                const list = document.getElementById('tasks-list');
-                const filtered = AppState.tasks.filter(t => t.text.toLowerCase().includes(query.toLowerCase()));
-                list.innerHTML = '';
-
-                if (filtered.length === 0) {
-                    list.innerHTML = `<div class="card" style="text-align:center; padding: 40px;"><p style="color:var(--text-tertiary); font-size: 16px;">${tr('noTasks')}</p></div>`;
-                    return;
-                }
-
-                filtered.forEach(task => {
-                    const item = document.createElement('div');
-                    item.className = 'task-item' + (task.completed ? ' completed' : '');
-                    item.innerHTML = `
-                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="TaskManager.toggle(${task.id})">
-                        <div class="task-content">
-                            <div class="task-text">${task.text}</div>
-                            <div class="task-meta">
-                                <span class="priority-badge priority-${task.priority}">🎯 ${tr('priority' + task.priority.charAt(0).toUpperCase() + task.priority.slice(1))}</span>
-                                <span>📅 ${formatDate(task.created)}</span>
-                            </div>
-                        </div>
-                        <div class="task-actions">
-                            <button class="btn-sm btn-danger" onclick="TaskManager.delete(${task.id})">🗑️ Delete</button>
-                        </div>
-                    `;
-                    list.appendChild(item);
-                });
-            }
-        };
-
-        // ============ NOTE MANAGER ============
-        const NoteManager = {
-            add() {
-                const title = document.getElementById('note-title');
-                const content = document.getElementById('note-input');
-                const tags = document.getElementById('note-tags');
-
-                if (!content.value.trim()) return;
-
-                AppState.notes.push({
-                    id: Date.now(),
-                    title: title.value || tr('titleNotes'),
-                    content: content.value,
-                    tags: tags.value.split(',').map(t => t.trim()).filter(t => t),
-                    created: new Date().toISOString()
-                });
-
-                title.value = '';
-                content.value = '';
-                tags.value = '';
-                saveNotes();
-                this.render();
-                showToast(tr('noteAdded'));
-            },
-
-            delete(id) {
-                if (confirm(tr('confirmDeleteNote'))) {
-                    AppState.notes = AppState.notes.filter(n => n.id !== id);
-                    saveNotes();
-                    this.render();
-                    showToast(tr('noteDeleted'));
-                }
-            },
-
-            render() {
-                const list = document.getElementById('notes-list');
-                list.innerHTML = '';
-
-                if (AppState.notes.length === 0) {
-                    list.innerHTML = `<div class="card" style="text-align:center; padding: 40px;"><p style="color:var(--text-tertiary); font-size: 16px;">${tr('noNotes')}</p></div>`;
-                    return;
-                }
-
-                AppState.notes.forEach(note => {
-                    const item = document.createElement('div');
-                    item.className = 'note-item';
-                    const tagsHtml = note.tags.map(tag => `<span class="note-tag">#${tag}</span>`).join('');
-                    item.innerHTML = `
-                        <div class="note-title">${note.title}</div>
-                        <div class="note-content">${note.content}</div>
-                        ${tagsHtml ? `<div class="note-tags">${tagsHtml}</div>` : ''}
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div class="note-date">📅 ${formatDate(note.created)}</div>
-                            <button class="btn-sm btn-danger" onclick="NoteManager.delete(${note.id})">🗑️ Delete</button>
-                        </div>
-                    `;
-                    list.appendChild(item);
-                });
-            },
-
-            search(query) {
-                const list = document.getElementById('notes-list');
-                const filtered = AppState.notes.filter(n => 
-                    n.title.toLowerCase().includes(query.toLowerCase()) ||
-                    n.content.toLowerCase().includes(query.toLowerCase())
-                );
-                list.innerHTML = '';
-
-                if (filtered.length === 0) {
-                    list.innerHTML = `<div class="card" style="text-align:center; padding: 40px;"><p style="color:var(--text-tertiary); font-size: 16px;">${tr('noNotes')}</p></div>`;
-                    return;
-                }
-
-                filtered.forEach(note => {
-                    const item = document.createElement('div');
-                    item.className = 'note-item';
-                    const tagsHtml = note.tags.map(tag => `<span class="note-tag">#${tag}</span>`).join('');
-                    item.innerHTML = `
-                        <div class="note-title">${note.title}</div>
-                        <div class="note-content">${note.content}</div>
-                        ${tagsHtml ? `<div class="note-tags">${tagsHtml}</div>` : ''}
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div class="note-date">📅 ${formatDate(note.created)}</div>
-                            <button class="btn-sm btn-danger" onclick="NoteManager.delete(${note.id})">🗑️ Delete</button>
-                        </div>
-                    `;
-                    list.appendChild(item);
-                });
-            }
-        };
-
-        // ============ STATISTICS ============
-        function updateStats() {
-            const total = AppState.tasks.length;
-            const completed = AppState.tasks.filter(t => t.completed).length;
-            const active = total - completed;
-            const today = AppState.tasks.filter(t => new Date(t.created).toDateString() === new Date().toDateString()).length;
-
-            const mainStats = [
-                { label: tr('totalTasks'), value: total, icon: '📋' },
-                { label: tr('completedTasks'), value: completed, icon: '✅' },
-                { label: tr('activeTasks'), value: active, icon: '⚡' },
-                { label: tr('todayTasks'), value: today, icon: '📅' },
-                { label: tr('totalNotes'), value: AppState.notes.length, icon: '📝' }
-            ];
-
-            const statsMain = document.getElementById('stats-main');
-            statsMain.innerHTML = mainStats.map(stat => `
-                <div class="stat-card">
-                    <div class="stat-icon">${stat.icon}</div>
-                    <div class="stat-label">${stat.label}</div>
-                    <div class="stat-number">${stat.value}</div>
-                </div>
-            `).join('');
-
-            const priorityStats = [
-                { label: tr('priorityHigh'), value: AppState.tasks.filter(t => t.priority === 'high').length, icon: '🔴' },
-                { label: tr('priorityMedium'), value: AppState.tasks.filter(t => t.priority === 'medium').length, icon: '🟡' },
-                { label: tr('priorityLow'), value: AppState.tasks.filter(t => t.priority === 'low').length, icon: '🟢' }
-            ];
-
-            const statsPriority = document.getElementById('stats-priority');
-            statsPriority.innerHTML = priorityStats.map(stat => `
-                <div class="stat-card">
-                    <div class="stat-icon">${stat.icon}</div>
-                    <div class="stat-label">${stat.label}</div>
-                    <div class="stat-number">${stat.value}</div>
-                </div>
-            `).join('');
-
-            const size = getDataSize();
-            document.getElementById('storage-info').innerHTML = `
-                <div style="font-size: 14px; color: var(--text-secondary);">
-                    <p>💾 ${size} KB used</p>
-                    <p>📊 ${AppState.tasks.length} tasks + ${AppState.notes.length} notes</p>
-                </div>
-            `;
-        }
-
-        // ============ FILTER BUTTONS ============
-        function renderFilters() {
-            const filterGroup = document.getElementById('filter-group');
-            const filters = [
-                { id: 'all', label: tr('filterAll') },
-                { id: 'active', label: tr('filterActive') },
-                { id: 'completed', label: tr('filterCompleted') },
-                { id: 'today', label: tr('filterToday') }
-            ];
-
-            filterGroup.innerHTML = filters.map(f => `
-                <button class="filter-btn ${AppState.currentFilter === f.id ? 'active' : ''}" 
-                    onclick="AppState.currentFilter='${f.id}'; TaskManager.render(); renderFilters()">
-                    ${f.label}
-                </button>
-            `).join('');
-        }
-
-        // ============ EXPORT/IMPORT ============
-        function exportJSON() {
-            const data = { tasks: AppState.tasks, notes: AppState.notes };
-            const json = JSON.stringify(data, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `mindlist-backup-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            showToast(tr('jsonExported'));
-        }
-
-        function exportCSV() {
-            let csv = 'Type,Title,Priority,Status,Created\n';
-
-            AppState.tasks.forEach(task => {
-                csv += `Task,"${task.text}","${task.priority}","${task.completed ? 'Completed' : 'Active'}","${formatDate(task.created)}"\n`;
-            });
-
-            AppState.notes.forEach(note => {
-                csv += `Note,"${note.title}",,,"${formatDate(note.created)}"\n`;
-            });
-
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `mindlist-backup-${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            showToast(tr('csvExported'));
-        }
-
-        function importData() {
-            document.getElementById('import-file').click();
-        }
-
-        document.addEventListener('change', function(e) {
-            if (e.target.id === 'import-file') {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    try {
-                        const data = JSON.parse(event.target.result);
-                        AppState.tasks = data.tasks || [];
-                        AppState.notes = data.notes || [];
-                        saveTasks();
-                        saveNotes();
-                        TaskManager.render();
-                        NoteManager.render();
-                        updateStats();
-                        showToast(tr('dataImported'));
-                    } catch (error) {
-                        showToast(tr('importError'));
-                    }
-                };
-                reader.readAsText(file);
+        // Hamburger Responsive Handler
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                sidebar.classList.remove('open');
             }
         });
 
-        function clearAllData() {
-            if (confirm(tr('confirmClearAll'))) {
-                AppState.tasks = [];
-                AppState.notes = [];
-                saveTasks();
-                saveNotes();
-                TaskManager.render();
-                NoteManager.render();
-                updateStats();
-                showToast(tr('dataCleared'));
-            }
-        }
-
-        // ============ UPDATE UI ============
-        function updateUI() {
-            document.getElementById('title-tasks').textContent = tr('titleTasks');
-            document.getElementById('subtitle-tasks').textContent = tr('subtitleTasks');
-            document.getElementById('title-notes').textContent = tr('titleNotes');
-            document.getElementById('subtitle-notes').textContent = tr('subtitleNotes');
-            document.getElementById('title-stats').textContent = tr('titleStats');
-            document.getElementById('subtitle-stats').textContent = tr('subtitleStats');
-            document.getElementById('title-settings').textContent = tr('titleSettings');
-            document.getElementById('subtitle-settings').textContent = tr('subtitleSettings');
-
-            document.getElementById('nav-tasks').textContent = tr('navTasks');
-            document.getElementById('nav-notes').textContent = tr('navNotes');
-            document.getElementById('nav-stats').textContent = tr('navStats');
-            document.getElementById('nav-settings').textContent = tr('navSettings');
-
-            document.getElementById('task-input').placeholder = tr('taskTitle');
-            document.getElementById('task-search').placeholder = tr('searchTasks');
-            document.getElementById('note-title').placeholder = tr('noteTitle');
-            document.getElementById('note-input').placeholder = tr('noteContentPlaceholder');
-            document.getElementById('note-tags').placeholder = tr('noteTags');
-            document.getElementById('note-search').placeholder = tr('searchNotes');
-
-            document.getElementById('text-priority-dist').textContent = tr('priorityDist');
-            document.getElementById('text-storage').textContent = tr('storage');
-            document.getElementById('text-select-lang').textContent = tr('selectLang');
-            document.getElementById('text-data-section').textContent = tr('dataSection');
-            document.getElementById('text-about').textContent = tr('about');
-
-            renderFilters();
-            TaskManager.render();
-            NoteManager.render();
-            updateStats();
-        }
-
-        // ============ INITIALIZATION ============
-        document.addEventListener('DOMContentLoaded', function() {
-            loadTasks();
-            loadNotes();
-
-            if (AppState.currentTheme === 'light') {
-                document.body.classList.add('light-mode');
-                document.getElementById('theme-btn').textContent = '☀️';
-            }
-
-            document.getElementById('theme-btn').addEventListener('click', toggleTheme);
-            document.getElementById('menu-btn').addEventListener('click', function() {
-                document.getElementById('sidebar').classList.toggle('active');
-            });
-
+        function setLanguage(lang) {
+            currentLang = lang;
             document.querySelectorAll('.lang-btn').forEach(btn => {
-                const lang = btn.textContent.includes('SQ') ? 'sq' : btn.textContent.includes('EN') ? 'en' : 'de';
-                if (lang === AppState.currentLang) {
-                    btn.classList.add('active');
-                }
+                btn.classList.toggle('active', btn.innerText.toLowerCase() === lang);
             });
+            
+            // Apply Translations
+            document.getElementById('mainTitle').innerText = translations[lang].mainTitle;
+            document.getElementById('mainSubtitle').innerText = translations[lang].mainSubtitle;
+            document.getElementById('taskInput').placeholder = translations[lang].taskPlaceholder;
+            document.getElementById('addTaskBtn').innerText = translations[lang].addBtn;
+            document.getElementById('filterAll').innerText = translations[lang].filterAll;
+            document.getElementById('filterActive').innerText = translations[lang].filterActive;
+            document.getElementById('filterCompleted').innerText = translations[lang].filterCompleted;
+            document.getElementById('noteTitle').innerText = translations[lang].noteTitle;
+            document.getElementById('noteInput').placeholder = translations[lang].notePlaceholder;
+            document.getElementById('saveNoteBtn').innerText = translations[lang].saveNoteBtn;
+            document.getElementById('statsTitle').innerText = translations[lang].statsTitle;
+            document.getElementById('lblTotal').innerText = translations[lang].lblTotal;
+            document.getElementById('lblDone').innerText = translations[lang].lblDone;
+            document.getElementById('lblActive').innerText = translations[lang].lblActive;
+            document.getElementById('lblPending').innerText = translations[lang].lblPending;
+            document.getElementById('menuTitleSpace').innerText = translations[lang].spaceTitle;
+            document.getElementById('menuTitleSystem').innerText = translations[lang].sysTitle;
+            document.getElementById('menuTasks').innerText = translations[lang].mTasks;
+            document.getElementById('menuNotes').innerText = translations[lang].mNotes;
+            document.getElementById('menuStats').innerText = translations[lang].mStats;
+            document.getElementById('menuSettings').innerText = translations[lang].mSettings;
+        }
 
-            updateUI();
-        });
-    </script>
+        // Engine Code for Core Features (Tasks & Notes)
+        function updateStorageAndUI() {
+            localStorage.setItem('mindlist_tasks', JSON.stringify(tasks));
+            localStorage.setItem('mindlist_notes', JSON.stringify(notes));
+            renderTasks();
+            renderNotes();
+            calculateStats();
+        }
 
-    <!-- Service Worker Registration -->
-    <script>
+        function addTask() {
+            const text = document.getElementById('taskInput').value.trim();
+            const priority = document.getElementById('prioritySelect').value;
+            if (!text) return;
+
+            tasks.push({ id: Date.now(), text, priority, completed: false });
+            document.getElementById('taskInput').value = '';
+            updateStorageAndUI();
+        }
+
+        function toggleTask(id) {
+            tasks = tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+            updateStorageAndUI();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            updateStorageAndUI();
+        }
+
+        function filterTasks(f) {
+            currentFilter = f;
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTasks();
+        }
+
+        function renderTasks() {
+            const container = document.getElementById('taskList');
+            container.innerHTML = '';
+            
+            let filtered = tasks;
+            if (currentFilter === 'active') filtered = tasks.filter(t => !t.completed);
+            if (currentFilter === 'completed') filtered = tasks.filter(t => t.completed);
+
+            filtered.forEach(t => {
+                const item = document.createElement('div');
+                item.className = `list-item ${t.priority} ${t.completed ? 'completed' : ''}`;
+                item.innerHTML = `
+                    <div class="item-left">
+                        <input type="checkbox" class="checkbox" ${t.completed ? 'checked' : ''} onclick="toggleTask(${t.id})">
+                        <span>${t.text}</span>
+                    </div>
+                    <button class="delete-btn" onclick="deleteTask(${t.id})">✕</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Notes Feature - FULLY FIXED CRITICAL STORAGE BUG
+        function saveNote() {
+            const noteText = document.getElementById('noteInput').value.trim();
+            if (!noteText) return;
+
+            notes.push({ id: Date.now(), text: noteText });
+            document.getElementById('noteInput').value = '';
+            updateStorageAndUI();
+        }
+
+        function deleteNote(id) {
+            notes = notes.filter(n => n.id !== id);
+            updateStorageAndUI();
+        }
+
+        function renderNotes() {
+            const container = document.getElementById('noteList');
+            container.innerHTML = '';
+            notes.forEach(n => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.style.padding = '8px 12px';
+                item.innerHTML = `
+                    <span>${n.text}</span>
+                    <button class="delete-btn" onclick="deleteNote(${n.id})">✕</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function calculateStats() {
+            document.getElementById('statTotal').innerText = tasks.length;
+            document.getElementById('statDone').innerText = tasks.filter(t => t.completed).length;
+            document.getElementById('statActive').innerText = tasks.filter(t => !t.completed).length;
+            document.getElementById('statPending').innerText = tasks.filter(t => !t.completed && t.priority === 'high').length;
+        }
+
+        // Initial Executions
+        setLanguage('sq');
+        updateStorageAndUI();
+
+        // Register Service Worker
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(err => console.log(err));
+            });
         }
     </script>
 </body>
