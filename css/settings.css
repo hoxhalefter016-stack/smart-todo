@@ -1,0 +1,33 @@
+/* ===== SETTINGS STYLES ===== */
+
+.settings-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.settings-section {
+  padding: var(--spacing-lg);
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.settings-section h3 {
+  margin-bottom: var(--spacing-lg);
+  color: var(--text-primary);
+}
+
+.settings-section button {
+  margin-right: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.settings-section select {
+  padding: var(--spacing-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  width: 100%;
+}
