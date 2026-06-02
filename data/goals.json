@@ -1,0 +1,12 @@
+{
+  "goals": [
+    {
+      "id": "goal-1",
+      "title": "Mëso JavaScript",
+      "description": "Plotësimi i kursit JavaScript",
+      "progress": 25,
+      "created": "2026-06-02T00:00:00Z",
+      "targetDate": "2026-12-31T00:00:00Z"
+    }
+  ]
+}
