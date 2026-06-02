@@ -1,13 +1,27 @@
-<!DOCTYPE html>
-<html lang="sq">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VALORA</title>
-</head>
+class VeloraProduct:
+    def __init__(self):
+        self.tasks = []
+        self.subscribers = []
+        self.premium_features = False
 
-<body>
-  <h1>VALORA</h1>
-  <p>Versioni i parë i aplikacionit</p>
-</body>
-</html>
+    def add_task(self, task):
+        self.tasks.append(task)
+
+    def get_tasks(self):
+        return self.tasks
+
+    def subscribe(self, user, plan):
+        self.subscribers.append((user, plan))
+        if plan == 'Pro' or plan == 'Team':
+            self.enable_premium_features()
+
+    def enable_premium_features(self):
+        self.premium_features = True
+
+    def capture_quick_input(self, input_text):
+        # Convert quick input to task or note
+        return 'Task created: ' + input_text
+
+    def show_progress(self):
+        # Implement progress tracking logic here
+        return 'Progress displayed'
