@@ -1,7 +1,5 @@
 // ===== NOTES API =====
 
-const NOTES_ENDPOINT = '/api/notes';
-
 const NotesAPI = {
   // Merr të gjithë shënimet
   async getAll() {
