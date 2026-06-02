@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qëllime - VALORA</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">VALORA</div>
+    <nav class="nav-menu">
+      <a href="dashboard.html" class="nav-item">📊 Dashboard</a>
+      <a href="notes.html" class="nav-item">📝 Shënime</a>
+      <a href="tasks.html" class="nav-item">✅ Detyra</a>
+      <a href="calendar.html" class="nav-item">📅 Kalendar</a>
+      <a href="goals.html" class="nav-item active">🎯 Qëllime</a>
+      <a href="graph.html" class="nav-item">🔗 Hartë Mendore</a>
+      <a href="settings.html" class="nav-item">⚙️ Cilësimet</a>
+    </nav>
+  </div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <h1>🎯 Qëllime</h1>
+      <button class="btn-primary" onclick="addGoal()">+ Qëllim i Ri</button>
+    </div>
+
+    <div class="content">
+      <div id="goals-container" class="goals-container"></div>
+    </div>
+  </main>
+
+  <script src="../js/script.js"></script>
+</body>
+</html>

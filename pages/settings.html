@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cilësimet - VALORA</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/settings.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">VALORA</div>
+    <nav class="nav-menu">
+      <a href="dashboard.html" class="nav-item">📊 Dashboard</a>
+      <a href="notes.html" class="nav-item">📝 Shënime</a>
+      <a href="tasks.html" class="nav-item">✅ Detyra</a>
+      <a href="calendar.html" class="nav-item">📅 Kalendar</a>
+      <a href="goals.html" class="nav-item">🎯 Qëllime</a>
+      <a href="graph.html" class="nav-item">🔗 Hartë Mendore</a>
+      <a href="settings.html" class="nav-item active">⚙️ Cilësimet</a>
+    </nav>
+  </div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <h1>⚙️ Cilësimet</h1>
+    </div>
+
+    <div class="content">
+      <div class="settings-container">
+        <div class="settings-section">
+          <h3>Tema</h3>
+          <button class="btn-secondary" onclick="toggleTheme()">🌙 Ndryshoni temën</button>
+        </div>
+
+        <div class="settings-section">
+          <h3>Gjuha</h3>
+          <select id="language-select" onchange="changeLanguage(this.value)">
+            <option value="sq">Shqip</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+
+        <div class="settings-section">
+          <h3>Backup</h3>
+          <button class="btn-secondary" onclick="exportData()">📥 Eksporto të dhënat</button>
+          <button class="btn-secondary" onclick="importData()">📤 Importo të dhënat</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/script.js"></script>
+  <script src="../js/settings.js"></script>
+</body>
+</html>

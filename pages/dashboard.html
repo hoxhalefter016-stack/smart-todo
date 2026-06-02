@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - VALORA</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">VALORA</div>
+    <nav class="nav-menu">
+      <a href="dashboard.html" class="nav-item active">📊 Dashboard</a>
+      <a href="notes.html" class="nav-item">📝 Shënime</a>
+      <a href="tasks.html" class="nav-item">✅ Detyra</a>
+      <a href="calendar.html" class="nav-item">📅 Kalendar</a>
+      <a href="goals.html" class="nav-item">🎯 Qëllime</a>
+      <a href="graph.html" class="nav-item">🔗 Hartë Mendore</a>
+      <a href="settings.html" class="nav-item">⚙️ Cilësimet</a>
+    </nav>
+  </div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <h1>📊 Dashboard</h1>
+    </div>
+
+    <div class="content">
+      <div class="dashboard-grid">
+        <div class="card stats-card">
+          <h3>Shënime</h3>
+          <p class="stat-number" id="notes-count">0</p>
+        </div>
+        <div class="card stats-card">
+          <h3>Detyra Aktive</h3>
+          <p class="stat-number" id="tasks-count">0</p>
+        </div>
+        <div class="card stats-card">
+          <h3>Qëllime</h3>
+          <p class="stat-number" id="goals-count">0</p>
+        </div>
+        <div class="card stats-card">
+          <h3>Aktiviteti</h3>
+          <p class="stat-number" id="activity-count">0</p>
+        </div>
+      </div>
+
+      <div class="dashboard-section">
+        <h2>Detyra të sotme</h2>
+        <div id="today-tasks" class="tasks-list"></div>
+      </div>
+
+      <div class="dashboard-section">
+        <h2>Shënime të fundit</h2>
+        <div id="recent-notes" class="notes-list"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/script.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

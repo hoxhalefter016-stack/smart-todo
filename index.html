@@ -3,11 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VALORA</title>
+  <title>VALORA - Aplikacioni Personal i Organizimit</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-  <h1>VALORA</h1>
-  <p>Versioni i parë i aplikacionit</p>
+  <div class="sidebar">
+    <div class="logo">VALORA</div>
+    
+    <nav class="nav-menu">
+      <a href="pages/dashboard.html" class="nav-item active">
+        <span class="icon">📊</span> Dashboard
+      </a>
+      <a href="pages/notes.html" class="nav-item">
+        <span class="icon">📝</span> Shënime
+      </a>
+      <a href="pages/tasks.html" class="nav-item">
+        <span class="icon">✅</span> Detyra
+      </a>
+      <a href="pages/calendar.html" class="nav-item">
+        <span class="icon">📅</span> Kalendar
+      </a>
+      <a href="pages/goals.html" class="nav-item">
+        <span class="icon">🎯</span> Qëllime
+      </a>
+      <a href="pages/graph.html" class="nav-item">
+        <span class="icon">🔗</span> Hartë Mendore
+      </a>
+      <a href="pages/settings.html" class="nav-item">
+        <span class="icon">⚙️</span> Cilësimet
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-secondary" onclick="toggleTheme()">🌙 Tema</button>
+      <a href="pages/profile.html" class="nav-item">
+        <span class="icon">👤</span> Profili
+      </a>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <h1>VALORA</h1>
+      <div class="topbar-actions">
+        <input type="text" id="search" placeholder="Kërko...">
+        <button class="btn-primary">🔔</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div id="app"></div>
+    </div>
+  </main>
+
+  <script src="js/script.js"></script>
 </body>
 </html>

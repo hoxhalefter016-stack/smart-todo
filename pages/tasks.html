@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detyra - VALORA</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/tasks.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">VALORA</div>
+    <nav class="nav-menu">
+      <a href="dashboard.html" class="nav-item">📊 Dashboard</a>
+      <a href="notes.html" class="nav-item">📝 Shënime</a>
+      <a href="tasks.html" class="nav-item active">✅ Detyra</a>
+      <a href="calendar.html" class="nav-item">📅 Kalendar</a>
+      <a href="goals.html" class="nav-item">🎯 Qëllime</a>
+      <a href="graph.html" class="nav-item">🔗 Hartë Mendore</a>
+      <a href="settings.html" class="nav-item">⚙️ Cilësimet</a>
+    </nav>
+  </div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <h1>✅ Detyra</h1>
+      <button class="btn-primary" onclick="addTask()">+ Detyra e Re</button>
+    </div>
+
+    <div class="content">
+      <div class="tasks-filters">
+        <button class="filter-btn active" onclick="filterTasks('all')">Të Gjitha</button>
+        <button class="filter-btn" onclick="filterTasks('active')">Aktive</button>
+        <button class="filter-btn" onclick="filterTasks('completed')">Të Përfunduara</button>
+      </div>
+      <div id="tasks-container" class="tasks-container"></div>
+    </div>
+  </main>
+
+  <script src="../js/script.js"></script>
+  <script src="../js/tasks.js"></script>
+</body>
+</html>

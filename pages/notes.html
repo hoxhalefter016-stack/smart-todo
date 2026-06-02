@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shënime - VALORA</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/notes.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">VALORA</div>
+    <nav class="nav-menu">
+      <a href="dashboard.html" class="nav-item">📊 Dashboard</a>
+      <a href="notes.html" class="nav-item active">📝 Shënime</a>
+      <a href="tasks.html" class="nav-item">✅ Detyra</a>
+      <a href="calendar.html" class="nav-item">📅 Kalendar</a>
+      <a href="goals.html" class="nav-item">🎯 Qëllime</a>
+      <a href="graph.html" class="nav-item">🔗 Hartë Mendore</a>
+      <a href="settings.html" class="nav-item">⚙️ Cilësimet</a>
+    </nav>
+  </div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <h1>📝 Shënime</h1>
+      <button class="btn-primary" onclick="createNewNote()">+ Shënim i Ri</button>
+    </div>
+
+    <div class="content notes-container">
+      <div class="notes-sidebar">
+        <input type="text" placeholder="Kërko shënime..." id="notes-search" class="search-input">
+        <div id="notes-list" class="notes-list"></div>
+      </div>
+
+      <div class="notes-editor">
+        <div id="note-editor" class="editor-empty">
+          <p>Zgjidh një shënim për të filluar</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/script.js"></script>
+  <script src="../js/notes.js"></script>
+</body>
+</html>
