@@ -1,0 +1,58 @@
+/* ===== DASHBOARD STYLES ===== */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.stats-card {
+  text-align: center;
+}
+
+.stats-card h3 {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-number {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--accent);
+}
+
+.dashboard-section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.dashboard-section h2 {
+  font-size: 18px;
+  margin-bottom: var(--spacing-lg);
+  color: var(--text-primary);
+}
+
+.tasks-list, .notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.task-item, .note-item {
+  padding: var(--spacing-lg);
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--accent);
+}
+
+.task-item h4, .note-item h4 {
+  margin-bottom: var(--spacing-sm);
+}
+
+.task-item p, .note-item p {
+  color: var(--text-secondary);
+  font-size: 13px;
+}

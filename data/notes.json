@@ -1,0 +1,12 @@
+{
+  "notes": [
+    {
+      "id": "example-1",
+      "title": "Shënim i parë",
+      "content": "Kjo është një shënim shembull",
+      "tags": ["shembull"],
+      "created": "2026-06-02T00:00:00Z",
+      "updated": "2026-06-02T00:00:00Z"
+    }
+  ]
+}

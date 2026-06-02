@@ -1,0 +1,12 @@
+{
+  "tasks": [
+    {
+      "id": "task-1",
+      "title": "Detyra e parë",
+      "description": "Përshkrim i detyrës",
+      "priority": "high",
+      "dueDate": "2026-06-02T00:00:00Z",
+      "completed": false
+    }
+  ]
+}
