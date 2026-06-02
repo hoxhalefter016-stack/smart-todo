@@ -6,20 +6,20 @@ let currentFilter = 'all';
 function loadTasks() {
   const container = document.getElementById('tasks-container');
   if (!container) return;
-  
+
   let filtered = tasks;
-  
+
   if (currentFilter === 'active') {
     filtered = tasks.filter(t => !t.completed);
   } else if (currentFilter === 'completed') {
     filtered = tasks.filter(t => t.completed);
   }
-  
+
   if (filtered.length === 0) {
     container.innerHTML = '<p>Nuk ka detyra</p>';
     return;
   }
-  
+
   container.innerHTML = filtered.map(task => `
     <div class="task-card ${task.completed ? 'completed' : ''}">
       <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask('${task.id}')">
@@ -37,16 +37,16 @@ function loadTasks() {
 function addTask() {
   const title = prompt('Titull i detyrës:');
   if (!title) return;
-  
+
   const newTask = {
     id: generateId(),
     title: title,
     description: '',
     priority: 'medium',
     dueDate: new Date(),
-    completed: false
+    completed: false,
   };
-  
+
   tasks.unshift(newTask);
   Storage.set('tasks', tasks);
   loadTasks();
@@ -69,15 +69,18 @@ function deleteTask(taskId) {
 
 function filterTasks(filter) {
   currentFilter = filter;
-  
+
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.classList.remove('active');
   });
-  
-  if (event && event.target) {
-    event.target.classList.add('active');
-  }
-  
+
+  const buttons = document.querySelectorAll('.filter-btn');
+  buttons.forEach(btn => {
+    if (btn.textContent.includes(filter)) {
+      btn.classList.add('active');
+    }
+  });
+
   loadTasks();
 }
 

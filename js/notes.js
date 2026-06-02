@@ -6,14 +6,14 @@ let notes = Storage.get('notes', []);
 function loadNotes() {
   const container = document.getElementById('notes-list');
   if (!container) return;
-  
+
   notes = Storage.get('notes', []);
-  
+
   if (notes.length === 0) {
     container.innerHTML = '<p>Nuk ka shënime</p>';
     return;
   }
-  
+
   container.innerHTML = notes.map(note => `
     <div class="note-item ${note.id === currentNoteId ? 'active' : ''}" onclick="selectNote('${note.id}')">
       <h4>${note.title}</h4>
@@ -25,7 +25,7 @@ function loadNotes() {
 function selectNote(noteId) {
   currentNoteId = noteId;
   const note = notes.find(n => n.id === noteId);
-  
+
   if (note) {
     const editor = document.getElementById('note-editor');
     editor.innerHTML = `
@@ -36,7 +36,7 @@ function selectNote(noteId) {
       <textarea placeholder="Shënime..." onchange="updateNoteContent('${note.id}', this.value)">${note.content}</textarea>
     `;
   }
-  
+
   loadNotes();
 }
 
@@ -47,9 +47,9 @@ function createNewNote() {
     content: '',
     tags: [],
     created: new Date(),
-    updated: new Date()
+    updated: new Date(),
   };
-  
+
   notes.unshift(newNote);
   Storage.set('notes', notes);
   selectNote(newNote.id);
@@ -80,7 +80,7 @@ function deleteNote(noteId) {
   Storage.set('notes', notes);
   currentNoteId = null;
   loadNotes();
-  
+
   const editor = document.getElementById('note-editor');
   if (editor) {
     editor.innerHTML = '<div class="editor-empty"><p>Zgjidh një shënim për të filluar</p></div>';
@@ -91,11 +91,11 @@ const searchInput = document.getElementById('notes-search');
 if (searchInput) {
   searchInput.addEventListener('input', (e) => {
     const query = e.target.value.toLowerCase();
-    const filtered = notes.filter(n => 
-      n.title.toLowerCase().includes(query) || 
+    const filtered = notes.filter(n =>
+      n.title.toLowerCase().includes(query) ||
       n.content.toLowerCase().includes(query)
     );
-    
+
     const container = document.getElementById('notes-list');
     container.innerHTML = filtered.map(note => `
       <div class="note-item ${note.id === currentNoteId ? 'active' : ''}" onclick="selectNote('${note.id}')">

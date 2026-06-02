@@ -5,7 +5,7 @@ function toggleTheme() {
   const html = document.documentElement;
   const currentTheme = html.getAttribute('data-theme');
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  
+
   html.setAttribute('data-theme', newTheme);
   localStorage.setItem('theme', newTheme);
   document.body.setAttribute('data-theme', newTheme);
@@ -41,7 +41,7 @@ const translations = {
     settings: 'Settings',
     profile: 'Profile',
     search: 'Search...',
-  }
+  },
 };
 
 let currentLang = localStorage.getItem('language') || 'sq';
@@ -69,7 +69,7 @@ const Storage = {
       console.error('Storage error:', e);
     }
   },
-  
+
   get(key, defaultValue = null) {
     try {
       const item = localStorage.getItem(`valora_${key}`);
@@ -79,17 +79,17 @@ const Storage = {
       return defaultValue;
     }
   },
-  
+
   remove(key) {
     localStorage.removeItem(`valora_${key}`);
-  }
+  },
 };
 
 // Navigation
 function navigate(page) {
   const navItems = document.querySelectorAll('.nav-item');
   navItems.forEach(item => item.classList.remove('active'));
-  
+
   const activeItem = document.querySelector(`[href*="${page}"]`);
   if (activeItem) {
     activeItem.classList.add('active');
@@ -109,14 +109,14 @@ function performSearch(query) {
   if (query.length === 0) {
     return;
   }
-  
+
   console.log('Searching for:', query);
 }
 
 // PWA - Service Worker Registration
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('pwa/service-worker.js')
-    .then(reg => console.log('Service Worker registered'))
+    .then(() => console.log('Service Worker registered'))
     .catch(err => console.log('SW registration failed:', err));
 }
 
@@ -124,7 +124,7 @@ if ('serviceWorker' in navigator) {
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   updateUILanguage();
-  
+
   const user = Storage.get('currentUser');
   if (!user) {
     console.log('No user logged in');
@@ -150,9 +150,9 @@ function showNotification(title, message, type = 'info') {
     <strong>${title}</strong>
     <p>${message}</p>
   `;
-  
+
   document.body.appendChild(notification);
-  
+
   setTimeout(() => {
     notification.style.opacity = '0';
     setTimeout(() => notification.remove(), 300);
@@ -161,7 +161,7 @@ function showNotification(title, message, type = 'info') {
 
 // Utility functions
 function generateId() {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
 }
 
 function formatDate(date, format = 'short') {
@@ -169,11 +169,11 @@ function formatDate(date, format = 'short') {
   if (format === 'short') {
     return d.toLocaleDateString('sq-AL');
   } else if (format === 'long') {
-    return d.toLocaleDateString('sq-AL', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return d.toLocaleDateString('sq-AL', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   }
   return d.toLocaleString('sq-AL');
